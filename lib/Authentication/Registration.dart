@@ -1,10 +1,15 @@
-import '../Library/Utils.dart' as utils;
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Library/DiamondBackground.dart';
+import '../Library/AppColour.dart';
+import '../Library/Utils.dart' as utils;
 import '../Library/api_service.dart';
 import '../Models/UserModel.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import 'LoginScreen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -15,12 +20,10 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // Form Keys
   final _personalFormKey = GlobalKey<FormState>();
   final _kycFormKey = GlobalKey<FormState>();
   final _businessFormKey = GlobalKey<FormState>();
 
-  // Controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
@@ -31,7 +34,10 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
 
-  XFile? _selectedImage;
+  XFile? selectedImageKYC;
+  XFile? selectedLicenseCopy;
+  XFile? selectedTaxCertificate;
+  XFile? selectedPartnerCopy;
 
   @override
   void initState() {
@@ -39,29 +45,30 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     _tabController = TabController(length: 3, vsync: this);
   }
 
-  void _nextTab(GlobalKey<FormState> formKey) {
-    if (formKey.currentState!.validate()) {
-      _tabController.animateTo(_tabController.index + 1);
-    }
-  }
-
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(Function(XFile?) onImageSelected) async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedImage != null) {
       setState(() {
-        _selectedImage = pickedImage;
+        onImageSelected(pickedImage);
       });
     }
   }
 
+  Future<String?> _convertImageToBase64(XFile? imageFile) async {
+    if (imageFile == null) return null;
+    final bytes = await File(imageFile.path).readAsBytes();
+    return base64Encode(bytes);
+  }
+  bool isLoading = false;
+
   void _register() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
+    setState(() => isLoading = true);
+    
+    String? idProofBase64 = await _convertImageToBase64(selectedImageKYC);
+    String? licenseCopyBase64 = await _convertImageToBase64(selectedLicenseCopy);
+    String? taxCertificateBase64 = await _convertImageToBase64(selectedTaxCertificate);
+    String? partnerCopyBase64 = await _convertImageToBase64(selectedPartnerCopy);
 
     UserModel user = UserModel(
       userId: _usernameController.text,
@@ -73,64 +80,78 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       address: _addressController.text,
       companyName: _companyNameController.text,
       contactName: _nameController.text,
-      idProof: _selectedImage?.path ?? "",
-      licenseCopy: "",
-      taxCertificate: "",
-      partnerCopy: "",
+      idProof: idProofBase64 ?? "",
+      licenseCopy: licenseCopyBase64 ?? "",
+      taxCertificate: taxCertificateBase64 ?? "",
+      partnerCopy: partnerCopyBase64 ?? "",
       references: [Reference(name: "Ref1", phone: "9876543210")],
     );
+      try {
+        final response = await http.post(
+          Uri.parse('${ApiService.baseUrl}/register'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(user.toJson()),
+        );
+        setState(() => isLoading = false);
 
-    bool success = await ApiService.registerUser(user);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          utils.showCustomSnackbar('Login successful!', true);
+          Get.to(() => Loginscreen());
 
-    Navigator.pop(context);
+        } else {
+          utils.showCustomSnackbar(jsonDecode(response.body)['message'] , false);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(success ? "User registered successfully!" : "Registration failed.")),
-    );
+          print("Error: ${response.body}");
+        }
+      } catch (e) {
+        setState(() => isLoading = false);
+        utils.showCustomSnackbar('Error: Unable to connect to server', false);      }
+  }
+
+  void _nextTab(GlobalKey<FormState> formKey) {
+    if (formKey.currentState!.validate()) {
+      _tabController.animateTo(_tabController.index + 1);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // DiamondBackground(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'REGISTER',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height:20),
-                TabBar(
-                  controller: _tabController,
-                  tabs: const [
-                    Tab(text: "Personal Info"),
-                    Tab(text: "KYC Info"),
-                    Tab(text: "Business Info"),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      _buildPersonalInfoForm(),
-                      _buildKYCInfoForm(),
-                      _buildBusinessInfoForm(),
-                    ],
-                  ),
-                ),
+      backgroundColor: AppColors.primaryWhite,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              'REGISTER',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primaryBlack),
+            ),
+            const SizedBox(height: 20),
+            TabBar(
+              controller: _tabController,
+              labelColor: AppColors.primaryBlack,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: AppColors.primaryBlack,
+              tabs: const [
+                Tab(text: "Personal Info"),
+                Tab(text: "KYC Info"),
+                Tab(text: "Business Info"),
               ],
             ),
-          ),
-        ],
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  _buildPersonalInfoForm(),
+                  _buildKYCInfoForm(),
+                  _buildBusinessInfoForm(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,57 +162,104 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       child: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          utils.buildTextField("Name", _nameController),
-          utils.buildTextField("Email", _emailController),
-          utils.buildTextField("Mobile No", _mobileController),
-          utils.buildTextField("Username", _usernameController),
-          utils.buildTextField("Password", _passwordController, obscureText: true),
-          utils.buildTextField("Confirm Password", _confirmPasswordController, obscureText: true),
+
+          utils.buildTextField("Name", _nameController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("Email", _emailController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("Mobile No", _mobileController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("Username", _usernameController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("Password", _passwordController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("Confirm Password", _confirmPasswordController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+
           SizedBox(height: 20),
-          ElevatedButton(onPressed: () => _nextTab(_personalFormKey), child: Text("Next")),
+          utils.PrimaryButton(text: "Next", onPressed: () {
+            _nextTab(_personalFormKey);
+          },)
         ],
       ),
     );
   }
 
   Widget _buildKYCInfoForm() {
-    return Form(
-      key: _kycFormKey,
-      child: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: [
-          Center(
-            child: Column(
-              children: [
-                _selectedImage != null
-                    ? Image.file(
-                  File(_selectedImage!.path),
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.cover,
-                )
-                    : Container(
-                  height: 150,
-                  width: 150,
-                  color: Colors.grey[300],
-                  child: Icon(Icons.image, size: 50, color: Colors.grey[700]),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: _pickImage,
-                  icon: Icon(Icons.camera_alt),
-                  label: Text("Upload KYC Image"),
-                ),
-              ],
+    return SingleChildScrollView(
+      child: Form(
+        key: _kycFormKey,
+        child: Column(
+          children: [
+            _buildImagePicker("ID Proof", selectedImageKYC, (image) => selectedImageKYC = image),
+            _buildImagePicker("License Copy", selectedLicenseCopy, (image) => selectedLicenseCopy = image),
+            _buildImagePicker("Tax Certificate", selectedTaxCertificate, (image) => selectedTaxCertificate = image),
+            _buildImagePicker("Partner Copy", selectedPartnerCopy, (image) => selectedPartnerCopy = image),
+            SizedBox(height: 20),
+            utils.PrimaryButton(text: "Next", onPressed: () {
+              _nextTab(_kycFormKey);
+            },)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePicker(String label, XFile? selectedFile, Function(XFile?) onImageSelected) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(color: AppColors.primaryBlack, fontSize: 16, fontWeight: FontWeight.w500)),
+        SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade400),
+          ),
+          child: InkWell(
+            onTap: () => _pickImage(onImageSelected),
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  if (selectedFile != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(selectedFile.path),
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    Icon(Icons.image_outlined, color: Colors.grey, size: 50),
+
+                  SizedBox(width: 10),
+
+                  Expanded(
+                    child: Text(
+                      selectedFile != null ? selectedFile.name : "Select Image",
+                      style: TextStyle(
+                        color: selectedFile != null ? Colors.black : Colors.grey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+                  if (selectedFile != null)
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          onImageSelected(null);
+                        });
+                      },
+                      icon: Icon(Icons.cancel, color: Colors.red),
+                    ),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => _nextTab(_kycFormKey),
-            child: Text("Next"),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 12),
+      ],
     );
   }
 
@@ -201,11 +269,12 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       child: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          utils.buildTextField("Company Name", _companyNameController),
-          utils.buildTextField("Address", _addressController),
-          utils.buildTextField("Pincode", _pincodeController),
+          utils.buildTextField("Company Name", _companyNameController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("Address", _addressController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+          utils.buildTextField("City", _pincodeController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
+
           SizedBox(height: 20),
-          ElevatedButton(onPressed: _register, child: Text("Submit")),
+          utils.PrimaryButton(text: "Submit", onPressed: _register)
         ],
       ),
     );

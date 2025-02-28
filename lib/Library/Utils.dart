@@ -1,11 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'AppColour.dart';
+import 'package:get/get.dart';
 
 Widget PrimaryButton({
   required String text,
   required VoidCallback onPressed,
-  Color backgroundColor = AppColors.buttonPrimary,
-  Color textColor = AppColors.buttonTextPrimary,
+  Color backgroundColor = AppColors.primaryBlack,
+  Color textColor = AppColors.primaryWhite,
   Color borderColor = Colors.transparent,
   double width = double.infinity,
 }) {
@@ -52,7 +54,7 @@ Widget PrimaryTextField({
         obscureText: obscureText,
         decoration: InputDecoration(
           filled: true,
-          fillColor: fillColor ?? Colors.white, // Default: White background
+          fillColor: fillColor ??AppColors.primaryWhite, // Default: White background
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius ?? 12), // Default: 12
             borderSide: BorderSide(color: borderColor ?? Colors.grey), // Default: Grey border
@@ -72,22 +74,37 @@ Widget PrimaryTextField({
   );
 }
 
+void showCustomSnackbar(String message, bool isSuccess) {
+  Get.snackbar(
+    isSuccess ? 'Success' : 'Error',
+    message,
+    backgroundColor: isSuccess ? Colors.green : Colors.red,
+    colorText: AppColors.primaryWhite,
+    snackPosition: SnackPosition.BOTTOM,
+    margin: const EdgeInsets.all(10),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    borderRadius: 8,
+    duration: const Duration(seconds: 3),
+    // overlayBlur: 1,
+  );
+}
 
 Widget buildTextField(
     String label,
     TextEditingController controller,
-    {bool obscureText = false, IconData? icon}) {
+    {bool obscureText = false, IconData? icon, required Color textColor, required MaterialColor hintColor,onChange}) {
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: TextFormField(
+      onChanged: onChange,
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: icon != null ? Icon(icon, color: Colors.blueAccent) : null,
+        prefixIcon: icon != null ? Icon(icon, color: AppColors.primaryBlack) : null,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppColors.primaryWhite,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -98,7 +115,7 @@ Widget buildTextField(
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+          borderSide: BorderSide(color: AppColors.primaryBlack, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

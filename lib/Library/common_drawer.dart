@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-
+import '../Library/AppColour.dart';
+import '../Library/AppStrings.dart';
+import '../Library/AppStyle.dart';
+import 'package:get/get.dart';
 import '../Authentication/AuthChoiceScreen.dart';
 
 class CommonDrawer extends StatelessWidget {
@@ -17,48 +20,46 @@ class CommonDrawer extends StatelessWidget {
                 _buildDrawerItem(
                   icon: Icons.person,
                   text: "Profile",
-                  iconColor: Colors.pink[400]!,
+                  iconColor: AppColors.primaryBlack,
                   onTap: () => Navigator.pop(context),
                 ),
                 _buildDrawerItem(
                   icon: Icons.home,
                   text: "Home",
-                  iconColor: Colors.blue[400]!,
+                  iconColor: AppColors.primaryBlack,
                   onTap: () => Navigator.pop(context),
                 ),
                 _buildDrawerItem(
                   icon: Icons.shopping_cart_checkout,
                   text: "My Cart",
-                  iconColor: Colors.purple[400]!,
+                  iconColor: AppColors.primaryBlack,
                   onTap: () => Navigator.pop(context),
                 ),
                 _buildDrawerItem(
                   icon: Icons.receipt_long,
                   text: "Orders",
-                  iconColor: Colors.green[400]!,
+                  iconColor: AppColors.primaryBlack,
                   onTap: () {},
                 ),
                 _buildDrawerItem(
                   icon: Icons.favorite_border,
                   text: "Wishlist",
-                  iconColor: Colors.red[400]!,
+                  iconColor: AppColors.primaryBlack,
                   onTap: () {},
                 ),
                 _buildDrawerItem(
                   icon: Icons.settings,
                   text: "Settings",
-                  iconColor: Colors.orange[400]!,
+                  iconColor: AppColors.primaryBlack,
                   onTap: () {},
                 ),
-                const Divider(),
+                const Divider(color: AppColors.primaryBlack),
                 _buildDrawerItem(
                   icon: Icons.logout,
                   text: "Logout",
                   iconColor: Colors.redAccent,
                   onTap: () {
-                    // // Implement logout logic
-                    // Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AuthChoiceScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthChoiceScreen()));
                   },
                 ),
               ],
@@ -66,6 +67,7 @@ class CommonDrawer extends StatelessWidget {
           ),
         ],
       ),
+      backgroundColor: AppColors.primaryWhite,
     );
   }
 
@@ -73,8 +75,8 @@ class CommonDrawer extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-       color: Colors.green[100]!
+      decoration: const BoxDecoration(
+        color: AppColors.primaryWhite,
       ),
       child: Column(
         children: const [
@@ -82,18 +84,18 @@ class CommonDrawer extends StatelessWidget {
             padding: EdgeInsets.all(8.0),
             child: CircleAvatar(
               radius: 40,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 50, color: Color(0xFF2575FC)),
+              backgroundColor: AppColors.primaryBlack,
+              child: Icon(Icons.person, size: 50, color: AppColors.primaryWhite),
             ),
           ),
           SizedBox(height: 10),
           Text(
             "User Name",
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppColors.primaryBlack, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
             "user@example.com",
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(color: AppColors.primaryBlack, fontSize: 14),
           ),
         ],
       ),
@@ -110,18 +112,16 @@ class CommonDrawer extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: iconColor.withOpacity(0.1),
+          color: AppColors.primaryBlack.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, color: iconColor),
       ),
       title: Text(
         text,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.primaryBlack),
       ),
       onTap: onTap,
     );
   }
-
 }
-

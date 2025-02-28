@@ -1,9 +1,12 @@
+
 import 'package:flutter/material.dart';
 import '../Library/AppColour.dart';
-import '../Library/DiamondBackground.dart';
+import '../Library/AppStrings.dart';
+import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
 import 'LoginScreen.dart';
 import 'Registration.dart';
+import 'package:get/get.dart';
 
 class AuthChoiceScreen extends StatefulWidget {
   const AuthChoiceScreen({super.key});
@@ -16,9 +19,9 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryWhite,
       body: Stack(
         children: [
-          // DiamondBackground(),
           Center(
             child: Stack(
               children: [
@@ -31,25 +34,17 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width * 0.35,
-                          child: const Text(
-                            "My Jewelry",
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryBlack,
-                              fontFamily: 'Serif',
-                            ),
+                          child: Text(
+                              AppString.authTxt,
+                            style: TextStyleHelper.authChoiceStyle.copyWith(color: AppColors.primaryBlack)
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "find your dream Diamond",
-                          style: TextStyle(
-                            fontSize: 14, // Small subtitle text
-                            color: AppColors.primaryBlack,
-                          ),
+                          AppString.authThough,
+                          style: TextStyleHelper.textStyleMediam.copyWith(color: AppColors.primaryBlack)
                         ),
                       ],
                     ),
@@ -63,16 +58,12 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: utils.PrimaryButton(
-                          text: 'LOGIN',
-                          backgroundColor:  Colors.blue[50]!,
-                          textColor:  Colors.purple[200]!,
-                          borderColor: Colors.blue[50]!,
+                          text: AppString.logIn,
+                          backgroundColor: AppColors.primaryBlack,
+                          textColor: AppColors.primaryWhite,
+                          borderColor: AppColors.primaryBlack,
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Loginscreen(),
-                                ));
+                            Get.to(() => Loginscreen());
                           },
                         ),
                       ),
@@ -80,16 +71,12 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                       SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: utils.PrimaryButton(
-                              text: 'REGISTER',
-                              backgroundColor:  Colors.green[50]!,
-                              textColor:  Colors.purple[200]!,
-                              borderColor: Colors.blue[50]!,
+                              text: AppString.register,
+                              backgroundColor: AppColors.primaryBlack,
+                              textColor: AppColors.primaryWhite,
+                              borderColor: AppColors.primaryBlack,
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RegistrationScreen(),
-                                    ));
+                                Get.to(() => RegistrationScreen());
                               })),
                     ],
                   ),
