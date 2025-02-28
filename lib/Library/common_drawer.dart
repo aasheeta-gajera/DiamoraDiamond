@@ -1,4 +1,7 @@
+import 'package:daimo/Library/api_service.dart';
+import 'package:daimo/Library/shared_pref_service.dart';
 import 'package:flutter/material.dart';
+import '../Dashboard/Profile.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
@@ -11,6 +14,7 @@ class CommonDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: AppColors.primaryWhite,
       child: Column(
         children: [
           _buildDrawerHeader(),
@@ -21,7 +25,7 @@ class CommonDrawer extends StatelessWidget {
                   icon: Icons.person,
                   text: "Profile",
                   iconColor: AppColors.primaryBlack,
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => Get.to(ProfileScreen()),
                 ),
                 _buildDrawerItem(
                   icon: Icons.home,
@@ -59,19 +63,22 @@ class CommonDrawer extends StatelessWidget {
                   text: "Logout",
                   iconColor: Colors.redAccent,
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthChoiceScreen()));
-                  },
+                    ApiService apiService = ApiService();
+                    apiService.logout();
+                    },
                 ),
               ],
             ),
           ),
         ],
       ),
-      backgroundColor: AppColors.primaryWhite,
     );
   }
 
   Widget _buildDrawerHeader() {
+    String name = SharedPrefService.getString('user_name') ?? "";
+    String email = SharedPrefService.getString('user_email') ?? "";
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -79,8 +86,8 @@ class CommonDrawer extends StatelessWidget {
         color: AppColors.primaryWhite,
       ),
       child: Column(
-        children: const [
-          Padding(
+        children: [
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: CircleAvatar(
               radius: 40,
@@ -88,19 +95,27 @@ class CommonDrawer extends StatelessWidget {
               child: Icon(Icons.person, size: 50, color: AppColors.primaryWhite),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
-            "User Name",
-            style: TextStyle(color: AppColors.primaryBlack, fontSize: 18, fontWeight: FontWeight.bold),
+            name,
+            style: const TextStyle(
+              color: AppColors.primaryBlack,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
-            "user@example.com",
-            style: TextStyle(color: AppColors.primaryBlack, fontSize: 14),
+            email,
+            style: const TextStyle(
+              color: AppColors.primaryBlack,
+              fontSize: 14,
+            ),
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildDrawerItem({
     required IconData icon,

@@ -105,7 +105,8 @@ class _RegistrationScreenState extends State<RegistrationScreen>
         }
       } catch (e) {
         setState(() => isLoading = false);
-        utils.showCustomSnackbar('Error: Unable to connect to server', false);      }
+        utils.showCustomSnackbar('${e}', false);
+      }
   }
 
   void _nextTab(GlobalKey<FormState> formKey) {
@@ -118,39 +119,42 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'REGISTER',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primaryBlack),
-            ),
-            const SizedBox(height: 20),
-            TabBar(
-              controller: _tabController,
-              labelColor: AppColors.primaryBlack,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: AppColors.primaryBlack,
-              tabs: const [
-                Tab(text: "Personal Info"),
-                Tab(text: "KYC Info"),
-                Tab(text: "Business Info"),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
+      body: PopScope(
+        canPop: true,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'REGISTER',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primaryBlack),
+              ),
+              const SizedBox(height: 20),
+              TabBar(
                 controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  _buildPersonalInfoForm(),
-                  _buildKYCInfoForm(),
-                  _buildBusinessInfoForm(),
+                labelColor: AppColors.primaryBlack,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: AppColors.primaryBlack,
+                tabs: const [
+                  Tab(text: "Personal Info"),
+                  Tab(text: "KYC Info"),
+                  Tab(text: "Business Info"),
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    _buildPersonalInfoForm(),
+                    _buildKYCInfoForm(),
+                    _buildBusinessInfoForm(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

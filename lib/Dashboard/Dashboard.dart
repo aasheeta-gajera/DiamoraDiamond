@@ -6,6 +6,8 @@ import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import 'package:get/get.dart';
 
+import 'Dimond.dart';
+
 
 class DiamondHomePage extends StatelessWidget {
   final String? token;
@@ -95,10 +97,10 @@ class DiamondHomePage extends StatelessWidget {
             _selectedIndex = index;
             switch (index) {
             case 0:
-              //Get.to(() => HomePage());
+              Get.to(() => DiamondHomePage());
               break;
             case 1:
-             // Get.to(() => CartPage());
+             // Get.to(() => DiamondListScreen());
               break;
             case 2:
              // Get.to(() => OrdersPage());
@@ -128,7 +130,9 @@ class DiamondHomePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Diamonds", icon: Icons.diamond, onTap: () {},),
+            _DiamondCard(title: "Diamonds", icon: Icons.diamond, onTap: () {
+              Get.to(DiamondListScreen());
+            },),
             _DiamondCard(title: "Search", icon: Icons.search, onTap: () {},),
           ],
         ),
