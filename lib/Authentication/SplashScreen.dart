@@ -1,11 +1,12 @@
+import 'package:daimo/Dashboard/Admin/DashboardAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
-import '../Library/shared_pref_service.dart'; // Import SharedPrefService
-import '../Dashboard/Dashboard.dart';
+import '../Library/SharedPrefService.dart';
+import '../Dashboard/User/DashboardUser.dart';
 import 'AuthChoiceScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,22 +17,29 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  Future<void> checkAuthentication() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    String? token = await SharedPrefService.getString('auth_token');
+    String? userType = await SharedPrefService.getString('userType') ?? "";
+
+    if (token != null && token.isNotEmpty) {
+      if (userType == "admin") {
+        Get.off(() => DiamondHomeAdmin(token: token)); // Navigate to Admin Dashboard
+      } else {
+        Get.off(() => DiamondHomePage(token: token)); // Navigate to User Dashboard
+      }
+    } else {
+      Get.off(() => AuthChoiceScreen());
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
     checkAuthentication();
-  }
-
-  Future<void> checkAuthentication() async {
-    await Future.delayed(const Duration(seconds: 3)); // Reduce delay to 3 sec for better UX
-
-    String? token = await SharedPrefService.getString('auth_token'); // Check if user is logged in
-
-    if (token != null && token.isNotEmpty) {
-      Get.off(() => DiamondHomePage(token: token)); // Redirect to Dashboard if logged in
-    } else {
-      Get.off(() => AuthChoiceScreen());
-    }
   }
 
   @override

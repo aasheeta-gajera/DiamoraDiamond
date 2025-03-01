@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Library/AppColour.dart';
 import '../Library/Utils.dart' as utils;
-import '../Library/api_service.dart';
+import '../Library/ApiService.dart';
 import '../Models/UserModel.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

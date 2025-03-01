@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../Dashboard/Admin/DashboardAdmin.dart';
+import '../Dashboard/User/DashboardUser.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import 'package:get/get.dart';
-import '../Dashboard/Dashboard.dart';
 import '../Library/Utils.dart' as utils;
-import '../Library/api_service.dart';
-import '../Library/shared_pref_service.dart';  // Import the shared preferences service
+import '../Library/ApiService.dart';
+import '../Library/SharedPrefService.dart';  // Import the shared preferences service
 import 'forgot_password_screen.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -31,11 +32,17 @@ class _LoginscreenState extends State<Loginscreen> {
 
   Future<void> checkLoginStatus() async {
     String? token = SharedPrefService.getString('auth_token');
+    String? userTypes = await SharedPrefService.getString('userType') ?? "";
 
     if (token != null && token.isNotEmpty) {
-      Get.off(() => DiamondHomePage(token: token));
+      if (userTypes == "admin") {
+        print('Redirecting to Admin Dashboard');
+        Get.off(() => DiamondHomeAdmin(token: token));
+      } else {
+        print('Redirecting to User Dashboard');
+        Get.off(() => DiamondHomePage(token: token));
+      }
     }
-
   }
 
   Future<void> _login() async {
@@ -54,19 +61,22 @@ class _LoginscreenState extends State<Loginscreen> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        String token = responseData['token']??'';
-        String email = responseData['user']['email']??'';
-        String name = responseData['user']['name']??'';
-        String userId = responseData['user']['user_id']??'';
-        String mobile = responseData['user']['mobile']??'';
-        String city = responseData['user']['city']??'';
-        String address = responseData['user']['address']??'';
-        String contactName = responseData['user']['contact_name']??'';
-        String idProof = responseData['user']['idProof']??'';
-        String licenseCopy = responseData['user']['licenseCopy']??'';
-        String taxCertificate = responseData['user']['taxCertificate']??'';
-        String partnerCopy = responseData['user']['partnerCopy']??'';
+        print(responseData);
+        String token = responseData['token'] ?? '';
+        String email = responseData['user']['email'] ?? '';
+        String name = responseData['user']['name'] ?? '';
+        String userId = responseData['user']['user_id'] ?? '';
+        String mobile = responseData['user']['mobile'] ?? '';
+        String city = responseData['user']['city'] ?? '';
+        String address = responseData['user']['address'] ?? '';
+        String contactName = responseData['user']['contact_name'] ?? '';
+        String idProof = responseData['user']['idProof'] ?? '';
+        String licenseCopy = responseData['user']['licenseCopy'] ?? '';
+        String taxCertificate = responseData['user']['taxCertificate'] ?? '';
+        String partnerCopy = responseData['user']['partnerCopy'] ?? '';
+        String userType = responseData['user']['userType'] ?? ''; // Default to 'customer'
 
+        // Save user details in Shared Preferences
         await SharedPrefService.setString('auth_token', token);
         await SharedPrefService.setString('user_email', email);
         await SharedPrefService.setString('user_name', name);
@@ -79,11 +89,20 @@ class _LoginscreenState extends State<Loginscreen> {
         await SharedPrefService.setString('license_copy', licenseCopy);
         await SharedPrefService.setString('tax_certificate', taxCertificate);
         await SharedPrefService.setString('partner_copy', partnerCopy);
-
+        await SharedPrefService.setString('userType', userType);
 
         utils.showCustomSnackbar('Login successful!', true);
-        Get.off(() => DiamondHomePage(token: token));
 
+        String? userTypes = await SharedPrefService.getString('userType') ?? "";
+        print('User Type: $userTypes');
+
+        if (userTypes == "admin") {
+          print('Redirecting to Admin Dashboard');
+          Get.off(() => DiamondHomeAdmin(token: token));
+        } else {
+          print('Redirecting to User Dashboard');
+          Get.off(() => DiamondHomePage(token: token));
+        }
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'] ?? 'Invalid credentials', false);
       }
@@ -93,6 +112,7 @@ class _LoginscreenState extends State<Loginscreen> {
       utils.showCustomSnackbar('${e}', false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

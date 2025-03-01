@@ -1,10 +1,10 @@
-
 import 'dart:convert';
 import 'package:daimo/Library/AppColour.dart';
 import 'package:flutter/material.dart';
-import '../Library/AppStyle.dart';
-import '../Library/api_service.dart';
-import '../Models/diamond_model.dart';
+import '../../Library/AppStyle.dart';
+import '../../Library/ApiService.dart';
+import '../../Library/Utils.dart' as utils;
+import '../../Models/DiamondModel.dart';
 import 'package:http/http.dart' as http;
 
 class DiamondListScreen extends StatefulWidget {
@@ -14,23 +14,35 @@ class DiamondListScreen extends StatefulWidget {
 
 class _DiamondListScreenState extends State<DiamondListScreen> {
   late Future<List<Diamond>> futureDiamonds;
+  bool isLoading = false;
 
   Future<List<Diamond>> fetchDiamonds() async {
-    final response = await http.get(Uri.parse('${ApiService.baseUrl}/getAllPurchasedDiamonds'));
+    setState(() => isLoading = true);
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> diamondList = data['diamonds'];
-      return diamondList.map((json) => Diamond.fromJson(json)).toList();
-    } else {
-      throw Exception("Failed to load diamonds");
+    try {
+      final response = await http.get(Uri.parse('${ApiService.baseUrl}/getAllPurchasedDiamonds'));
+      setState(() => isLoading = false);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final List<dynamic> diamondList = data['diamonds'];
+        return diamondList.map((json) => Diamond.fromJson(json)).toList();
+      } else {
+        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        return []; // Return an empty list if the API fails
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      utils.showCustomSnackbar('$e', false);
+      print(e);
+      return []; // Return an empty list if there's an error
     }
   }
 
   @override
   void initState() {
     super.initState();
-    futureDiamonds = fetchDiamonds();
+    futureDiamonds = fetchDiamonds(); // Correct way to assign a future in initState
   }
 
   @override

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'Authentication/SplashScreen.dart';
 import 'package:get/get.dart';
 
-import 'Library/shared_pref_service.dart';
+import 'Library/SharedPrefService.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

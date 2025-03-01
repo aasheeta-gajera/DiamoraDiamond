@@ -92,7 +92,12 @@ void showCustomSnackbar(String message, bool isSuccess) {
 Widget buildTextField(
     String label,
     TextEditingController controller,
-    {bool obscureText = false, IconData? icon, required Color textColor, required MaterialColor hintColor,onChange}) {
+    {bool obscureText = false,
+      IconData? icon,
+      required Color textColor,
+      required MaterialColor hintColor,
+      bool readOnly = false,
+      Function(String)? onChange}) {
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -100,9 +105,43 @@ Widget buildTextField(
       onChanged: onChange,
       controller: controller,
       obscureText: obscureText,
+      readOnly: readOnly,
+      style: TextStyle(color: textColor), // Ensure text remains black
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: icon != null ? Icon(icon, color: AppColors.primaryBlack) : null,
+        prefixIcon: icon != null ? Icon(icon, color: Colors.black) : null, // Black icon
+        filled: true,
+        fillColor: Colors.white, // White background
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black), // Black border
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black, width: 2), // Black border on focus
+        ),
+      ),
+    ),
+  );
+}
+
+
+
+Widget buildDropdownField({
+  required String label,
+  required String? value,
+  required List<Map<String, String>> items,
+  required Function(String?) onChanged,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: label,
         filled: true,
         fillColor: AppColors.primaryWhite,
         border: OutlineInputBorder(
@@ -122,7 +161,15 @@ Widget buildTextField(
           borderSide: BorderSide(color: Colors.red, width: 1.5),
         ),
       ),
-      validator: (value) => value!.isEmpty ? "$label is required" : null,
+      value: value,
+      items: items.map((supplier) {
+        return DropdownMenuItem<String>(
+          value: supplier["supplier"],
+          child: Text(supplier["supplier"]!),
+        );
+      }).toList(),
+      onChanged: onChanged,
     ),
   );
 }
+

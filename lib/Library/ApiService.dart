@@ -1,13 +1,14 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:daimo/Library/shared_pref_service.dart';
+import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:get/get.dart';
 import '../Authentication/LoginScreen.dart';
-import '../Models/diamond_model.dart';
+import '../Models/DiamondModel.dart';
 
 class ApiService {
-  static const String baseUrl = "https://837a-2402-8100-26a2-c430-9d54-6f33-dae6-4dd6.ngrok-free.app/api/user";
+  static const String baseUrl = "https://1496-2409-4080-9c9b-49b7-c91b-2f20-7640-256d.ngrok-free.app/api/user";
+  static String? userTypes = SharedPrefService.getString('userType') ?? "";
 
   Future logout() async {
     await SharedPrefService.clearAll(); // Clear saved data

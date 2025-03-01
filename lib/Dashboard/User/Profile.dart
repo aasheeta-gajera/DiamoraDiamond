@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Authentication/LoginScreen.dart';
-import '../Library/AppColour.dart';
-import '../Library/AppStyle.dart';
-import '../Library/api_service.dart';
-import '../Library/shared_pref_service.dart';
+
+import '../../Authentication/LoginScreen.dart';
+import '../../Library/AppColour.dart';
+import '../../Library/AppStyle.dart';
+import '../../Library/SharedPrefService.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   @override
