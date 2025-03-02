@@ -1,25 +1,26 @@
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../Dashboard/Admin/DashboardAdmin.dart';
-import '../Dashboard/User/DashboardUser.dart';
+import '../Dashboard/Admin/AdminDashboard.dart';
+import '../Dashboard/User/CustomerDashboard.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import 'package:get/get.dart';
 import '../Library/Utils.dart' as utils;
 import '../Library/ApiService.dart';
-import '../Library/SharedPrefService.dart';  // Import the shared preferences service
-import 'forgot_password_screen.dart';
+import '../Library/SharedPrefService.dart';
+import 'ForgotPassword.dart';
 
-class Loginscreen extends StatefulWidget {
-  const Loginscreen({super.key});
+class LogIn extends StatefulWidget {
+  const LogIn({super.key});
 
   @override
-  State<Loginscreen> createState() => _LoginscreenState();
+  State<LogIn> createState() => _LogInState();
 }
 
-class _LoginscreenState extends State<Loginscreen> {
+class _LogInState extends State<LogIn> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
@@ -37,10 +38,10 @@ class _LoginscreenState extends State<Loginscreen> {
     if (token != null && token.isNotEmpty) {
       if (userTypes == "admin") {
         print('Redirecting to Admin Dashboard');
-        Get.off(() => DiamondHomeAdmin(token: token));
+        Get.off(() => AdminDashboard(token: token));
       } else {
         print('Redirecting to User Dashboard');
-        Get.off(() => DiamondHomePage(token: token));
+        Get.off(() => CustomerDashboard(token: token));
       }
     }
   }
@@ -98,10 +99,10 @@ class _LoginscreenState extends State<Loginscreen> {
 
         if (userTypes == "admin") {
           print('Redirecting to Admin Dashboard');
-          Get.off(() => DiamondHomeAdmin(token: token));
+          Get.off(() => AdminDashboard(token: token));
         } else {
           print('Redirecting to User Dashboard');
-          Get.off(() => DiamondHomePage(token: token));
+          Get.off(() => CustomerDashboard(token: token));
         }
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'] ?? 'Invalid credentials', false);
@@ -143,7 +144,7 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
               const SizedBox(height: 20),
               GestureDetector(
-                onTap: () => Get.to(ForgotResetPasswordScreen()),
+                onTap: () => Get.to(ForgotResetPassword()),
                 child: Text(
                   AppString.forgotPassword,
                   style: TextStyleHelper.mediumBlack.copyWith(fontWeight: FontWeight.bold),

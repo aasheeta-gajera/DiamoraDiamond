@@ -4,7 +4,7 @@ import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
-import 'LoginScreen.dart';
+import 'Login.dart';
 import 'Registration.dart';
 import 'package:get/get.dart';
 
@@ -63,7 +63,7 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                           textColor: AppColors.primaryWhite,
                           borderColor: AppColors.primaryBlack,
                           onPressed: () {
-                            Get.to(() => Loginscreen());
+                            Get.to(() => LogIn());
                           },
                         ),
                       ),

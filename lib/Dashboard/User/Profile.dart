@@ -1,19 +1,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../Authentication/LoginScreen.dart';
+import '../../Authentication/Login.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/AppStyle.dart';
 import '../../Library/SharedPrefService.dart';
 
 
-class ProfileScreen extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileState extends State<Profile> {
   String name = "";
   String email = "";
   String mobileNo = "";
@@ -35,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void logout() async {
     await SharedPrefService.clearAll();
-    Get.offAll(() => Loginscreen());
+    Get.offAll(() => LogIn());
   }
 
   @override

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'Authentication/SplashScreen.dart';
+import 'Authentication/Splash.dart';
 import 'package:get/get.dart';
 
 import 'Library/SharedPrefService.dart';

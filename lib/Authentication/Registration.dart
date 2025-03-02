@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import '../Models/UserModel.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import 'LoginScreen.dart';
+import 'Login.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -96,7 +97,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           utils.showCustomSnackbar('Login successful!', true);
-          Get.to(() => Loginscreen());
+          Get.to(() => LogIn());
 
         } else {
           utils.showCustomSnackbar(jsonDecode(response.body)['message'] , false);

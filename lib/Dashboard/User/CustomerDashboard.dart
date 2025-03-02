@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../Library/DiamondBackground.dart';
 import '../../Library/Drawer.dart';
@@ -6,14 +7,14 @@ import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import 'package:get/get.dart';
 
-import 'DiamondPurchaseScreen.dart';
+import 'DiamondInventory.dart';
 
 
-class DiamondHomeAdmin extends StatelessWidget {
+class CustomerDashboard extends StatelessWidget {
   final String? token;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  DiamondHomeAdmin({Key? key, this.token}) : super(key: key);
+  CustomerDashboard({Key? key, this.token}) : super(key: key);
 
   int _selectedIndex = 0;
 
@@ -43,7 +44,7 @@ class DiamondHomeAdmin extends StatelessWidget {
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.3),
                       const Text(
-                        'Admin',
+                        'Customer',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -66,10 +67,10 @@ class DiamondHomeAdmin extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryWhite),
+                          Icon(Icons.attach_money, size: 50, color: AppColors.primaryWhite),
                           SizedBox(height: 8),
                           Text(
-                            "Sell Report",
+                            "MY INVENTORY",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -97,7 +98,7 @@ class DiamondHomeAdmin extends StatelessWidget {
             _selectedIndex = index;
             switch (index) {
             case 0:
-              Get.to(() => DiamondHomeAdmin());
+              Get.to(() => CustomerDashboard());
               break;
             case 1:
              // Get.to(() => DiamondListScreen());
@@ -115,10 +116,10 @@ class DiamondHomeAdmin extends StatelessWidget {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'PURCHASE'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'CART'),
           BottomNavigationBarItem(icon: Icon(Icons.opacity_rounded), label: 'ORDER'),
-          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'INQUIRY'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'REPORT'),
+          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'PURCHASE'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'ACCOUNT'),
         ],
       ),
     );
@@ -130,30 +131,28 @@ class DiamondHomeAdmin extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Inventory", icon: Icons.diamond, onTap: () {
-              // Get.to(DiamondListScreen());
+            _DiamondCard(title: "Diamonds", icon: Icons.diamond, onTap: () {
+              Get.to(DiamondInventory());
             },),
-            _DiamondCard(title: "Purchase Diamond", icon: Icons.add_shopping_cart, onTap: () {
-              Get.to(DiamondPurchaseForm());
-            },),
+            _DiamondCard(title: "Search", icon: Icons.search, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "My Order", icon: Icons.opacity_rounded, onTap: () {},),
-            _DiamondCard(title: "Inquiry", icon: Icons.add_task_outlined, onTap: () {},),
+            _DiamondCard(title: "Cart", icon: Icons.add_shopping_cart, onTap: () {},),
+            _DiamondCard(title: "Order", icon: Icons.opacity_rounded, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     _DiamondCard(title: "My Watchlist", icon: Icons.watch_later, onTap: () {},),
-        //     _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
-        //   ],
-        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _DiamondCard(title: "Watchlist", icon: Icons.watch_later, onTap: () {},),
+            _DiamondCard(title: "Memo", icon: Icons.publish_rounded, onTap: () {},),
+          ],
+        ),
       ],
     );
   }

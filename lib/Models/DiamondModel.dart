@@ -58,8 +58,8 @@ class Diamond {
     itemCode = json['itemCode'];
     lotNumber = json['lotNumber'];
     shape = json['shape'];
-    size = json['size'];
-    weightCarat: (json['weightCarat'] as num?)?.toDouble();
+    size = (json['size'] as num?)?.toDouble();
+    weightCarat = (json['weightCarat'] as num?)?.toDouble();
     color = json['color'];
     clarity = json['clarity'];
     cut = json['cut'];
@@ -69,7 +69,7 @@ class Diamond {
     certification = json['certification'];
     measurements = json['measurements'];
     tablePercentage = json['tablePercentage'];
-    purchasePrice: (json['purchasePrice'] as num?)?.toDouble();
+    purchasePrice = (json['purchasePrice'] as num?)?.toInt();
     totalDiamonds = json['totalDiamonds'];
     invoiceNumber = json['invoiceNumber'];
     purchaseDate = json['purchaseDate'];

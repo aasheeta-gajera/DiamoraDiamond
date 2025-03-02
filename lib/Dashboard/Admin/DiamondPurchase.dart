@@ -1,5 +1,4 @@
 
-import 'package:daimo/Dashboard/Admin/DashboardAdmin.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +39,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   double measurementsMaxValue = 11.0;
   double tablePercentageMinValue = 50.0;
   double tablePercentageMaxValue = 75.0;
-
 
   final List<Map<String, String>> suppliers = [
     {
@@ -105,23 +103,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
     },
   ];
 
-  // final List<Map<String, String>> diamondShapes = [
-  //   {"shape": "Round", "image": "Assets/Images/round.png"},
-  //   {"shape": "Princess", "image": "Assets/Images/princess.png"},
-  //   {"shape": "Emerald", "image": "Assets/Images/emerald.png"},
-  //   {"shape": "Asscher", "image": "Assets/Images/asscher.png"},
-  //   {"shape": "Marquise", "image": "Assets/Images/marquise.png"},
-  //   {"shape": "Oval", "image": "Assets/Images/oval.png"},
-  //   {"shape": "Pear", "image": "Assets/Images/pear.png"},
-  //   {"shape": "Heart", "image": "Assets/Images/heart.png"},
-  //   {"shape": "Cushion", "image": "Assets/Images/cushion.png"},
-  //   {"shape": "Radiant", "image": "Assets/Images/radiant.png"},
-  // ];
-
-  RangeValues _priceRange = RangeValues(500, 3000);
-  RangeValues _caratRange = RangeValues(0.5, 5.0);
-  String _selectedClarity = "VS1";
-  String _selectedCut = "Excellent";
+  // RangeValues _priceRange = RangeValues(500, 3000);
+  // RangeValues _caratRange = RangeValues(0.5, 5.0);
+  // String _selectedClarity = "VS1";
+  // String _selectedCut = "Excellent";
   List<String> _selectedShapes = [];
 
   final Map<String, String> shapeImages = {
@@ -280,13 +265,12 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       totalDiamondsController.clear();
       invoiceNumberController.clear();
       _selectedPurchaseDate = null;
-      _selectedLocation =0.0;
+      _selectedLocation = 0.0;
       isPairSelected = false;
     });
   }
 
   bool isLoading = false;
-
 
   Future submitForm() async {
     setState(() => isLoading = true);
@@ -308,8 +292,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         fluorescence: fluorescenceValue.toString(),
         certification: _selectedCertification.toString(),
         measurements: measurementsMinValue.toString(),
-          tablePercentage: tablePercentageMinValue.toInt(),
-          purchasePrice: int.tryParse(purchaseController.text) ?? 0,
+        tablePercentage: tablePercentageMinValue.toInt(),
+        purchasePrice: int.tryParse(purchaseController.text) ?? 0,
         totalDiamonds: int.tryParse(totalDiamondsController.text) ?? 0,
         invoiceNumber: invoiceNumberController.text,
         purchaseDate: _selectedPurchaseDate?.toIso8601String() ?? "",
@@ -344,7 +328,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -370,7 +353,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 Text("Shape:", style: TextStyleHelper.bigBlack),
                 GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(), // Prevents scrolling inside a scrollable parent
+                  physics:
+                      NeverScrollableScrollPhysics(), // Prevents scrolling inside a scrollable parent
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, // 4 items per row
                     crossAxisSpacing: 4, // Space between columns
@@ -394,8 +378,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isSelected ? Colors.black : Colors.white, // Change background color
-                          border: Border.all(color: Colors.black), // Black border
+                          color:
+                              isSelected
+                                  ? Colors.black
+                                  : Colors.white, // Change background color
+                          border: Border.all(
+                            color: Colors.black,
+                          ), // Black border
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: EdgeInsets.all(8),
@@ -406,7 +395,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                               shapeImages[shape]!,
                               width: 40,
                               height: 40,
-                              color: isSelected ? Colors.white : Colors.black, // Change image color
+                              color:
+                                  isSelected
+                                      ? Colors.white
+                                      : Colors.black, // Change image color
                             ),
                             SizedBox(height: 5),
                             Text(
@@ -415,7 +407,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: isSelected ? Colors.white : Colors.black, // Change text color
+                                color:
+                                    isSelected
+                                        ? Colors.white
+                                        : Colors.black, // Change text color
                               ),
                             ),
                           ],
@@ -426,8 +421,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
               ],
             ),
-
-
 
             // Wrap(
             //   spacing: 8.0,
@@ -468,7 +461,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
             //     ),
             //   )).toList(),
             // ),
-
             SizedBox(height: 10),
 
             utils.buildDropdownField(
@@ -479,7 +471,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 setState(() {
                   _selectedSupplier = value;
                   final selectedSupplierData = suppliers.firstWhere(
-                        (supplier) => supplier["supplier"] == value,
+                    (supplier) => supplier["supplier"] == value,
                   );
                   _supplierContact = selectedSupplierData["supplierContact"]!;
                   _itemCode = selectedSupplierData["itemCode"]!;
@@ -493,25 +485,23 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
               TextEditingController(text: _supplierContact),
               textColor: AppColors.primaryBlack,
               hintColor: Colors.grey,
-              readOnly: true
+              readOnly: true,
             ),
-
 
             utils.buildTextField(
               "Item Code",
               TextEditingController(text: _itemCode),
               textColor: AppColors.primaryBlack,
               hintColor: Colors.grey,
-                readOnly: true
+              readOnly: true,
             ),
             utils.buildTextField(
               "Lot Number",
               TextEditingController(text: _lotNumber),
               textColor: AppColors.primaryBlack,
               hintColor: Colors.grey,
-                readOnly: true,
+              readOnly: true,
             ),
-
 
             utils.buildTextField(
               "Invoice Number",
@@ -522,7 +512,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
             SizedBox(height: 10),
 
-            _buildRangeSlider("Size (mm)", sizeMin, sizeMax,3.0, 16.0, (
+            _buildRangeSlider("Size (mm)", sizeMin, sizeMax, 3.0, 16.0, (
               min,
               max,
             ) {
@@ -531,12 +521,19 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 sizeMax = max;
               });
             }),
-            _buildRangeSlider("Weight (Carat)", weightCaratMin, weightCaratMax, 0.25, 10.0, (min, max) {
-              setState(() {
-                weightCaratMin = min;
-                weightCaratMax = max;
-              });
-            }),
+            _buildRangeSlider(
+              "Weight (Carat)",
+              weightCaratMin,
+              weightCaratMax,
+              0.25,
+              10.0,
+              (min, max) {
+                setState(() {
+                  weightCaratMin = min;
+                  weightCaratMax = max;
+                });
+              },
+            ),
             _buildSlider(
               "Clarity",
               clarityValue,
@@ -619,6 +616,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 });
               },
             ),
+
             // _buildSlider(
             //   "Measurements",
             //   measurementsValue,
@@ -643,15 +641,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
             //     });
             //   },
             // ),
-
-
             _buildRangeSlider(
               "Measurements",
               measurementsMinValue,
               measurementsMaxValue,
-              4.0,  // Min diamond size in mm
+              4.0, // Min diamond size in mm
               11.0, // Max diamond size in mm
-                  (start, end) {
+              (start, end) {
                 setState(() {
                   measurementsMinValue = start;
                   measurementsMaxValue = end;
@@ -665,7 +661,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
               tablePercentageMaxValue,
               50.0, // Min table percentage
               75.0, // Max table percentage
-                  (start, end) {
+              (start, end) {
                 setState(() {
                   tablePercentageMinValue = start;
                   tablePercentageMaxValue = end;
@@ -691,44 +687,59 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 child: utils.buildTextField(
                   "Purchase Date",
                   TextEditingController(
-                    text: _selectedPurchaseDate != null
-                        ? "${_selectedPurchaseDate!.year}-${_selectedPurchaseDate!.month.toString().padLeft(2, '0')}-${_selectedPurchaseDate!.day.toString().padLeft(2, '0')}"
-                        : "",
+                    text:
+                        _selectedPurchaseDate != null
+                            ? "${_selectedPurchaseDate!.year}-${_selectedPurchaseDate!.month.toString().padLeft(2, '0')}-${_selectedPurchaseDate!.day.toString().padLeft(2, '0')}"
+                            : "",
                   ),
                   textColor: Colors.black, // Text color set to black
-                  hintColor: Colors.grey,  // Hint color remains grey
-                  readOnly: true,          // Non-editable field
+                  hintColor: Colors.grey, // Hint color remains grey
+                  readOnly: true, // Non-editable field
                   icon: Icons.calendar_today, // Calendar icon
                 ),
               ),
             ),
-
 
             SizedBox(height: 10),
             Text("Color:", style: TextStyle(fontSize: 18)),
 
             Wrap(
               spacing: 8.0,
-              children: colors.map((color) => ChoiceChip(
-                checkmarkColor: Colors.white,
-                backgroundColor: Colors.white,
-                selectedColor: Colors.black,
-                label: Text(color, style: TextStyle(color: _selectedColors.contains(color) ? Colors.white : Colors.black)),
-                selected: _selectedColors.contains(color),
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedColors.add(color);
-                    } else {
-                      _selectedColors.remove(color);
-                    }
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black), // Keeps the border black
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              )).toList(),
+              children:
+                  colors
+                      .map(
+                        (color) => ChoiceChip(
+                          checkmarkColor: Colors.white,
+                          backgroundColor: Colors.white,
+                          selectedColor: Colors.black,
+                          label: Text(
+                            color,
+                            style: TextStyle(
+                              color:
+                                  _selectedColors.contains(color)
+                                      ? Colors.white
+                                      : Colors.black,
+                            ),
+                          ),
+                          selected: _selectedColors.contains(color),
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _selectedColors.add(color);
+                              } else {
+                                _selectedColors.remove(color);
+                              }
+                            });
+                          },
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              color: Colors.black,
+                            ), // Keeps the border black
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      )
+                      .toList(),
             ),
 
             Divider(height: 30),
@@ -740,7 +751,12 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
             ),
 
             Center(
-              child: utils.PrimaryButton(text: "Purchase", onPressed: (){submitForm();}),
+              child: utils.PrimaryButton(
+                text: "Purchase",
+                onPressed: () {
+                  submitForm();
+                },
+              ),
             ),
           ],
         ),
@@ -770,7 +786,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
     return SwitchListTile(
       title: Text(
         label,
-        style: TextStyle(color: AppColors.primaryBlack, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: AppColors.primaryBlack,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       value: value,
       onChanged: onChanged,
@@ -782,13 +801,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   }
 
   Widget _buildSlider(
-      String label,
-      double value,
-      double min,
-      double max,
-      List<String> options,
-      Function(double) onChanged,
-      ) {
+    String label,
+    double value,
+    double min,
+    double max,
+    List<String> options,
+    Function(double) onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -807,16 +826,18 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: options.map((option) {
-              return Text(
-                option,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54, // Slightly gray for better visibility
-                  fontWeight: FontWeight.w500,
-                ),
-              );
-            }).toList(),
+            children:
+                options.map((option) {
+                  return Text(
+                    option,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color:
+                          Colors.black54, // Slightly gray for better visibility
+                      fontWeight: FontWeight.w500,
+                    ),
+                  );
+                }).toList(),
           ),
         ),
 
@@ -825,8 +846,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         LayoutBuilder(
           builder: (context, constraints) {
             double sliderWidth = constraints.maxWidth - 40; // Avoid overflow
-            double positionLeft =
-            ((value - min) / (max - min) * sliderWidth).clamp(0, sliderWidth);
+            double positionLeft = ((value - min) / (max - min) * sliderWidth)
+                .clamp(0, sliderWidth);
 
             return Stack(
               clipBehavior: Clip.none, // Allow overflow
@@ -876,17 +897,16 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       ],
     );
   }
-
 }
 
 Widget _buildRangeSlider(
-    String label,
-    double min,
-    double max,
-    double rangeMin,
-    double rangeMax,
-    Function(double, double) onChanged,
-    ) {
+  String label,
+  double min,
+  double max,
+  double rangeMin,
+  double rangeMax,
+  Function(double, double) onChanged,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

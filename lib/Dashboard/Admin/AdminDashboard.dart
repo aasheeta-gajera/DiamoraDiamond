@@ -1,20 +1,19 @@
 
 import 'package:flutter/material.dart';
-import '../../Library/DiamondBackground.dart';
 import '../../Library/Drawer.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import 'package:get/get.dart';
+import 'DiamondPurchase.dart';
+import 'Inventory.dart';
 
-import 'Dimond.dart';
 
-
-class DiamondHomePage extends StatelessWidget {
+class AdminDashboard extends StatelessWidget {
   final String? token;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  DiamondHomePage({Key? key, this.token}) : super(key: key);
+  AdminDashboard({Key? key, this.token}) : super(key: key);
 
   int _selectedIndex = 0;
 
@@ -44,7 +43,7 @@ class DiamondHomePage extends StatelessWidget {
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.3),
                       const Text(
-                        'Customer',
+                        'Admin',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -67,10 +66,10 @@ class DiamondHomePage extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.attach_money, size: 50, color: AppColors.primaryWhite),
+                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryWhite),
                           SizedBox(height: 8),
                           Text(
-                            "Sell Diamonds",
+                            "Sell Report",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -98,7 +97,7 @@ class DiamondHomePage extends StatelessWidget {
             _selectedIndex = index;
             switch (index) {
             case 0:
-              Get.to(() => DiamondHomePage());
+              Get.to(() => AdminDashboard());
               break;
             case 1:
              // Get.to(() => DiamondListScreen());
@@ -116,10 +115,10 @@ class DiamondHomePage extends StatelessWidget {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'CART'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'PURCHASE'),
           BottomNavigationBarItem(icon: Icon(Icons.opacity_rounded), label: 'ORDER'),
-          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'PURCHASE'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'ACCOUNT'),
+          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'INQUIRY'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'REPORT'),
         ],
       ),
     );
@@ -131,28 +130,30 @@ class DiamondHomePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Diamonds", icon: Icons.diamond, onTap: () {
-              Get.to(DiamondListScreen());
+            _DiamondCard(title: "Inventory", icon: Icons.diamond, onTap: () {
+              Get.to(Inventory());
             },),
-            _DiamondCard(title: "Search", icon: Icons.search, onTap: () {},),
+            _DiamondCard(title: "Purchase Diamond", icon: Icons.add_shopping_cart, onTap: () {
+              Get.to(DiamondPurchaseForm());
+            },),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "My Cart", icon: Icons.add_shopping_cart, onTap: () {},),
             _DiamondCard(title: "My Order", icon: Icons.opacity_rounded, onTap: () {},),
+            _DiamondCard(title: "Inquiry", icon: Icons.add_task_outlined, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _DiamondCard(title: "My Watchlist", icon: Icons.watch_later, onTap: () {},),
-            _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     _DiamondCard(title: "My Watchlist", icon: Icons.watch_later, onTap: () {},),
+        //     _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
+        //   ],
+        // ),
       ],
     );
   }

@@ -1,4 +1,5 @@
-import 'package:daimo/Dashboard/Admin/DashboardAdmin.dart';
+
+import 'package:daimo/Dashboard/Admin/AdminDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Library/AppColour.dart';
@@ -6,8 +7,8 @@ import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/SharedPrefService.dart';
-import '../Dashboard/User/DashboardUser.dart';
-import 'AuthChoiceScreen.dart';
+import '../Dashboard/User/CustomerDashboard.dart';
+import 'AuthChoice.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,9 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (token != null && token.isNotEmpty) {
       if (userType == "admin") {
-        Get.off(() => DiamondHomeAdmin(token: token)); // Navigate to Admin Dashboard
+        Get.off(() => AdminDashboard(token: token)); // Navigate to Admin Dashboard
       } else {
-        Get.off(() => DiamondHomePage(token: token)); // Navigate to User Dashboard
+        Get.off(() => CustomerDashboard(token: token)); // Navigate to User Dashboard
       }
     } else {
       Get.off(() => AuthChoiceScreen());

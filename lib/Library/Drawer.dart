@@ -1,6 +1,5 @@
 
 import 'package:daimo/Library/ApiService.dart';
-
 import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:flutter/material.dart';
 import '../Dashboard/User/Profile.dart';
@@ -8,7 +7,7 @@ import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import 'package:get/get.dart';
-import '../Authentication/AuthChoiceScreen.dart';
+import '../Authentication/AuthChoice.dart';
 
 class CommonDrawer extends StatelessWidget {
   const CommonDrawer({Key? key}) : super(key: key);
@@ -28,7 +27,7 @@ class CommonDrawer extends StatelessWidget {
                       icon: Icons.person,
                       text: "Profile",
                       iconColor: AppColors.primaryBlack,
-                      onTap: () => Get.to(ProfileScreen()),
+                      onTap: () => Get.to(Profile()),
                     ),
                     _buildDrawerItem(
                       icon: Icons.home,
@@ -80,7 +79,7 @@ class CommonDrawer extends StatelessWidget {
                       icon: Icons.person,
                       text: "Profile",
                       iconColor: AppColors.primaryBlack,
-                      onTap: () => Get.to(ProfileScreen()),
+                      onTap: () => Get.to(Profile()),
                     ),
                     _buildDrawerItem(
                       icon: Icons.home,
