@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import '../Library/AppColour.dart';
+import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
@@ -22,6 +23,12 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
       backgroundColor: AppColors.primaryWhite,
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset(
+              AppImages.authChoice,
+              fit: BoxFit.cover,
+            ),
+          ),
           Center(
             child: Stack(
               children: [
@@ -35,16 +42,16 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.35,
+                          width: MediaQuery.of(context).size.width * 0.40,
                           child: Text(
                               AppString.authTxt,
-                            style: TextStyleHelper.authChoiceStyle.copyWith(color: AppColors.primaryBlack)
+                            style: TextStyleHelper.authChoiceStyle.copyWith(color: AppColors.primaryWhite)
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           AppString.authThough,
-                          style: TextStyleHelper.textStyleMediam.copyWith(color: AppColors.primaryBlack)
+                          style: TextStyleHelper.textStyleMediam.copyWith(color: AppColors.primaryWhite)
                         ),
                       ],
                     ),
@@ -59,9 +66,9 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: utils.PrimaryButton(
                           text: AppString.logIn,
-                          backgroundColor: AppColors.primaryBlack,
-                          textColor: AppColors.primaryWhite,
-                          borderColor: AppColors.primaryBlack,
+                          backgroundColor: AppColors.primaryWhite,
+                          textColor: AppColors.primaryBlack,
+                          borderColor: AppColors.primaryWhite,
                           onPressed: () {
                             Get.to(() => LogIn());
                           },
@@ -76,7 +83,7 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                               textColor: AppColors.primaryWhite,
                               borderColor: AppColors.primaryBlack,
                               onPressed: () {
-                                Get.to(() => RegistrationScreen());
+                                Get.to(() => Registration());
                               })),
                     ],
                   ),

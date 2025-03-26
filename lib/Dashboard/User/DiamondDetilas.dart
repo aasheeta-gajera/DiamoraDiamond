@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../Library/AppStyle.dart';
 import '../../Models/DiamondModel.dart';
 import '../../Library/AppColour.dart';
 
@@ -12,8 +13,10 @@ class DiamondDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${diamond.itemCode} Details"),
+        surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryBlack,
+        title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
+        leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

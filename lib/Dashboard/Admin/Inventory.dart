@@ -5,6 +5,7 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Library/AppColour.dart';
+import '../../Library/AppImages.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 
@@ -52,74 +53,82 @@ class _InventoryState extends State<Inventory> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 40),
-        child: Column(
-          children: [
-            Text(
-              'INVENTORY',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryBlack,
-              ),
-            ),
-            Expanded(
-              child:
-                  isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : diamonds.isEmpty
-                      ? Center(
-                        child: Text(
-                          "NO DATA FOUND",
-                          style: TextStyleHelper.mediumBlack,
-                        ),
-                      )
-                      : ListView.builder(
-                        itemCount: diamonds.length,
-                        itemBuilder: (context, index) {
-                          final diamond = diamonds[index];
-                          return Card(
-                            color: AppColors.primaryWhite,
-                            margin: EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 16,
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                "${diamond.itemCode} - ${diamond.shape}",
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.primaryBlack,
+        title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
+        leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+          ),
+
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
+          Column(
+            children: [
+              Expanded(
+                child:
+                    isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : diamonds.isEmpty
+                        ? Center(
+                          child: Text(
+                            "NO DATA FOUND",
+                            style: TextStyleHelper.mediumBlack,
+                          ),
+                        )
+                        : ListView.builder(
+                          itemCount: diamonds.length,
+                          itemBuilder: (context, index) {
+                            final diamond = diamonds[index];
+                            return Card(
+                              color: AppColors.transparent,
+                              margin: EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
                               ),
-                              subtitle: Text(
-                                "Supplier: ${diamond.supplier}\n"
-                                "Size: ${diamond.size} ct\n"
-                                "Weight: ${diamond.weightCarat} carat\n"
-                                "Color: ${diamond.color}, Clarity: ${diamond.clarity}\n"
-                                "Cut: ${diamond.cut}, Polish: ${diamond.polish}\n"
-                                "Storage: ${diamond.storageLocation}",
-                              ),
-                              trailing: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    diamond.status.toString(),
-                                    style: TextStyle(
-                                      color:
-                                          diamond.status == "Sold"
-                                              ? Colors.red
-                                              : Colors.green,
-                                      fontWeight: FontWeight.bold,
+                              child: ListTile(
+                                title: Text(
+                                  "${diamond.itemCode} - ${diamond.shape}",
+                                ),
+                                subtitle: Text(
+                                  "Supplier: ${diamond.supplier}\n"
+                                  "Size: ${diamond.size} ct\n"
+                                  "Weight: ${diamond.weightCarat} carat\n"
+                                  "Color: ${diamond.color}, Clarity: ${diamond.clarity}\n"
+                                  "Cut: ${diamond.cut}, Polish: ${diamond.polish}\n"
+                                  "Storage: ${diamond.storageLocation}",
+                                  style: TextStyleHelper.mediumBlack,
+                                ),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      diamond.status.toString(),
+                                      style: TextStyle(
+                                        color:
+                                            diamond.status == "Sold"
+                                                ? Colors.red
+                                                : Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  Text("💎 x${diamond.totalDiamonds}"),
-                                ],
+                                    Text("💎 x${diamond.totalDiamonds}"),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-            ),
-          ],
-        ),
+                            );
+                          },
+                        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

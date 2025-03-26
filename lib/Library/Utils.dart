@@ -31,49 +31,6 @@ Widget PrimaryButton({
   );
 }
 
-Widget PrimaryTextField({
-  required String label,
-  required TextEditingController controller,
-  TextInputType keyboardType = TextInputType.text,
-  bool obscureText = false,
-  Color? borderColor,
-  Color? fillColor,
-  double? borderRadius,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(height: 5),
-      TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: fillColor ??AppColors.primaryWhite, // Default: White background
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius ?? 12), // Default: 12
-            borderSide: BorderSide(color: borderColor ?? Colors.grey), // Default: Grey border
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius ?? 12),
-            borderSide: BorderSide(color: borderColor ?? Colors.blue, width: 2), // Default: Blue focus
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(borderRadius ?? 12),
-            borderSide: BorderSide(color: borderColor ?? Colors.grey),
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        ),
-      ),
-    ],
-  );
-}
-
 void showCustomSnackbar(String message, bool isSuccess) {
   Get.snackbar(
     isSuccess ? 'Success' : 'Error',
@@ -88,17 +45,18 @@ void showCustomSnackbar(String message, bool isSuccess) {
     // overlayBlur: 1,
   );
 }
-
 Widget buildTextField(
     String label,
-    TextEditingController controller,
-    {bool obscureText = false,
+    TextEditingController controller, {
+      bool obscureText = false,
       IconData? icon,
-      required Color textColor,
-      required MaterialColor hintColor,
+      Color? textColor, // Removed required, now optional
+      Color? hintColor, // Removed required, now optional
       bool readOnly = false,
-      Function(String)? onChange}) {
-
+      String? Function(String?)? validator,
+      TextInputType keyboardType = TextInputType.text,
+      Function(String)? onChange,
+    }) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: TextFormField(
@@ -106,29 +64,33 @@ Widget buildTextField(
       controller: controller,
       obscureText: obscureText,
       readOnly: readOnly,
-      style: TextStyle(color: textColor), // Ensure text remains black
+      keyboardType: keyboardType,
+      style: const TextStyle(color: Colors.white),
+      // style: TextStyle(color: textColor), // Optional text color
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: icon != null ? Icon(icon, color: Colors.black) : null, // Black icon
+        hintText: label,
+        labelStyle: const TextStyle(color: Colors.white), // Set label text color to white
+        hintStyle: TextStyle(color: hintColor), // Optional hint color
+        prefixIcon: icon != null ? Icon(icon, color: Colors.white) : null, // Black icon
         filled: true,
-        fillColor: Colors.white, // White background
+        fillColor: Colors.transparent, // No default background color
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.black), // Black border
+          borderSide: const BorderSide(color: Colors.white), // Black border
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.black, width: 2), // Black border on focus
+          borderSide: const BorderSide(color: Colors.white, width: 2), // Black border on focus
         ),
       ),
     ),
   );
 }
-
 
 
 Widget buildDropdownField({
@@ -142,25 +104,27 @@ Widget buildDropdownField({
     child: DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: Colors.white), // Set label color to white
         filled: true,
-        fillColor: AppColors.primaryWhite,
+        fillColor: Colors.transparent,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderSide: BorderSide(color: AppColors.primaryWhite),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.primaryBlack, width: 2),
+          borderSide: BorderSide(color: AppColors.primaryWhite, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.red, width: 1.5),
         ),
       ),
+      dropdownColor: Colors.black,
       value: value,
       items: items.map((supplier) {
         return DropdownMenuItem<String>(
@@ -168,6 +132,7 @@ Widget buildDropdownField({
           child: Text(supplier["supplier"]!),
         );
       }).toList(),
+      style: TextStyle(color: Colors.white), // Dropdown text color
       onChanged: onChanged,
     ),
   );

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../Library/AppImages.dart';
 import '../../Library/DiamondBackground.dart';
 import '../../Library/Drawer.dart';
 import '../../Library/AppColour.dart';
@@ -21,11 +22,31 @@ class CustomerDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.primaryBlack,
+        title: Text("Customer",style: TextStyleHelper.mediumWhite,),
+        leading: IconButton(
+          color: AppColors.primaryBlack,
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Icon(Icons.menu, color: AppColors.primaryWhite),
+        ),
+      ),
       key: _scaffoldKey,
       backgroundColor: AppColors.primaryWhite,
-      drawer: CommonDrawer(), // Drawer
+      drawer: CommonDrawer(), // Drawer`
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+          ),
+
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 4),
             child: SingleChildScrollView(
@@ -33,27 +54,6 @@ class CustomerDashboard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        color: AppColors.primaryBlack,
-                        onPressed: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        icon: Icon(Icons.menu, color: AppColors.primaryBlack),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.3),
-                      const Text(
-                        'Customer',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryBlack,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
                   _buildGrid(context),
                   const SizedBox(height: 30),
                   Container(
@@ -131,26 +131,26 @@ class CustomerDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Diamonds", icon: Icons.diamond, onTap: () {
+            _DiamondCard(title: "INVENTORY", icon: Icons.diamond, onTap: () {
               Get.to(DiamondInventory());
             },),
-            _DiamondCard(title: "Search", icon: Icons.search, onTap: () {},),
+            _DiamondCard(title: "SEARCH", icon: Icons.search, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Cart", icon: Icons.add_shopping_cart, onTap: () {},),
-            _DiamondCard(title: "Order", icon: Icons.opacity_rounded, onTap: () {},),
+            _DiamondCard(title: "CART", icon: Icons.add_shopping_cart, onTap: () {},),
+            _DiamondCard(title: "ORDER", icon: Icons.opacity_rounded, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Watchlist", icon: Icons.watch_later, onTap: () {},),
-            _DiamondCard(title: "Memo", icon: Icons.publish_rounded, onTap: () {},),
+            _DiamondCard(title: "PURCHASE", icon: Icons.watch_later, onTap: () {},),
+            // _DiamondCard(title: "MEMO", icon: Icons.publish_rounded, onTap: () {},),
           ],
         ),
       ],

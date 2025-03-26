@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import '../Library/AppColour.dart';
+import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
@@ -113,53 +114,65 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
-        child: Column(
-          children: [
-            Text(
-              AppString.forgotPassword,
-              style: TextStyleHelper.bigBlack.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+          ),
+
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.white.withOpacity(0.3)),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
+            child: Column(
+              children: [
+                Text(
+                  isResetMode == false?AppString.forgotPassword:AppString.resetPassword,
+                  style: TextStyleHelper.extraLargeWhite.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20),
+                if (!isResetMode)
+                  Column(
+                    children: [
+                      utils.buildTextField(
+                        'Enter your email',
+                        emailController,
+                        textColor: AppColors.primaryWhite,
+                        hintColor: Colors.white,
+                        onChange: _onEmailChanged,
+                      ),
+                    ],
+                  ),
+                if (isResetMode)
+                  Column(
+                    children: [
+                      utils.buildTextField(
+                        'New Password',
+                        passwordController,
+                        textColor: AppColors.primaryBlack,
+                        hintColor: Colors.grey,
+                      ),
+                      utils.buildTextField(
+                        'Confirm Password',
+                        confirmPasswordController,
+                        textColor: AppColors.primaryBlack,
+                        hintColor: Colors.grey,
+                      ),
+                      SizedBox(height: 20),
+                      utils.PrimaryButton(
+                        onPressed: _resetPassword,
+                        text: 'Reset Password',
+                      ),
+                    ],
+                  ),
+              ],
             ),
-            SizedBox(height: 20),
-            if (!isResetMode)
-              Column(
-                children: [
-                  utils.buildTextField(
-                    'Enter your email',
-                    emailController,
-                    textColor: AppColors.primaryBlack,
-                    hintColor: Colors.grey,
-                    onChange: _onEmailChanged,
-                  ),
-                ],
-              ),
-            if (isResetMode)
-              Column(
-                children: [
-                  utils.buildTextField(
-                    'New Password',
-                    passwordController,
-                    textColor: AppColors.primaryBlack,
-                    hintColor: Colors.grey,
-                  ),
-                  utils.buildTextField(
-                    'Confirm Password',
-                    confirmPasswordController,
-                    textColor: AppColors.primaryBlack,
-                    hintColor: Colors.grey,
-                  ),
-                  SizedBox(height: 20),
-                  utils.PrimaryButton(
-                    onPressed: _resetPassword,
-                    text: 'Reset Password',
-                  ),
-                ],
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

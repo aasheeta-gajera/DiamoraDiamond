@@ -15,7 +15,7 @@ class CommonDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.greyLight,
       child: Column(
         children: [
           _buildDrawerHeader(),
@@ -25,25 +25,25 @@ class CommonDrawer extends StatelessWidget {
                   children: [
                     _buildDrawerItem(
                       icon: Icons.person,
-                      text: "Profile",
+                      text: "PROFILE",
                       iconColor: AppColors.primaryBlack,
                       onTap: () => Get.to(Profile()),
                     ),
                     _buildDrawerItem(
                       icon: Icons.home,
-                      text: "Home",
+                      text: "HOME",
                       iconColor: AppColors.primaryBlack,
                       onTap: () => Navigator.pop(context),
                     ),
                     _buildDrawerItem(
                       icon: Icons.shopping_cart_checkout,
-                      text: "My PURCHASE",
+                      text: "PURCHASE",
                       iconColor: AppColors.primaryBlack,
                       onTap: () => Navigator.pop(context),
                     ),
                     _buildDrawerItem(
                       icon: Icons.receipt_long,
-                      text: "Orders",
+                      text: "ORDER",
                       iconColor: AppColors.primaryBlack,
                       onTap: () {},
                     ),
@@ -77,37 +77,37 @@ class CommonDrawer extends StatelessWidget {
                   children: [
                     _buildDrawerItem(
                       icon: Icons.person,
-                      text: "Profile",
+                      text: "PROFILE",
                       iconColor: AppColors.primaryBlack,
                       onTap: () => Get.to(Profile()),
                     ),
                     _buildDrawerItem(
                       icon: Icons.home,
-                      text: "Home",
+                      text: "HOME",
                       iconColor: AppColors.primaryBlack,
                       onTap: () => Navigator.pop(context),
                     ),
                     _buildDrawerItem(
                       icon: Icons.shopping_cart_checkout,
-                      text: "My Cart",
+                      text: "MY CART",
                       iconColor: AppColors.primaryBlack,
                       onTap: () => Navigator.pop(context),
                     ),
                     _buildDrawerItem(
                       icon: Icons.receipt_long,
-                      text: "Orders",
+                      text: "ORDER",
                       iconColor: AppColors.primaryBlack,
                       onTap: () {},
                     ),
                     _buildDrawerItem(
                       icon: Icons.favorite_border,
-                      text: "Wishlist",
+                      text: "WISHLIST",
                       iconColor: AppColors.primaryBlack,
                       onTap: () {},
                     ),
                     _buildDrawerItem(
                       icon: Icons.settings,
-                      text: "Settings",
+                      text: "SETTING",
                       iconColor: AppColors.primaryBlack,
                       onTap: () {},
                     ),
@@ -136,7 +136,7 @@ class CommonDrawer extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(color: AppColors.primaryWhite),
+      decoration: const BoxDecoration(color: AppColors.greyLight),
       child: Column(
         children: [
           const Padding(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Authentication/Login.dart';
 import '../../Library/AppColour.dart';
+import '../../Library/AppImages.dart';
 import '../../Library/AppStyle.dart';
 import '../../Library/SharedPrefService.dart';
 
@@ -17,6 +18,7 @@ class _ProfileState extends State<Profile> {
   String email = "";
   String mobileNo = "";
   String address = "";
+  String companyName = "";
   String city = "";
   String contactName = "";
 
@@ -29,6 +31,7 @@ class _ProfileState extends State<Profile> {
     address = SharedPrefService.getString('Address') ?? "N/A";
     city = SharedPrefService.getString('City') ?? "N/A";
     contactName = SharedPrefService.getString('contactName') ?? "N/A";
+    companyName = SharedPrefService.getString('contactName') ?? "N/A";
     setState(() {});  // Refresh UI after fetching data
   }
 
@@ -47,36 +50,54 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 50),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(
-                "Profile",
-                style: TextStyleHelper.bigBlack.copyWith(fontWeight: FontWeight.bold),
-              ),
-              profileDetail("Name", name),
-              profileDetail("contactName", contactName),
-              profileDetail("Email", email),
-              profileDetail("Mobile No", mobileNo),
-              profileDetail("city", city),
-              profileDetail("Address", address),
-              const SizedBox(height: 30),
-              Center(
-                child: ElevatedButton(
-                  onPressed: logout,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:AppColors.primaryBlack,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                    textStyle: TextStyleHelper.mediumBlack,
-                  ),
-                  child: Text("Logout",style: TextStyleHelper.mediumWhite,),
-                ),
-              ),
-            ],
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.primaryBlack,
+        title: Text("PROFILE",style: TextStyleHelper.mediumWhite,),
+        leading: IconButton(onPressed: (){
+          Navigator.of(context).pop();
+        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+      ),
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-        ),
+
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 50),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  profileDetail("Contact Name", contactName),
+                  profileDetail("Email", email),
+                  profileDetail("Mobile No", mobileNo),
+                  profileDetail("city", city),
+                  profileDetail("Address", address),
+                  profileDetail("Company Name", address),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: logout,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:AppColors.primaryBlack,
+                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                        textStyle: TextStyleHelper.mediumBlack,
+                      ),
+                      child: Text("Logout",style: TextStyleHelper.mediumWhite,),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

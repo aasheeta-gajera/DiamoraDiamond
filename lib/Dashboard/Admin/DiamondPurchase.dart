@@ -3,11 +3,12 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:get/get.dart';
 import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
+import '../../Library/AppImages.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
+import '../../Models/SupplierModel.dart';
 
 class DiamondPurchaseForm extends StatefulWidget {
   @override
@@ -31,8 +32,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   double purchasePriceValue = 0.0;
   double totalDiamondsValue = 0.0;
 
-  String? _selectedSupplier;
-  String _supplierContact = "";
+    String _supplierContact = "";
+
+  List<Supplier> suppliers = [];
+  Supplier? _selectedSupplier;
   String _itemCode = "";
   String _lotNumber = "";
   double measurementsMinValue = 4.0;
@@ -40,68 +43,68 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   double tablePercentageMinValue = 50.0;
   double tablePercentageMaxValue = 75.0;
 
-  final List<Map<String, String>> suppliers = [
-    {
-      "supplier": "ABC Diamonds",
-      "supplierContact": "+91 9876543210",
-      "itemCode": "ABC123",
-      "lotNumber": "LOT001",
-    },
-    {
-      "supplier": "XYZ Gems",
-      "supplierContact": "+91 9876543222",
-      "itemCode": "XYZ567",
-      "lotNumber": "LOT002",
-    },
-    {
-      "supplier": "GemStar Ltd.",
-      "supplierContact": "+1 212-555-7890",
-      "itemCode": "GEM890",
-      "lotNumber": "LOT003",
-    },
-    {
-      "supplier": "Shine Bright Co.",
-      "supplierContact": "+44 7896-123456",
-      "itemCode": "SBC456",
-      "lotNumber": "LOT004",
-    },
-    {
-      "supplier": "Luxury Stones",
-      "supplierContact": "+91 9876543333",
-      "itemCode": "LS789",
-      "lotNumber": "LOT005",
-    },
-    {
-      "supplier": "Blue Diamond Traders",
-      "supplierContact": "+1 305-555-6789",
-      "itemCode": "BDT234",
-      "lotNumber": "LOT006",
-    },
-    {
-      "supplier": "Opulent Gems",
-      "supplierContact": "+61 412-987-654",
-      "itemCode": "OG567",
-      "lotNumber": "LOT007",
-    },
-    {
-      "supplier": "Regal Diamonds",
-      "supplierContact": "+971 50-9876543",
-      "itemCode": "RD890",
-      "lotNumber": "LOT008",
-    },
-    {
-      "supplier": "Elite Carats",
-      "supplierContact": "+33 6-1234-5678",
-      "itemCode": "EC345",
-      "lotNumber": "LOT009",
-    },
-    {
-      "supplier": "Royal Jewelers",
-      "supplierContact": "+81 90-1234-5678",
-      "itemCode": "RJ678",
-      "lotNumber": "LOT010",
-    },
-  ];
+  // final List<Map<String, String>> suppliers = [
+  //   {
+  //     "supplier": "Shree Diamond Suppliers",
+  //     "supplierContact": "+91 9876543210",
+  //     "itemCode": "ABC123",
+  //     "lotNumber": "LOT001",
+  //   },
+  //   {
+  //     "supplier": "XYZ Gems",
+  //     "supplierContact": "+91 9876543222",
+  //     "itemCode": "XYZ567",
+  //     "lotNumber": "LOT002",
+  //   },
+  //   {
+  //     "supplier": "GemStar Ltd.",
+  //     "supplierContact": "+1 212-555-7890",
+  //     "itemCode": "GEM890",
+  //     "lotNumber": "LOT003",
+  //   },
+  //   {
+  //     "supplier": "Shine Bright Co.",
+  //     "supplierContact": "+44 7896-123456",
+  //     "itemCode": "SBC456",
+  //     "lotNumber": "LOT004",
+  //   },
+  //   {
+  //     "supplier": "Luxury Stones",
+  //     "supplierContact": "+91 9876543333",
+  //     "itemCode": "LS789",
+  //     "lotNumber": "LOT005",
+  //   },
+  //   {
+  //     "supplier": "Blue Diamond Traders",
+  //     "supplierContact": "+1 305-555-6789",
+  //     "itemCode": "BDT234",
+  //     "lotNumber": "LOT006",
+  //   },
+  //   {
+  //     "supplier": "Opulent Gems",
+  //     "supplierContact": "+61 412-987-654",
+  //     "itemCode": "OG567",
+  //     "lotNumber": "LOT007",
+  //   },
+  //   {
+  //     "supplier": "Regal Diamonds",
+  //     "supplierContact": "+971 50-9876543",
+  //     "itemCode": "RD890",
+  //     "lotNumber": "LOT008",
+  //   },
+  //   {
+  //     "supplier": "Elite Carats",
+  //     "supplierContact": "+33 6-1234-5678",
+  //     "itemCode": "EC345",
+  //     "lotNumber": "LOT009",
+  //   },
+  //   {
+  //     "supplier": "Royal Jewelers",
+  //     "supplierContact": "+81 90-1234-5678",
+  //     "itemCode": "RJ678",
+  //     "lotNumber": "LOT010",
+  //   },
+  // ];
 
   // RangeValues _priceRange = RangeValues(500, 3000);
   // RangeValues _caratRange = RangeValues(0.5, 5.0);
@@ -277,7 +280,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
     try {
       Diamond diamond = Diamond(
-        supplier: _selectedSupplier ?? "",
+        supplier: _selectedSupplier?.name??'',
         supplierContact: _supplierContact ?? "",
         itemCode: _itemCode ?? "",
         lotNumber: _lotNumber ?? "",
@@ -318,7 +321,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         utils.showCustomSnackbar('Diamond purchased successfully!', true);
         resetForm();
-        // Get.to(DiamondHomeAdmin());
       } else {
         utils.showCustomSnackbar('Failed to purchase diamond.', false);
       }
@@ -329,456 +331,508 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchSuppliers();
+  }
+
+  Future<void> fetchSuppliers() async {
+    try {
+      final response = await http.get(Uri.parse("${ApiService.baseUrl}/getAllSuppliers"));
+
+      print("Raw API Response: ${response.body}");  // Debugging Step
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        print("Decoded API Response: $data");  // Debugging Step
+
+        if (data is Map<String, dynamic> && data.containsKey("data")) {
+          setState(() {
+            suppliers = (data["data"] as List)
+                .map((json) => Supplier.fromJson(json))
+                .toList();
+
+            for (var supplier in suppliers) {
+              _supplierContact = suppliers.first.contact;
+            }
+          });
+        }
+        else {
+          print("Unexpected API format: $data");  // Debugging Output
+        }
+      } else {
+        print("API Error: ${response.statusCode}");
+        throw Exception("Failed to load suppliers");
+      }
+    } catch (error) {
+      print("Error fetching suppliers: $error");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-        child: Column(
-          children: [
-            // First part: Filters for diamond purchase
-            Text(
-              'PURCHASE',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryBlack,
-              ),
-            ),
-            const SizedBox(height: 20),
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.primaryBlack,
+        title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+          ),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+            child: Column(
               children: [
-                Text("Shape:", style: TextStyleHelper.bigBlack),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics:
-                      NeverScrollableScrollPhysics(), // Prevents scrolling inside a scrollable parent
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4, // 4 items per row
-                    crossAxisSpacing: 4, // Space between columns
-                    mainAxisSpacing: 8, // Space between rows
-                    childAspectRatio: 1, // Adjust the height-width ratio
-                  ),
-                  itemCount: shapeImages.length,
-                  itemBuilder: (context, index) {
-                    String shape = shapeImages.keys.elementAt(index);
-                    bool isSelected = _selectedShapes.contains(shape);
-
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (isSelected) {
-                            _selectedShapes.remove(shape);
-                          } else {
-                            _selectedShapes.add(shape);
-                          }
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? Colors.black
-                                  : Colors.white, // Change background color
-                          border: Border.all(
-                            color: Colors.black,
-                          ), // Black border
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              shapeImages[shape]!,
-                              width: 40,
-                              height: 40,
-                              color:
-                                  isSelected
-                                      ? Colors.white
-                                      : Colors.black, // Change image color
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              shape,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color:
-                                    isSelected
-                                        ? Colors.white
-                                        : Colors.black, // Change text color
-                              ),
-                            ),
-                          ],
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Shape ", style: TextStyleHelper.bigWhite),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics:
+                          NeverScrollableScrollPhysics(), // Prevents scrolling inside a scrollable parent
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 8,
+                        childAspectRatio: 1,
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
+                      itemCount: shapeImages.length,
+                      itemBuilder: (context, index) {
+                        String shape = shapeImages.keys.elementAt(index);
+                        bool isSelected = _selectedShapes.contains(shape);
 
-            // Wrap(
-            //   spacing: 8.0,
-            //   children: shapeImages.keys.map((shape) => ChoiceChip(
-            //     checkmarkColor: Colors.white,
-            //     backgroundColor: Colors.white,
-            //     selectedColor: Colors.black,
-            //     label: Row(
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: [
-            //         Image.asset(
-            //           shapeImages[shape]!, // Fetch image dynamically
-            //           width: 24,
-            //           height: 24,
-            //         ),
-            //         SizedBox(width: 5),
-            //         Text(
-            //           shape,
-            //           style: TextStyle(
-            //             color: _selectedShapes.contains(shape) ? Colors.white : Colors.black,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     selected: _selectedShapes.contains(shape),
-            //     onSelected: (selected) {
-            //       setState(() {
-            //         if (selected) {
-            //           _selectedShapes.add(shape);
-            //         } else {
-            //           _selectedShapes.remove(shape);
-            //         }
-            //       });
-            //     },
-            //     shape: RoundedRectangleBorder(
-            //       side: BorderSide(color: Colors.black),
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   )).toList(),
-            // ),
-            SizedBox(height: 10),
-
-            utils.buildDropdownField(
-              label: "Supplier",
-              value: _selectedSupplier,
-              items: suppliers,
-              onChanged: (value) {
-                setState(() {
-                  _selectedSupplier = value;
-                  final selectedSupplierData = suppliers.firstWhere(
-                    (supplier) => supplier["supplier"] == value,
-                  );
-                  _supplierContact = selectedSupplierData["supplierContact"]!;
-                  _itemCode = selectedSupplierData["itemCode"]!;
-                  _lotNumber = selectedSupplierData["lotNumber"]!;
-                });
-              },
-            ),
-
-            utils.buildTextField(
-              "Supplier Contact",
-              TextEditingController(text: _supplierContact),
-              textColor: AppColors.primaryBlack,
-              hintColor: Colors.grey,
-              readOnly: true,
-            ),
-
-            utils.buildTextField(
-              "Item Code",
-              TextEditingController(text: _itemCode),
-              textColor: AppColors.primaryBlack,
-              hintColor: Colors.grey,
-              readOnly: true,
-            ),
-            utils.buildTextField(
-              "Lot Number",
-              TextEditingController(text: _lotNumber),
-              textColor: AppColors.primaryBlack,
-              hintColor: Colors.grey,
-              readOnly: true,
-            ),
-
-            utils.buildTextField(
-              "Invoice Number",
-              invoiceNumberController,
-              textColor: AppColors.primaryBlack,
-              hintColor: Colors.grey,
-            ),
-
-            SizedBox(height: 10),
-
-            _buildRangeSlider("Size (mm)", sizeMin, sizeMax, 3.0, 16.0, (
-              min,
-              max,
-            ) {
-              setState(() {
-                sizeMin = min;
-                sizeMax = max;
-              });
-            }),
-            _buildRangeSlider(
-              "Weight (Carat)",
-              weightCaratMin,
-              weightCaratMax,
-              0.25,
-              10.0,
-              (min, max) {
-                setState(() {
-                  weightCaratMin = min;
-                  weightCaratMax = max;
-                });
-              },
-            ),
-            _buildSlider(
-              "Clarity",
-              clarityValue,
-              0,
-              clarityLevels.length - 1,
-              clarityLevels,
-              (value) {
-                setState(() {
-                  clarityValue = value;
-                });
-              },
-            ),
-            _buildSlider("Cut", cutValue, 0, cutGrades.length - 1, cutGrades, (
-              value,
-            ) {
-              setState(() {
-                cutValue = value;
-              });
-            }),
-            _buildSlider(
-              "Polish",
-              polishValue,
-              0,
-              polishes.length - 1,
-              polishes,
-              (value) {
-                setState(() {
-                  polishValue = value;
-                });
-              },
-            ),
-            _buildSlider(
-              "Symmetry",
-              symmetryValue,
-              0,
-              symmetries.length - 1,
-              symmetries,
-              (value) {
-                setState(() {
-                  symmetryValue = value;
-                });
-              },
-            ),
-
-            _buildSlider(
-              "Certifications",
-              _selectedCertification,
-              0,
-              certifications.length - 1,
-              certifications,
-              (value) {
-                setState(() {
-                  _selectedCertification = value;
-                });
-              },
-            ),
-
-            _buildSlider(
-              "Locations",
-              _selectedLocation,
-              0,
-              locations.length - 1,
-              locations,
-              (value) {
-                setState(() {
-                  _selectedLocation = value;
-                });
-              },
-            ),
-
-            _buildSlider(
-              "Fluorescence",
-              fluorescenceValue,
-              0,
-              5,
-              ["None", "Faint", "Medium", "Strong", "Very Strong"],
-              (value) {
-                setState(() {
-                  fluorescenceValue = value;
-                });
-              },
-            ),
-
-            // _buildSlider(
-            //   "Measurements",
-            //   measurementsValue,
-            //   0,
-            //   100,
-            //   List.generate(101, (index) => index.toString()),
-            //   (value) {
-            //     setState(() {
-            //       measurementsValue = value;
-            //     });
-            //   },
-            // ),
-            // _buildSlider(
-            //   "Table Percentage",
-            //   tablePercentageValue,
-            //   0,
-            //   100,
-            //   List.generate(101, (index) => "$index%"),
-            //   (value) {
-            //     setState(() {
-            //       tablePercentageValue = value;
-            //     });
-            //   },
-            // ),
-            _buildRangeSlider(
-              "Measurements",
-              measurementsMinValue,
-              measurementsMaxValue,
-              4.0, // Min diamond size in mm
-              11.0, // Max diamond size in mm
-              (start, end) {
-                setState(() {
-                  measurementsMinValue = start;
-                  measurementsMaxValue = end;
-                });
-              },
-            ),
-
-            _buildRangeSlider(
-              "Table Percentage",
-              tablePercentageMinValue,
-              tablePercentageMaxValue,
-              50.0, // Min table percentage
-              75.0, // Max table percentage
-              (start, end) {
-                setState(() {
-                  tablePercentageMinValue = start;
-                  tablePercentageMaxValue = end;
-                });
-              },
-            ),
-
-            utils.buildTextField(
-              "Purchase Price",
-              purchaseController,
-              textColor: AppColors.primaryBlack,
-              hintColor: Colors.grey,
-            ),
-            utils.buildTextField(
-              "Total Diamond",
-              totalDiamondsController,
-              textColor: AppColors.primaryBlack,
-              hintColor: Colors.grey,
-            ),
-            GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: utils.buildTextField(
-                  "Purchase Date",
-                  TextEditingController(
-                    text:
-                        _selectedPurchaseDate != null
-                            ? "${_selectedPurchaseDate!.year}-${_selectedPurchaseDate!.month.toString().padLeft(2, '0')}-${_selectedPurchaseDate!.day.toString().padLeft(2, '0')}"
-                            : "",
-                  ),
-                  textColor: Colors.black, // Text color set to black
-                  hintColor: Colors.grey, // Hint color remains grey
-                  readOnly: true, // Non-editable field
-                  icon: Icons.calendar_today, // Calendar icon
-                ),
-              ),
-            ),
-
-            SizedBox(height: 10),
-            Text("Color:", style: TextStyle(fontSize: 18)),
-
-            Wrap(
-              spacing: 8.0,
-              children:
-                  colors
-                      .map(
-                        (color) => ChoiceChip(
-                          checkmarkColor: Colors.white,
-                          backgroundColor: Colors.white,
-                          selectedColor: Colors.black,
-                          label: Text(
-                            color,
-                            style: TextStyle(
-                              color:
-                                  _selectedColors.contains(color)
-                                      ? Colors.white
-                                      : Colors.black,
-                            ),
-                          ),
-                          selected: _selectedColors.contains(color),
-                          onSelected: (selected) {
+                        return GestureDetector(
+                          onTap: () {
                             setState(() {
-                              if (selected) {
-                                _selectedColors.add(color);
+                              if (isSelected) {
+                                _selectedShapes.remove(shape);
                               } else {
-                                _selectedColors.remove(color);
+                                _selectedShapes.add(shape);
                               }
                             });
                           },
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.black,
-                            ), // Keeps the border black
-                            borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? AppColors.primaryBlack
+                                      : AppColors.primaryWhite, // Change background color
+                              border: Border.all(
+                                color: Colors.white,
+                              ), // Black border
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  shapeImages[shape]!,
+                                  width: 40,
+                                  height: 40,
+                                  color:
+                                      isSelected
+                                          ? AppColors.primaryWhite
+                                          : Colors.black, // Change image color
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  shape,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        isSelected
+                                            ? Colors.white
+                                            : Colors.black, // Change text color
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                      .toList(),
-            ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
 
-            Divider(height: 30),
+                // Wrap(
+                //   spacing: 8.0,
+                //   children: shapeImages.keys.map((shape) => ChoiceChip(
+                //     checkmarkColor: Colors.white,
+                //     backgroundColor: Colors.white,
+                //     selectedColor: Colors.black,
+                //     label: Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: [
+                //         Image.asset(
+                //           shapeImages[shape]!, // Fetch image dynamically
+                //           width: 24,
+                //           height: 24,
+                //         ),
+                //         SizedBox(width: 5),
+                //         Text(
+                //           shape,
+                //           style: TextStyle(
+                //             color: _selectedShapes.contains(shape) ? Colors.white : Colors.black,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     selected: _selectedShapes.contains(shape),
+                //     onSelected: (selected) {
+                //       setState(() {
+                //         if (selected) {
+                //           _selectedShapes.add(shape);
+                //         } else {
+                //           _selectedShapes.remove(shape);
+                //         }
+                //       });
+                //     },
+                //     shape: RoundedRectangleBorder(
+                //       side: BorderSide(color: Colors.black),
+                //       borderRadius: BorderRadius.circular(8),
+                //     ),
+                //   )).toList(),
+                // ),
+                SizedBox(height: 10),
 
-            _buildSwitch(
-              "Diamond Pair:",
-              isPairSelected,
-              (value) => setState(() => isPairSelected = value),
-            ),
+                // utils.buildDropdownField(
+                //   label: "Supplier",
+                //   value: _selectedSupplier,
+                //   items: suppliers,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       _selectedSupplier = value;
+                //       final selectedSupplierData = suppliers.firstWhere(
+                //         (supplier) => supplier["supplier"] == value,
+                //       );
+                //       _supplierContact = selectedSupplierData["supplierContact"]!;
+                //       _itemCode = selectedSupplierData["itemCode"]!;
+                //       _lotNumber = selectedSupplierData["lotNumber"]!;
+                //     });
+                //   },
+                // ),
 
-            Center(
-              child: utils.PrimaryButton(
-                text: "Purchase",
-                onPressed: () {
-                  submitForm();
-                },
-              ),
+                utils.buildDropdownField(
+                  label: "Supplier",
+                  value: _selectedSupplier?.companyName,
+                  items: suppliers.map((supplier) => {
+                    "supplier": supplier.companyName,
+                    "supplierContact": supplier.contact,
+                    "itemCode": supplier.gstNumber,  // Adjust as needed
+                    "lotNumber": supplier.email,     // Adjust as needed
+                  }).toList(),  // Convert to List<Map<String, String>>
+                  onChanged: (value) {
+                    setState(() {
+                      final selectedSupplierData = suppliers.firstWhere((supplier) => supplier.companyName == value);
+                      _selectedSupplier = selectedSupplierData;
+                      _supplierContact = selectedSupplierData.contact;
+                      _itemCode = selectedSupplierData.gstNumber;
+                      _lotNumber = selectedSupplierData.email;
+                    });
+                  },
+                ),
+
+
+
+                utils.buildTextField(
+                  "Supplier Contact",
+                  TextEditingController(text: _supplierContact),
+                  textColor: AppColors.primaryBlack,
+                  hintColor: Colors.grey,
+                  readOnly: true,
+                ),
+
+                utils.buildTextField(
+                  "Item Code",
+                  TextEditingController(text: _itemCode),
+                  textColor: AppColors.primaryBlack,
+                  hintColor: Colors.grey,
+                  readOnly: true,
+                ),
+                utils.buildTextField(
+                  "Lot Number",
+                  TextEditingController(text: _lotNumber),
+                  textColor: AppColors.primaryBlack,
+                  hintColor: Colors.grey,
+                  readOnly: true,
+                ),
+
+                utils.buildTextField(
+                  "Invoice Number",
+                  invoiceNumberController,
+                  textColor: AppColors.primaryBlack,
+                  hintColor: Colors.grey,
+                ),
+
+                SizedBox(height: 10),
+
+                _buildRangeSlider("Size (mm)", sizeMin, sizeMax, 3.0, 16.0, (
+                  min,
+                  max,
+                ) {
+                  setState(() {
+                    sizeMin = min;
+                    sizeMax = max;
+                  });
+                }),
+                _buildRangeSlider(
+                  "Weight (Carat)",
+                  weightCaratMin,
+                  weightCaratMax,
+                  0.25,
+                  10.0,
+                  (min, max) {
+                    setState(() {
+                      weightCaratMin = min;
+                      weightCaratMax = max;
+                    });
+                  },
+                ),
+                _buildSlider(
+                  "Clarity",
+                  clarityValue,
+                  0,
+                  clarityLevels.length - 1,
+                  clarityLevels,
+                  (value) {
+                    setState(() {
+                      clarityValue = value;
+                    });
+                  },
+                ),
+                _buildSlider("Cut", cutValue, 0, cutGrades.length - 1, cutGrades, (
+                  value,
+                ) {
+                  setState(() {
+                    cutValue = value;
+                  });
+                }),
+                _buildSlider(
+                  "Polish",
+                  polishValue,
+                  0,
+                  polishes.length - 1,
+                  polishes,
+                  (value) {
+                    setState(() {
+                      polishValue = value;
+                    });
+                  },
+                ),
+                _buildSlider(
+                  "Symmetry",
+                  symmetryValue,
+                  0,
+                  symmetries.length - 1,
+                  symmetries,
+                  (value) {
+                    setState(() {
+                      symmetryValue = value;
+                    });
+                  },
+                ),
+
+                _buildSlider(
+                  "Certifications",
+                  _selectedCertification,
+                  0,
+                  certifications.length - 1,
+                  certifications,
+                  (value) {
+                    setState(() {
+                      _selectedCertification = value;
+                    });
+                  },
+                ),
+
+                _buildSlider(
+                  "Locations",
+                  _selectedLocation,
+                  0,
+                  locations.length - 1,
+                  locations,
+                  (value) {
+                    setState(() {
+                      _selectedLocation = value;
+                    });
+                  },
+                ),
+
+                _buildSlider(
+                  "Fluorescence",
+                  fluorescenceValue,
+                  0,
+                  5,
+                  ["None", "Faint", "Medium", "Strong", "Very Strong"],
+                  (value) {
+                    setState(() {
+                      fluorescenceValue = value;
+                    });
+                  },
+                ),
+
+                // _buildSlider(
+                //   "Measurements",
+                //   measurementsValue,
+                //   0,
+                //   100,
+                //   List.generate(101, (index) => index.toString()),
+                //   (value) {
+                //     setState(() {
+                //       measurementsValue = value;
+                //     });
+                //   },
+                // ),
+                // _buildSlider(
+                //   "Table Percentage",
+                //   tablePercentageValue,
+                //   0,
+                //   100,
+                //   List.generate(101, (index) => "$index%"),
+                //   (value) {
+                //     setState(() {
+                //       tablePercentageValue = value;
+                //     });
+                //   },
+                // ),
+                _buildRangeSlider(
+                  "Measurements",
+                  measurementsMinValue,
+                  measurementsMaxValue,
+                  4.0, // Min diamond size in mm
+                  11.0, // Max diamond size in mm
+                  (start, end) {
+                    setState(() {
+                      measurementsMinValue = start;
+                      measurementsMaxValue = end;
+                    });
+                  },
+                ),
+
+                _buildRangeSlider(
+                  "Table Percentage",
+                  tablePercentageMinValue,
+                  tablePercentageMaxValue,
+                  50.0, // Min table percentage
+                  75.0, // Max table percentage
+                  (start, end) {
+                    setState(() {
+                      tablePercentageMinValue = start;
+                      tablePercentageMaxValue = end;
+                    });
+                  },
+                ),
+
+                utils.buildTextField(
+                  "Purchase Price",
+                  purchaseController,
+                  textColor: AppColors.primaryBlack,
+                  hintColor: Colors.grey,
+                ),
+                utils.buildTextField(
+                  "Total Diamond",
+                  totalDiamondsController,
+                  textColor: AppColors.primaryBlack,
+                  hintColor: Colors.grey,
+                ),
+                GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: AbsorbPointer(
+                    child: utils.buildTextField(
+                      "Purchase Date",
+                      TextEditingController(
+                        text:
+                            _selectedPurchaseDate != null
+                                ? "${_selectedPurchaseDate!.year}-${_selectedPurchaseDate!.month.toString().padLeft(2, '0')}-${_selectedPurchaseDate!.day.toString().padLeft(2, '0')}"
+                                : "",
+                      ),
+                      textColor: Colors.black, // Text color set to black
+                      hintColor: Colors.grey, // Hint color remains grey
+                      readOnly: true, // Non-editable field
+                      icon: Icons.calendar_today, // Calendar icon
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+                Text("Color:", style: TextStyle(fontSize: 18)),
+
+                Wrap(
+                  spacing: 8.0,
+                  children:
+                      colors
+                          .map(
+                            (color) => ChoiceChip(
+                              checkmarkColor: Colors.white,
+                              backgroundColor: Colors.transparent,
+                              selectedColor: Colors.black,
+                              label: Text(
+                                color,
+                                style: TextStyle(
+                                  color:
+                                      _selectedColors.contains(color)
+                                          ? Colors.white
+                                          : Colors.black,
+                                ),
+                              ),
+                              selected: _selectedColors.contains(color),
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    _selectedColors.add(color);
+                                  } else {
+                                    _selectedColors.remove(color);
+                                  }
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: Colors.black,
+                                ), // Keeps the border black
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                ),
+
+                Divider(height: 30),
+
+                _buildSwitch(
+                  "Diamond Pair:",
+                  isPairSelected,
+                  (value) => setState(() => isPairSelected = value),
+                ),
+
+                Center(
+                  child: utils.PrimaryButton(
+                    text: "Purchase",
+                    onPressed: () {
+                      submitForm();
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildDropdown(
-    String label,
-    List<String> options,
-    Function(String?) onChanged,
-  ) {
-    return DropdownButtonFormField(
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
-      ),
-      items:
-          options
-              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-              .toList(),
-      onChanged: onChanged,
     );
   }
 
@@ -787,7 +841,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       title: Text(
         label,
         style: TextStyle(
-          color: AppColors.primaryBlack,
+          color: AppColors.primaryWhite,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -816,7 +870,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.black, // Black text
+            color: AppColors.primaryWhite, // Black text
           ),
         ),
         SizedBox(height: 8),
@@ -833,7 +887,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                     style: TextStyle(
                       fontSize: 12,
                       color:
-                          Colors.black54, // Slightly gray for better visibility
+                          Colors.white, // Slightly gray for better visibility
                       fontWeight: FontWeight.w500,
                     ),
                   );
@@ -858,8 +912,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   min: min,
                   max: max,
                   divisions: (max - min).toInt(),
-                  activeColor: Colors.black, // Black active color
-                  inactiveColor: Colors.black12, // Light gray for inactive
+                  activeColor: AppColors.primaryWhite, // Black active color
+                  inactiveColor: Colors.white12, // Light gray for inactive
                   onChanged: (newValue) {
                     onChanged(newValue);
                   },
@@ -874,7 +928,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.white, // White background
+                        color: Colors.grey, // White background
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(color: Colors.black26, blurRadius: 4),
@@ -912,7 +966,7 @@ Widget _buildRangeSlider(
     children: [
       Text(
         "$label: ${min.toStringAsFixed(2)} - ${max.toStringAsFixed(2)}",
-        style: TextStyleHelper.mediumBlack,
+        style: TextStyleHelper.mediumWhite,
       ),
       RangeSlider(
         values: RangeValues(
@@ -921,7 +975,7 @@ Widget _buildRangeSlider(
         ),
         min: rangeMin,
         max: rangeMax,
-        activeColor: AppColors.primaryBlack,
+        activeColor: AppColors.primaryWhite,
         inactiveColor: AppColors.greyLight,
         divisions: 10,
         labels: RangeLabels(

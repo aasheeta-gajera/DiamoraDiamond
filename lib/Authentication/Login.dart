@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../Dashboard/Admin/AdminDashboard.dart';
 import '../Dashboard/User/CustomerDashboard.dart';
 import '../Library/AppColour.dart';
+import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import 'package:get/get.dart';
@@ -37,10 +37,8 @@ class _LogInState extends State<LogIn> {
 
     if (token != null && token.isNotEmpty) {
       if (userTypes == "admin") {
-        print('Redirecting to Admin Dashboard');
         Get.off(() => AdminDashboard(token: token));
       } else {
-        print('Redirecting to User Dashboard');
         Get.off(() => CustomerDashboard(token: token));
       }
     }
@@ -57,12 +55,15 @@ class _LogInState extends State<LogIn> {
     };
 
     try {
-      final response = await http.post(Uri.parse(url), headers: headers, body: jsonEncode(body));
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
       setState(() => isLoading = false);
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        print(responseData);
         String token = responseData['token'] ?? '';
         String email = responseData['user']['email'] ?? '';
         String name = responseData['user']['name'] ?? '';
@@ -75,9 +76,9 @@ class _LogInState extends State<LogIn> {
         String licenseCopy = responseData['user']['licenseCopy'] ?? '';
         String taxCertificate = responseData['user']['taxCertificate'] ?? '';
         String partnerCopy = responseData['user']['partnerCopy'] ?? '';
-        String userType = responseData['user']['userType'] ?? ''; // Default to 'customer'
+        String userType = responseData['user']['userType'] ?? ''; // Default to 'customer']
 
-        // Save user details in Shared Preferences
+        // Save User Data
         await SharedPrefService.setString('auth_token', token);
         await SharedPrefService.setString('user_email', email);
         await SharedPrefService.setString('user_name', name);
@@ -94,63 +95,177 @@ class _LogInState extends State<LogIn> {
 
         utils.showCustomSnackbar('Login successful!', true);
 
-        String? userTypes = await SharedPrefService.getString('userType') ?? "";
-        print('User Type: $userTypes');
-
-        if (userTypes == "admin") {
-          print('Redirecting to Admin Dashboard');
+        if (userType == "admin") {
           Get.off(() => AdminDashboard(token: token));
         } else {
-          print('Redirecting to User Dashboard');
           Get.off(() => CustomerDashboard(token: token));
         }
       } else {
-        utils.showCustomSnackbar(jsonDecode(response.body)['message'] ?? 'Invalid credentials', false);
+        utils.showCustomSnackbar(
+          jsonDecode(response.body)['message'] ?? 'Invalid credentials',
+          false,
+        );
       }
     } catch (e) {
       setState(() => isLoading = false);
-      print(e);
-      utils.showCustomSnackbar('${e}', false);
+      utils.showCustomSnackbar('Error: ${e.toString()}', false);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                AppString.logIn,
-                style: TextStyleHelper.bigBlack.copyWith(fontWeight: FontWeight.bold),
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+          ),
+
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
+
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // App Logo
+                  Image.asset(
+                    AppImages.splashImage, // Ensure logo is in assets/images
+                    height: 100,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Login Text
+                  Text(
+                    AppString.logIn,
+                    style: TextStyleHelper.bigBlack.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryWhite,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Email Input Field
+                  // Email Input Field
+                  _buildInputField(
+                    AppString.email,
+                    "Enter your email",
+                    emailController,
+                    Icons.email, textColor: AppColors.primaryWhite, hintColor: Colors.grey,
+                  ),
+                  const SizedBox(height: 15),
+
+                  // Password Input Field
+                  _buildInputField(
+                    AppString.password,
+                    "Enter your password",
+                    passwordController,
+                    Icons.lock,
+                    obscureText: true, textColor: AppColors.primaryWhite, hintColor: Colors.grey,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Login Button
+                  isLoading
+                      ? CircularProgressIndicator(color: AppColors.primaryWhite):
+                  utils.PrimaryButton(text: AppString.submit, onPressed: _login),
+                  const SizedBox(height: 15),
+
+                  // Forgot Password
+                  GestureDetector(
+                    onTap: () => Get.to(ForgotResetPassword()),
+                    child: Text(
+                      AppString.forgotPassword,
+                      style: TextStyleHelper.mediumBlack.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              utils.buildTextField(AppString.email, emailController, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
-              const SizedBox(height: 20),
-              utils.buildTextField(AppString.password, passwordController, obscureText: true, textColor: AppColors.primaryBlack, hintColor: Colors.grey),
-              const SizedBox(height: 20),
-              isLoading
-                  ? CircularProgressIndicator(color: AppColors.primaryBlack)
-                  : utils.PrimaryButton(
-                text: AppString.submit,
-                backgroundColor: AppColors.primaryBlack,
-                textColor: AppColors.primaryWhite,
-                onPressed: _login,
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () => Get.to(ForgotResetPassword()),
-                child: Text(
-                  AppString.forgotPassword,
-                  style: TextStyleHelper.mediumBlack.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Build Input Field with Custom Styling
+  Widget _buildInputField(
+      String label,
+      String hint,
+      TextEditingController controller,
+      IconData icon, {
+        bool readOnly = false,
+        required Color textColor,
+        required MaterialColor hintColor,
+        TextInputType keyboardType = TextInputType.text,
+        bool obscureText = false,
+        Function(String)? onChange,
+      }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        onChanged: onChange,
+        controller: controller,
+        obscureText: obscureText,
+        readOnly: readOnly,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          hintText: hint,
+          labelText: label,
+          hintStyle: const TextStyle(color: Colors.white), // Set hint text color to white
+          labelStyle: const TextStyle(color: Colors.white), // Optional: Set label text color to white
+          prefixIcon: Icon(icon, color: Colors.white),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.2),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 15),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(
+              color: Colors.white,
+              width: 2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  // Build Gradient Button
+  Widget _buildGradientButton(String text, VoidCallback onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.deepPurpleAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          style: TextStyleHelper.mediumBlack.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

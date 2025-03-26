@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
+import '../../Library/AppImages.dart';
+import '../../Library/AppStyle.dart';
 import '../../Library/Drawer.dart';
 import '../../Library/AppColour.dart';
-import '../../Library/AppStrings.dart';
-import '../../Library/AppStyle.dart';
 import 'package:get/get.dart';
 import 'DiamondPurchase.dart';
 import 'Inventory.dart';
@@ -20,11 +20,31 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.primaryBlack,
+        title: Text("ADMIN",style: TextStyleHelper.mediumWhite,),
+        leading:  IconButton(
+          color: AppColors.primaryBlack,
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Icon(Icons.menu, color: AppColors.primaryWhite),
+        ),
+      ),
       key: _scaffoldKey,
       backgroundColor: AppColors.primaryWhite,
       drawer: CommonDrawer(), // Drawer
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+          ),
+
+          // Dark Overlay for readability
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 4),
             child: SingleChildScrollView(
@@ -32,34 +52,13 @@ class AdminDashboard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        color: AppColors.primaryBlack,
-                        onPressed: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        icon: Icon(Icons.menu, color: AppColors.primaryBlack),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.3),
-                      const Text(
-                        'Admin',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryBlack,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
                   _buildGrid(context),
                   const SizedBox(height: 30),
                   Container(
                     height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey[900],
+                      color: AppColors.primaryBlack,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -80,6 +79,32 @@ class AdminDashboard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 120,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryBlack,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryWhite),
+                          SizedBox(height: 8),
+                          Text(
+                            "PURCHASE",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryWhite,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -87,7 +112,7 @@ class AdminDashboard extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.primaryBlack,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey.shade500,
@@ -130,10 +155,10 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "Inventory", icon: Icons.diamond, onTap: () {
+            _DiamondCard(title: "INVENTORY", icon: Icons.diamond, onTap: () {
               Get.to(Inventory());
             },),
-            _DiamondCard(title: "Purchase Diamond", icon: Icons.add_shopping_cart, onTap: () {
+            _DiamondCard(title: "PURCHASE", icon: Icons.add_shopping_cart, onTap: () {
               Get.to(DiamondPurchaseForm());
             },),
           ],
@@ -142,18 +167,18 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "My Order", icon: Icons.opacity_rounded, onTap: () {},),
-            _DiamondCard(title: "Inquiry", icon: Icons.add_task_outlined, onTap: () {},),
+            _DiamondCard(title: "ORDER", icon: Icons.opacity_rounded, onTap: () {},),
+            _DiamondCard(title: "INQUIRY", icon: Icons.add_task_outlined, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     _DiamondCard(title: "My Watchlist", icon: Icons.watch_later, onTap: () {},),
-        //     _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
-        //   ],
-        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _DiamondCard(title: "HISTORY", icon: Icons.watch_later, onTap: () {},),
+            // _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
+          ],
+        ),
       ],
     );
   }
@@ -171,7 +196,7 @@ class _DiamondCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: Colors.grey[900],
+        color:AppColors.primaryBlack,
         elevation: 6,
         shadowColor: Colors.grey.withOpacity(0.4),
         shape: RoundedRectangleBorder(
