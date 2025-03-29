@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -86,14 +85,22 @@ class _AddSupplierState extends State<AddSupplier> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset:false,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryBlack,
-        title: Text("Add Supplier",style: TextStyleHelper.mediumWhite,),
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
-      ),      body: Stack(
+        title: Text("Add Supplier", style: TextStyleHelper.mediumWhite),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_sharp,
+            color: AppColors.primaryWhite,
+          ),
+        ),
+      ),
+      body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
@@ -104,95 +111,92 @@ class _AddSupplierState extends State<AddSupplier> {
             child: Container(color: Colors.black.withOpacity(0.3)),
           ),
 
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  utils.buildTextField(
-                    "Supplier Name",
-                    nameController,
-                    textColor: AppColors.primaryWhite,
-                    hintColor: Colors.grey,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Supplier Name is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  utils.buildTextField(
-                    "Contact",
-                    contactController,
-                    textColor: AppColors.primaryWhite,
-                    hintColor: Colors.grey,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Contact is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  utils.buildTextField(
-                    "Email",
-                    emailController,
-                    textColor: AppColors.primaryWhite,
-                    hintColor: Colors.grey,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Email is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  utils.buildTextField(
-                    "Address",
-                    addressController,
-                    textColor: AppColors.primaryWhite,
-                    hintColor: Colors.grey,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Address is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  utils.buildTextField(
-                    "GST Number",
-                    gstController,
-                    textColor: AppColors.primaryWhite,
-                    hintColor: Colors.grey,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "GST Number is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  utils.buildTextField(
-                    "Company Name",
-                    companyNameController,
-                    textColor: AppColors.primaryWhite,
-                    hintColor: Colors.grey,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Company Name is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  isLoading
-                      ? CircularProgressIndicator()
-                      : utils.PrimaryButton(
-                    text: "Add Supplier",
-                    onPressed: () {
-                      AddSupplier();
-                    },
-                  ),
-                ],
-              ),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                utils.buildTextField(
+                  "Supplier Name",
+                  nameController,
+                  textColor: AppColors.primaryWhite,
+                  hintColor: Colors.grey,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Supplier Name is required";
+                    }
+                    return null;
+                  },
+                ),
+                utils.buildTextField(
+                  "Contact",
+                  contactController,
+                  textColor: AppColors.primaryWhite,
+                  hintColor: Colors.grey,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Contact is required";
+                    }
+                    return null;
+                  },
+                ),
+                utils.buildTextField(
+                  "Email",
+                  emailController,
+                  textColor: AppColors.primaryWhite,
+                  hintColor: Colors.grey,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Email is required";
+                    }
+                    return null;
+                  },
+                ),
+                utils.buildTextField(
+                  "Address",
+                  addressController,
+                  textColor: AppColors.primaryWhite,
+                  hintColor: Colors.grey,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Address is required";
+                    }
+                    return null;
+                  },
+                ),
+                utils.buildTextField(
+                  "GST Number",
+                  gstController,
+                  textColor: AppColors.primaryWhite,
+                  hintColor: Colors.grey,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "GST Number is required";
+                    }
+                    return null;
+                  },
+                ),
+                utils.buildTextField(
+                  "Company Name",
+                  companyNameController,
+                  textColor: AppColors.primaryWhite,
+                  hintColor: Colors.grey,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Company Name is required";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                isLoading
+                    ? CircularProgressIndicator()
+                    : utils.PrimaryButton(
+                      text: "Add Supplier",
+                      onPressed: () {
+                        addSupplier();
+                      },
+                    ),
+              ],
             ),
           ),
         ],

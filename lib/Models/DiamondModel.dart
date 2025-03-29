@@ -24,6 +24,7 @@ class Diamond {
   bool? pairingAvailable;
   String? imageURL;
   String? remarks;
+  int? totalPurchasePrice;
 
   Diamond(
       {this.supplier,
@@ -50,7 +51,9 @@ class Diamond {
         this.storageLocation,
         this.pairingAvailable,
         this.imageURL,
-        this.remarks});
+        this.remarks,
+        this.totalPurchasePrice
+      });
 
   Diamond.fromJson(Map<String, dynamic> json) {
     supplier = json['supplier'];
@@ -78,6 +81,7 @@ class Diamond {
     pairingAvailable = json['pairingAvailable'];
     imageURL = json['imageURL'];
     remarks = json['remarks'];
+    totalPurchasePrice = (json['totalPurchasePrice'] ?? 0);
   }
 
   Map<String, dynamic> toJson() {
@@ -107,6 +111,7 @@ class Diamond {
     data['pairingAvailable'] = this.pairingAvailable;
     data['imageURL'] = this.imageURL;
     data['remarks'] = this.remarks;
+    data['totalPurchasePrice'] = this.totalPurchasePrice;
     return data;
   }
 }

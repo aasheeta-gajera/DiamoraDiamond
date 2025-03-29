@@ -322,7 +322,9 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         utils.showCustomSnackbar('Diamond purchased successfully!', true);
         resetForm();
       } else {
-        utils.showCustomSnackbar('Failed to purchase diamond.', false);
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
+        String message = jsonData["message"];
+        utils.showCustomSnackbar(message, false);
       }
     } catch (e) {
       setState(() => isLoading = false);
@@ -746,12 +748,12 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   },
                 ),
 
-                utils.buildTextField(
-                  "Purchase Price",
-                  purchaseController,
-                  textColor: AppColors.primaryBlack,
-                  hintColor: Colors.grey,
-                ),
+                // utils.buildTextField(
+                //   "Purchase Price",
+                //   purchaseController,
+                //   textColor: AppColors.primaryBlack,
+                //   hintColor: Colors.grey,
+                // ),
                 utils.buildTextField(
                   "Total Diamond",
                   totalDiamondsController,
