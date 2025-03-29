@@ -29,8 +29,22 @@ class Supplier {
       companyName: json['companyName'] ?? '',
     );
   }
+
+  // Provide an empty instance to prevent null errors
+  factory Supplier.empty() {
+    return Supplier(
+      id: '',
+      name: '',
+      contact: '',
+      email: '',
+      address: '',
+      gstNumber: '',
+      companyName: '',
+    );
+  }
+
   @override
   String toString() {
-    return 'Supplier(id: $id, name: $name, contact: $contact, company: $companyName)';
+    return 'Supplier(id: $id, name: $name, contact: $contact, email: $email, address: $address, gstNumber: $gstNumber, company: $companyName)';
   }
 }

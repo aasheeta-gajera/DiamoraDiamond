@@ -36,8 +36,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
   List<Supplier> suppliers = [];
   Supplier? _selectedSupplier;
-  String _itemCode = "";
-  String _lotNumber = "";
+  String _companyName = "";
+  String _supplierEmail = "";
   double measurementsMinValue = 4.0;
   double measurementsMaxValue = 11.0;
   double tablePercentageMinValue = 50.0;
@@ -250,8 +250,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
     setState(() {
       _selectedSupplier = null;
       _supplierContact = "";
-      _itemCode = "";
-      _lotNumber = "";
+      _companyName = "";
+      _supplierEmail = "";
       _selectedShapes = [];
       sizeMin = 0.0;
       weightCaratMin = 0.0;
@@ -282,8 +282,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       Diamond diamond = Diamond(
         supplier: _selectedSupplier?.name??'',
         supplierContact: _supplierContact ?? "",
-        itemCode: _itemCode ?? "",
-        lotNumber: _lotNumber ?? "",
+        itemCode: _companyName ?? "",
+        lotNumber: _supplierEmail ?? "",
         shape: _selectedShapes.isNotEmpty ? _selectedShapes.join(", ") : "",
         size: sizeMin,
         weightCarat: weightCaratMin,
@@ -522,31 +522,37 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 //         (supplier) => supplier["supplier"] == value,
                 //       );
                 //       _supplierContact = selectedSupplierData["supplierContact"]!;
-                //       _itemCode = selectedSupplierData["itemCode"]!;
-                //       _lotNumber = selectedSupplierData["lotNumber"]!;
+                //       _companyName = selectedSupplierData["itemCode"]!;
+                //       _supplierEmail = selectedSupplierData["lotNumber"]!;
                 //     });
                 //   },
                 // ),
-
                 utils.buildDropdownField(
                   label: "Supplier",
-                  value: _selectedSupplier?.companyName,
+                  value: _selectedSupplier?.companyName, // Ensure this exists in the items list
                   items: suppliers.map((supplier) => {
-                    "supplier": supplier.companyName,
+                    "supplier": supplier.companyName,  // Primary identifier
                     "supplierContact": supplier.contact,
-                    "itemCode": supplier.gstNumber,  // Adjust as needed
-                    "lotNumber": supplier.email,     // Adjust as needed
-                  }).toList(),  // Convert to List<Map<String, String>>
+                    "itemCode": supplier.gstNumber,
+                    "lotNumber": supplier.email,
+                  }).toList(), // Convert to List<Map<String, String>>
                   onChanged: (value) {
                     setState(() {
-                      final selectedSupplierData = suppliers.firstWhere((supplier) => supplier.companyName == value);
-                      _selectedSupplier = selectedSupplierData;
-                      _supplierContact = selectedSupplierData.contact;
-                      _itemCode = selectedSupplierData.gstNumber;
-                      _lotNumber = selectedSupplierData.email;
+                      final selectedSupplierData = suppliers.firstWhere(
+                            (supplier) => supplier.companyName == value,
+                        orElse: () => Supplier.empty(), // Provide a default empty Supplier object
+                      );
+
+                      if (selectedSupplierData.companyName.isNotEmpty) {
+                        _selectedSupplier = selectedSupplierData;
+                        _supplierContact = selectedSupplierData.contact;
+                        _companyName = selectedSupplierData.companyName;
+                        _supplierEmail = selectedSupplierData.email;
+                      }
                     });
                   },
                 ),
+
 
 
 
@@ -559,15 +565,16 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 utils.buildTextField(
-                  "Item Code",
-                  TextEditingController(text: _itemCode),
+                  "Supplier Email",
+                  TextEditingController(text: _supplierEmail),
                   textColor: AppColors.primaryBlack,
                   hintColor: Colors.grey,
                   readOnly: true,
                 ),
+
                 utils.buildTextField(
-                  "Lot Number",
-                  TextEditingController(text: _lotNumber),
+                  "company Name",
+                  TextEditingController(text: _companyName),
                   textColor: AppColors.primaryBlack,
                   hintColor: Colors.grey,
                   readOnly: true,

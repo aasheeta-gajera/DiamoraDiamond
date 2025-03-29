@@ -56,8 +56,10 @@ class _InventoryState extends State<Inventory> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryBlack,
-        title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+        title: Text("Inventory",style: TextStyleHelper.mediumWhite,),
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
       ),
       body: Stack(
         children: [

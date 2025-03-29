@@ -5,6 +5,7 @@ import '../../Library/AppStyle.dart';
 import '../../Library/Drawer.dart';
 import '../../Library/AppColour.dart';
 import 'package:get/get.dart';
+import 'AddSupplier.dart';
 import 'DiamondPurchase.dart';
 import 'Inventory.dart';
 
@@ -167,14 +168,17 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "ORDER", icon: Icons.opacity_rounded, onTap: () {},),
-            _DiamondCard(title: "INQUIRY", icon: Icons.add_task_outlined, onTap: () {},),
+            _DiamondCard(title: "ADD SUPPLIER", icon: Icons.opacity_rounded, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
+            },),
+            _DiamondCard(title: "RECEIVE ORDER", icon: Icons.opacity_rounded, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _DiamondCard(title: "INQUIRY", icon: Icons.add_task_outlined, onTap: () {},),
             _DiamondCard(title: "HISTORY", icon: Icons.watch_later, onTap: () {},),
             // _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
           ],
