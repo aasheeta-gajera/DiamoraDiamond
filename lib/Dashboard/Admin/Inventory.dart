@@ -95,11 +95,6 @@ class _InventoryState extends State<Inventory> {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
           Column(
             children: [
               Expanded(
@@ -136,174 +131,204 @@ class _InventoryState extends State<Inventory> {
                               "diamond diamond${diamonds[index].totalPurchasePrice}",
                             );
 
-                            return Screenshot(
-                              controller: screenshotController,
-                              child: Container(
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4.0,
-                                    horizontal: 8,
-                                  ),
-                                  child: Card(
-                                    color: AppColors.primaryBlack,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "──── Range ────",
-                                          style: TextStyleHelper.mediumWhite,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0,
-                                          ),
-                                          child: IntrinsicHeight(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .start, // Align properly
-                                              children: [
-                                                Text.rich(
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                                horizontal: 8,
+                              ),
+                              child: Card(
+                                color: AppColors.primaryBlack,
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "──── Range ────",
+                                      style: TextStyleHelper.mediumWhite,
+                                    ),
+                                    SizedBox(height: 5),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0,
+                                      ),
+                                      child: IntrinsicHeight(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .start, // Align properly
+                                          children: [
+                                            Text.rich(
+                                              TextSpan(
+                                                children: [
                                                   TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: "Weight: ",
-                                                        style: TextStyleHelper
-                                                            .mediumWhite
-                                                            .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                            ),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            "${diamond.weightCarat}",
-                                                        style:
-                                                            TextStyleHelper
-                                                                .mediumWhite,
-                                                      ),
-                                                    ],
+                                                    text: "Weight: ",
+                                                    style: TextStyleHelper
+                                                        .mediumWhite
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                   ),
-                                                ),
-                                                VerticalDivider(
-                                                  color: Colors.white,
-                                                  thickness: 2,
-                                                  width: 20,
-                                                ),
-                                                Text.rich(
                                                   TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: "Color: ",
-                                                        style: TextStyleHelper
-                                                            .mediumWhite
-                                                            .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                            ),
-                                                      ),
-                                                      TextSpan(
-                                                        text: "${diamond.color}",
-                                                        style:
-                                                            TextStyleHelper
-                                                                .mediumWhite,
-                                                      ),
-                                                    ],
+                                                    text:
+                                                        "${diamond.weightCarat}",
+                                                    style:
+                                                        TextStyleHelper
+                                                            .mediumWhite,
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0,
-                                          ),
-                                          child: IntrinsicHeight(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .start, // Align properly
-                                              children: [
-                                                Text.rich(
-                                                  TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: "Clarity:  ",
-                                                        style: TextStyleHelper
-                                                            .mediumWhite
-                                                            .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                            ),
-                                                      ),
-                                                      TextSpan(
-                                                        text: "${diamond.clarity}",
-                                                        style:
-                                                            TextStyleHelper
-                                                                .mediumWhite,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                VerticalDivider(
-                                                  color: Colors.white,
-                                                  thickness: 2,
-                                                  width: 20,
-                                                ),
-                                                Text.rich(
-                                                  TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: "Certified: ",
-                                                        style: TextStyleHelper
-                                                            .mediumWhite
-                                                            .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                            ),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            "${diamond.certification}",
-                                                        style:
-                                                            TextStyleHelper
-                                                                .mediumWhite,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
+                                            VerticalDivider(
+                                              color: Colors.white,
+                                              thickness: 2,
+                                              width: 20,
                                             ),
+                                            Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: "Color: ",
+                                                    style: TextStyleHelper
+                                                        .mediumWhite
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: "${diamond.color}",
+                                                    style:
+                                                        TextStyleHelper
+                                                            .mediumWhite,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0,
+                                      ),
+                                      child: IntrinsicHeight(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .start, // Align properly
+                                          children: [
+                                            Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: "Clarity:  ",
+                                                    style: TextStyleHelper
+                                                        .mediumWhite
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: "${diamond.clarity}",
+                                                    style:
+                                                        TextStyleHelper
+                                                            .mediumWhite,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            VerticalDivider(
+                                              color: Colors.white,
+                                              thickness: 2,
+                                              width: 20,
+                                            ),
+                                            Text.rich(
+                                              TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: "Certified: ",
+                                                    style: TextStyleHelper
+                                                        .mediumWhite
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        "${diamond.certification}",
+                                                    style:
+                                                        TextStyleHelper
+                                                            .mediumWhite,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "──── Shapes ────",
+                                      style: TextStyleHelper.mediumWhite,
+                                    ),
+                                    shapeCount! > 0
+                                        ? shapeCount == 1
+                                        ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SizedBox(
+                                          width: 80, // Fixed width for a single shape
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Image.asset(
+                                                shapeImages[validShapes![0]]!,
+                                                width: 40,
+                                                height: 40,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                validShapes[0],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "──── Shapes ────",
-                                          style: TextStyleHelper.mediumWhite,
-                                        ),
-                                        shapeCount! > 0
-                                            ? shapeCount == 1
-                                            ? Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
+                                      ),
+                                    )
+                                        : shapeCount <= 3 // Use Row for 2-3 shapes
+                                        ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: List.generate(shapeCount, (index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 4.0), // Adjust spacing
                                             child: SizedBox(
-                                              width: 80, // Fixed width for a single shape
+                                              width: 80, // Fixed width for consistency
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Image.asset(
-                                                    shapeImages[validShapes![0]]!,
+                                                    shapeImages[validShapes![index]]!,
                                                     width: 40,
                                                     height: 40,
                                                     color: Colors.white,
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                    validShapes[0],
+                                                    validShapes[index],
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontSize: 12,
@@ -314,92 +339,56 @@ class _InventoryState extends State<Inventory> {
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                        )
-                                            : shapeCount <= 3 // Use Row for 2-3 shapes
-                                            ? Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: List.generate(shapeCount, (index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 4.0), // Adjust spacing
-                                                child: SizedBox(
-                                                  width: 80, // Fixed width for consistency
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Image.asset(
-                                                        shapeImages[validShapes![index]]!,
-                                                        width: 40,
-                                                        height: 40,
-                                                        color: Colors.white,
-                                                      ),
-                                                      SizedBox(height: 5),
-                                                      Text(
-                                                        validShapes[index],
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.w500,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ],
+                                          );
+                                        }),
+                                      ),
+                                    )
+                                        : Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: GridView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: shapeCount > 4 ? 4 : shapeCount, // Grid for 4+
+                                          crossAxisSpacing: 4,
+                                          mainAxisSpacing: 8,
+                                          childAspectRatio: 1,
+                                        ),
+                                        itemCount: shapeCount,
+                                        itemBuilder: (context, index) {
+                                          return SizedBox(
+                                            width: 80, // Fixed width
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Image.asset(
+                                                  shapeImages[validShapes![index]]!,
+                                                  width: 40,
+                                                  height: 40,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                  validShapes[index],
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
-                                              );
-                                            }),
-                                          ),
-                                        )
-                                            : Padding(
-                                          padding: const EdgeInsets.all(6.0),
-                                          child: GridView.builder(
-                                            shrinkWrap: true,
-                                            physics: NeverScrollableScrollPhysics(),
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: shapeCount > 4 ? 4 : shapeCount, // Grid for 4+
-                                              crossAxisSpacing: 4,
-                                              mainAxisSpacing: 8,
-                                              childAspectRatio: 1,
+                                              ],
                                             ),
-                                            itemCount: shapeCount,
-                                            itemBuilder: (context, index) {
-                                              return SizedBox(
-                                                width: 80, // Fixed width
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Image.asset(
-                                                      shapeImages[validShapes![index]]!,
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Colors.white,
-                                                    ),
-                                                    SizedBox(height: 5),
-                                                    Text(
-                                                      validShapes[index],
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight: FontWeight.w500,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        )
-                                            : Text(
-                                          "No shapes available",
-                                          style: TextStyleHelper.mediumWhite,
-                                        ),
-
-                                      ],
+                                          );
+                                        },
+                                      ),
+                                    )
+                                        : Text(
+                                      "No shapes available",
+                                      style: TextStyleHelper.mediumWhite,
                                     ),
-                                  ),
+
+                                  ],
                                 ),
                               ),
                             );

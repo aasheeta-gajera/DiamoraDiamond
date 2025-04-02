@@ -8,7 +8,7 @@ import '../Authentication/Login.dart';
 import '../Models/DiamondModel.dart';
 
 class ApiService {
-  static const String baseUrl = "https://84ac-2409-4080-be18-c956-e8b6-22d9-b9a3-424f.ngrok-free.app/api/user";
+  static const String baseUrl = "https://1d86-2409-4080-be18-c956-c0da-a34a-a2f0-1ddd.ngrok-free.app/api/user";
   static String? userTypes = SharedPrefService.getString('userType') ?? "";
 
   Future logout() async {

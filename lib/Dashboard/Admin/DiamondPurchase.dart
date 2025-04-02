@@ -388,11 +388,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
             child: Column(

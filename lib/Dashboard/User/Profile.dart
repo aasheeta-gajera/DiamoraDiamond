@@ -64,12 +64,6 @@ class _ProfileState extends State<Profile> {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 50),
             child: SingleChildScrollView(

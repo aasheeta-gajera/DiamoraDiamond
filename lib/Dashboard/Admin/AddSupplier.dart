@@ -105,12 +105,6 @@ class _AddSupplierState extends State<AddSupplier> {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
-
           Form(
             key: _formKey,
             child: Column(

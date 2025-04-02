@@ -121,12 +121,6 @@ class _LogInState extends State<LogIn> {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
-
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 50),

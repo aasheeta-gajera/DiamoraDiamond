@@ -119,11 +119,6 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.white.withOpacity(0.3)),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
             child: Column(

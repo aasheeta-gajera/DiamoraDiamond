@@ -42,11 +42,6 @@ class CustomerDashboard extends StatelessWidget {
           Positioned.fill(
             child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
           ),
-
-          // Dark Overlay for readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 4),
             child: SingleChildScrollView(
