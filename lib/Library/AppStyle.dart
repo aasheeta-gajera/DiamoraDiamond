@@ -25,6 +25,11 @@ class TextStyleHelper {
     color: AppColors.primaryWhite,
   );
 
+  static TextStyle mediumPrimaryColour = const TextStyle(
+    fontSize: 16,
+    color: AppColors.primaryColour,
+  );
+
   // 🔹 Big Text Style
   static TextStyle bigBlack = const TextStyle(
     fontSize: 20,

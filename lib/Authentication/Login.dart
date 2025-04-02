@@ -140,7 +140,7 @@ class _LogInState extends State<LogIn> {
                     style: TextStyleHelper.bigBlack.copyWith(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColour,
+                      color: AppColors.primaryWhite,
                     ),
                   ),
                   const SizedBox(height: 10),

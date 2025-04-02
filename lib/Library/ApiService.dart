@@ -8,12 +8,12 @@ import '../Authentication/Login.dart';
 import '../Models/DiamondModel.dart';
 
 class ApiService {
-  static const String baseUrl = "https://cf7f-2409-40c1-100f-d99b-8e3-2340-467a-f7d9.ngrok-free.app/api/user";
+  static const String baseUrl = "https://f9fb-2409-40c1-100f-d99b-4405-3ecd-e6ee-22af.ngrok-free.app/api/user";
   static String? userTypes = SharedPrefService.getString('userType') ?? "";
 
   Future logout() async {
     await SharedPrefService.clearAll(); // Clear saved data
-    Get.offAll(() => AuthChoiceScreen());   // Navigate back to login
+    Get.offAll(() => LogIn());   // Navigate back to login
   }
 
   Future<List<Diamond>> fetchDiamonds() async {

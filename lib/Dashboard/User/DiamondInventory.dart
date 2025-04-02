@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:daimo/Library/ApiService.dart';
@@ -15,7 +14,9 @@ import 'package:path_provider/path_provider.dart';
 
 
 class DiamondInventory extends StatefulWidget {
-  const DiamondInventory({super.key});
+  final List<Diamond>? diamonds;
+  
+  const DiamondInventory({super.key, this.diamonds});
 
   @override
   _DiamondInventoryState createState() => _DiamondInventoryState();
@@ -28,7 +29,16 @@ class _DiamondInventoryState extends State<DiamondInventory> {
   @override
   void initState() {
     super.initState();
-    fetchDiamonds();
+    if (widget.diamonds != null) {
+      // If diamonds are passed as a parameter, use them directly
+      setState(() {
+        diamonds = widget.diamonds!;
+        isLoading = false;
+      });
+    } else {
+      // Otherwise fetch diamonds from the API
+      fetchDiamonds();
+    }
   }
 
   Future<void> fetchDiamonds() async {
@@ -80,7 +90,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("DiamondInventory", style: TextStyleHelper.mediumWhite),
+        title: Text("Diamond Inventory", style: TextStyleHelper.mediumWhite),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

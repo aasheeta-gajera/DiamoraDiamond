@@ -137,7 +137,7 @@ class _RegistrationState extends State<Registration>
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("REGISTER", style: TextStyleHelper.mediumWhite),
+        title: Text("REGISTER", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();

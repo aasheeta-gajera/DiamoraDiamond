@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../Library/AppImages.dart';
 import '../../Library/DiamondBackground.dart';
@@ -9,6 +8,7 @@ import '../../Library/AppStyle.dart';
 import 'package:get/get.dart';
 
 import 'DiamondInventory.dart';
+import 'DiamondSearch.dart';
 
 
 class CustomerDashboard extends StatelessWidget {
@@ -129,7 +129,9 @@ class CustomerDashboard extends StatelessWidget {
             _DiamondCard(title: "INVENTORY", icon: Icons.diamond, onTap: () {
               Get.to(DiamondInventory());
             },),
-            _DiamondCard(title: "SEARCH", icon: Icons.search, onTap: () {},),
+            _DiamondCard(title: "SEARCH", icon: Icons.search, onTap: () {
+              Get.to(DiamondSearch());
+            },),
           ],
         ),
         const SizedBox(height: 20),
