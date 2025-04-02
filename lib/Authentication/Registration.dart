@@ -13,6 +13,7 @@ import '../Models/UserModel.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'Login.dart';
+import 'package:uuid/uuid.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -32,12 +33,14 @@ class _RegistrationState extends State<Registration>
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _companyNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _refNumberController = TextEditingController();
+  final TextEditingController _refNameController = TextEditingController();
 
   XFile? selectedImageKYC;
   XFile? selectedLicenseCopy;
@@ -55,53 +58,67 @@ class _RegistrationState extends State<Registration>
     final bytes = await File(imageFile.path).readAsBytes();
     return base64Encode(bytes);
   }
+
   bool isLoading = false;
 
   void _register() async {
     setState(() => isLoading = true);
 
     String? idProofBase64 = await _convertImageToBase64(selectedImageKYC);
-    String? licenseCopyBase64 = await _convertImageToBase64(selectedLicenseCopy);
-    String? taxCertificateBase64 = await _convertImageToBase64(selectedTaxCertificate);
-    String? partnerCopyBase64 = await _convertImageToBase64(selectedPartnerCopy);
-
+    String? licenseCopyBase64 = await _convertImageToBase64(
+      selectedLicenseCopy,
+    );
+    String? taxCertificateBase64 = await _convertImageToBase64(
+      selectedTaxCertificate,
+    );
+    String? partnerCopyBase64 = await _convertImageToBase64(
+      selectedPartnerCopy,
+    );
+    var uuid = Uuid();
+    String id = uuid.v4();
     UserModel user = UserModel(
-      userId: _usernameController.text,
+      userId: id.toString(),
       password: _passwordController.text,
       email: _emailController.text,
       mobile: _mobileController.text,
-      city: _pincodeController.text,
-      userType: "admin",
+      city: _cityController.text,
+      userType: "customer",
       address: _addressController.text,
       companyName: _companyNameController.text,
       contactName: _nameController.text,
       idProof: idProofBase64 ?? "",
-      licenseCopy: licenseCopyBase64 ?? "",
+      licenseCopy: "",
       taxCertificate: taxCertificateBase64 ?? "",
       partnerCopy: partnerCopyBase64 ?? "",
-      references: [Reference(name: "Ref1", phone: "9876543210")],
+      business_type: _selectedBusinessType.toString(),
+      terms_agreed: _termsAgreed,
+      references: [
+        Reference(
+          name: _refNameController.text,
+          phone: _refNumberController.text,
+        ),
+      ],
     );
-      try {
-        final response = await http.post(
-          Uri.parse('${ApiService.baseUrl}/register'),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(user.toJson()),
-        );
-        setState(() => isLoading = false);
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiService.baseUrl}/register'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(user.toJson()),
+      );
+      setState(() => isLoading = false);
 
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          utils.showCustomSnackbar('Login successful!', true);
-          Get.to(() => LogIn());
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        utils.showCustomSnackbar('Login successful!', true);
+        Get.to(() => LogIn());
+      } else {
+        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
 
-        } else {
-          utils.showCustomSnackbar(jsonDecode(response.body)['message'] , false);
-
-          print("Error: ${response.body}");
-        }
-      } catch (e) {
-        setState(() => isLoading = false);
-        utils.showCustomSnackbar('${e}', false);
+        print("Error: ${response.body}");
       }
+    } catch (e) {
+      setState(() => isLoading = false);
+      utils.showCustomSnackbar('${e}', false);
+    }
   }
 
   void _nextTab(GlobalKey<FormState> formKey) {
@@ -110,17 +127,26 @@ class _RegistrationState extends State<Registration>
     }
   }
 
+  String? _selectedBusinessType;
+  bool _termsAgreed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
-        title: Text("REGISTER",style: TextStyleHelper.mediumWhite,),
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+        backgroundColor: AppColors.primaryWhite,
+        title: Text("REGISTER", style: TextStyleHelper.mediumWhite),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_sharp,
+            color: AppColors.primaryColour,
+          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -147,11 +173,15 @@ class _RegistrationState extends State<Registration>
                     indicatorColor: AppColors.primaryWhite,
                     physics: NeverScrollableScrollPhysics(),
                     onTap: (index) {
-                      if (_tabController.index == 0 && (_personalFormKey.currentState?.validate() ?? false)) {
+                      if (_tabController.index == 0 &&
+                          (_personalFormKey.currentState?.validate() ??
+                              false)) {
                         _tabController.animateTo(index);
-                      } else if (_tabController.index == 1 && (_kycFormKey.currentState?.validate() ?? false)) {
+                      } else if (_tabController.index == 1 &&
+                          (_kycFormKey.currentState?.validate() ?? false)) {
                         _tabController.animateTo(index);
-                      } else if (_tabController.index == 2 && !_businessFormKey.currentState!.validate()) {
+                      } else if (_tabController.index == 2 &&
+                          !_businessFormKey.currentState!.validate()) {
                         _tabController.animateTo(index);
                       }
                     },
@@ -188,79 +218,154 @@ class _RegistrationState extends State<Registration>
       child: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-
-          utils.buildTextField("Name", _nameController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Name cannot be empty";
-            }
-            return null;
-          }),
-          utils.buildTextField("Email", _emailController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, keyboardType: TextInputType.emailAddress, validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Email cannot be empty";
-            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-              return "Enter a valid email";
-            }
-            return null;
-          }),
-          utils.buildTextField("Mobile No", _mobileController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, keyboardType: TextInputType.phone, validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Mobile number cannot be empty";
-            } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-              return "Enter a valid 10-digit mobile number";
-            }
-            return null;
-          }),
-          utils.buildTextField("Username", _usernameController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Username cannot be empty";
-            } else if (value.length < 4) {
-              return "Username must be at least 4 characters";
-            }
-            return null;
-          }),
-          utils.buildTextField("Password", _passwordController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, obscureText: true, validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Password cannot be empty";
-            } else if (value.length < 6) {
-              return "Password must be at least 6 characters";
-            }
-            return null;
-          }),
-          utils.buildTextField("Confirm Password", _confirmPasswordController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, obscureText: true, validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Confirm Password cannot be empty";
-            } else if (value != _passwordController.text) {
-              return "Passwords do not match";
-            }
-            return null;
-          }),
+          utils.buildTextField(
+            "Name",
+            _nameController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Name cannot be empty";
+              }
+              return null;
+            },
+          ),
+          utils.buildTextField(
+            "Email",
+            _emailController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Email cannot be empty";
+              } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                return "Enter a valid email";
+              }
+              return null;
+            },
+          ),
+          utils.buildTextField(
+            "Mobile No",
+            _mobileController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Mobile number cannot be empty";
+              } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                return "Enter a valid 10-digit mobile number";
+              }
+              return null;
+            },
+          ),
+          utils.buildTextField(
+            "Address",
+            _addressController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Address is required";
+              }
+              return null;
+            },
+          ),
+          utils.buildTextField(
+            "City",
+            _cityController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "City is required";
+              }
+              return null;
+            },
+          ),
+          // utils.buildTextField(
+          //   "Username",
+          //   _usernameController,
+          //   textColor: AppColors.primaryColour,
+          //   hintColor: Colors.grey,
+          //   validator: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return "Username cannot be empty";
+          //     } else if (value.length < 4) {
+          //       return "Username must be at least 4 characters";
+          //     }
+          //     return null;
+          //   },
+          // ),
+          utils.buildTextField(
+            "Password",
+            _passwordController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Password cannot be empty";
+              } else if (value.length < 6) {
+                return "Password must be at least 6 characters";
+              }
+              return null;
+            },
+          ),
+          utils.buildTextField(
+            "Confirm Password",
+            _confirmPasswordController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Confirm Password cannot be empty";
+              } else if (value != _passwordController.text) {
+                return "Passwords do not match";
+              }
+              return null;
+            },
+          ),
           SizedBox(height: 20),
-          utils.PrimaryButton(text: "Next", onPressed: () {
-            if(_nameController.text.toString().trim().isEmpty){
-              utils.showCustomSnackbar("Please Enter Name", false);
-            }else if(_emailController.text.toString().trim().isEmpty){
-              utils.showCustomSnackbar("Please Enter Email", false);
-            }else if(_mobileController.text.toString().trim().isEmpty){
-              utils.showCustomSnackbar("Please Enter Mobile Number", false);
-            }else if(_passwordController.text.toString().trim().isEmpty){
-              utils.showCustomSnackbar("Please Enter Password", false);
-            }else if (_passwordController.text.trim().isEmpty) {
-              utils.showCustomSnackbar("Please Enter Password", false);
-            }else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$').hasMatch(_passwordController.text.trim())) {
-              utils.showCustomSnackbar(
+          utils.PrimaryButton(
+            text: "Next",
+            onPressed: () {
+              if (_nameController.text.toString().trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter Name", false);
+              } else if (_emailController.text.toString().trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter Email", false);
+              } else if (_mobileController.text.toString().trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter Mobile Number", false);
+              } else if (_passwordController.text.toString().trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter Password", false);
+              } else if (_passwordController.text.trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter Password", false);
+              } else if (_addressController.text.trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter Address", false);
+              } else if (_cityController.text.trim().isEmpty) {
+                utils.showCustomSnackbar("Please Enter City", false);
+              } else if (!RegExp(
+                r'^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$',
+              ).hasMatch(_passwordController.text.trim())) {
+                utils.showCustomSnackbar(
                   "Password must be at least 8 characters long, include one uppercase letter, one number, and one special character.",
-                  false
-              );
-            }else if (_confirmPasswordController.text.trim().isEmpty) {
-              utils.showCustomSnackbar("Please Enter Confirm Password", false);
-            }else if (_passwordController.text.trim() != _confirmPasswordController.text.trim()) {
-              utils.showCustomSnackbar("Passwords do not match", false);
-            }else {
-              _nextTab(_personalFormKey);
-            }
-
-          },)
+                  false,
+                );
+              } else if (_confirmPasswordController.text.trim().isEmpty) {
+                utils.showCustomSnackbar(
+                  "Please Enter Confirm Password",
+                  false,
+                );
+              } else if (_passwordController.text.trim() !=
+                  _confirmPasswordController.text.trim()) {
+                utils.showCustomSnackbar("Passwords do not match", false);
+              } else {
+                _nextTab(_personalFormKey);
+              }
+            },
+          ),
         ],
       ),
     );
@@ -274,46 +379,86 @@ class _RegistrationState extends State<Registration>
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: _buildImagePicker("ID Proof", selectedImageKYC, (image) => setState(() => selectedImageKYC = image), selectedImageKYC == null ? "ID Proof is required" : null),
+              child: _buildImagePicker(
+                "ID Proof",
+                selectedImageKYC,
+                (image) => setState(() => selectedImageKYC = image),
+                selectedImageKYC == null ? "ID Proof is required" : null,
+              ),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: _buildImagePicker("License Copy", selectedLicenseCopy, (image) => setState(() => selectedLicenseCopy = image), selectedLicenseCopy == null ? "License Copy is required" : null),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildImagePicker(
+                "Tax Certificate",
+                selectedTaxCertificate,
+                (image) => setState(() => selectedTaxCertificate = image),
+                null,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: _buildImagePicker("License Copy", selectedLicenseCopy, (image) => setState(() => selectedLicenseCopy = image), selectedLicenseCopy == null ? "License Copy is required" : null),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildImagePicker("Tax Certificate", selectedTaxCertificate, (image) => setState(() => selectedTaxCertificate = image), selectedTaxCertificate == null ? "Tax Certificate is required" : null),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildImagePicker("Partner Copy", selectedPartnerCopy, (image) => setState(() => selectedPartnerCopy = image), selectedPartnerCopy == null ? "Partner Copy is required" : null),
+              child: _buildImagePicker(
+                "Partner Copy",
+                selectedPartnerCopy,
+                (image) => setState(() => selectedPartnerCopy = image),
+                null,
+              ),
             ),
 
             SizedBox(height: 20),
-            utils.PrimaryButton(text: "Next", onPressed: () {
-              if (selectedImageKYC == null) {
-                utils.showCustomSnackbar("Please Attach ID Proof", false);
-              } else if (selectedLicenseCopy == null) {
-                utils.showCustomSnackbar("Please Attach License Copy Proof", false);
-              } else if (selectedTaxCertificate == null) {
-                utils.showCustomSnackbar("Please Attach Tax Certificate Proof", false);
-              } else if (selectedPartnerCopy == null) {
-                utils.showCustomSnackbar("Please Attach Partner Copy Proof", false);
-              } else {
-                _nextTab(_kycFormKey);
-              }
-            },)
+            utils.PrimaryButton(
+              text: "Next",
+              onPressed: () {
+                if (selectedImageKYC == null) {
+                  utils.showCustomSnackbar("Please Attach ID Proof", false);}
+                // } else if (selectedLicenseCopy == null) {
+                //   utils.showCustomSnackbar(
+                //     "Please Attach License Copy Proof",
+                //     false,
+                //   );
+                // } else if (selectedTaxCertificate == null) {
+                //   utils.showCustomSnackbar(
+                //     "Please Attach Tax Certificate Proof",
+                //     false,
+                //   );
+                // } else if (selectedPartnerCopy == null) {
+                //   utils.showCustomSnackbar(
+                //     "Please Attach Partner Copy Proof",
+                //     false,
+                //   );
+                // }
+                else {
+                  _nextTab(_kycFormKey);
+                }
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildImagePicker(String label, XFile? selectedFile, Function(XFile?) onImageSelected, String? errorText) {
+  Widget _buildImagePicker(
+    String label,
+    XFile? selectedFile,
+    Function(XFile?) onImageSelected,
+    String? errorText,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: AppColors.primaryWhite, fontSize: 16, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: TextStyle(
+            color: AppColors.primaryWhite,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -323,7 +468,9 @@ class _RegistrationState extends State<Registration>
           child: InkWell(
             onTap: () async {
               final ImagePicker picker = ImagePicker();
-              final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+              final XFile? pickedImage = await picker.pickImage(
+                source: ImageSource.gallery,
+              );
               if (pickedImage != null) {
                 setState(() {
                   onImageSelected(pickedImage);
@@ -346,7 +493,11 @@ class _RegistrationState extends State<Registration>
                       ),
                     )
                   else
-                    Icon(Icons.image_outlined, color: AppColors.primaryWhite, size: 50),
+                    Icon(
+                      Icons.image_outlined,
+                      color: AppColors.primaryWhite,
+                      size: 50,
+                    ),
 
                   SizedBox(width: 10),
 
@@ -354,7 +505,10 @@ class _RegistrationState extends State<Registration>
                     child: Text(
                       selectedFile != null ? selectedFile.name : "Select Image",
                       style: TextStyle(
-                        color: selectedFile != null ? AppColors.primaryWhite : AppColors.primaryWhite,
+                        color:
+                            selectedFile != null
+                                ? AppColors.primaryWhite
+                                : AppColors.primaryWhite,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -387,30 +541,127 @@ class _RegistrationState extends State<Registration>
       child: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          utils.buildTextField("Company Name", _companyNameController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return "Company Name is required";
-            }
-            return null;
-          },),
-          utils.buildTextField("Address", _addressController, textColor: AppColors.primaryWhite, hintColor: Colors.grey, validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return "Address is required";
-            }
-            return null;
-          },),
-          utils.buildTextField("City", _pincodeController, textColor: AppColors.primaryWhite, hintColor: Colors.grey,validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return "City is required";
-            }
-            return null;
-          },),
+          utils.buildTextField(
+            "Company Name",
+            _companyNameController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            // validator: (value) {
+            //   if (value == null || value.trim().isEmpty) {
+            //     return "Company Name is required";
+            //   }
+            //   return null;
+            // },
+          ),
+          utils.buildTextField(
+            "Reference Name",
+            _refNameController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            validator: (value) {},
+          ),
+          utils.buildTextField(
+            "Reference Number",
+            _refNumberController,
+            textColor: AppColors.primaryColour,
+            hintColor: Colors.grey,
+            validator: (value) {},
+          ),
+
+          // Business Type Dropdown
+          Text(
+            "Business Type",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryColour,
+            ),
+          ),
+
+          DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: "Business Type",
+              labelStyle: TextStyle(
+                color: Colors.white,
+              ), // Set label color to white
+              filled: true,
+              fillColor: Colors.transparent,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.primaryWhite),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.primaryWhite, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red, width: 1.5),
+              ),
+            ),
+            style: TextStyle(color: Colors.white),
+            dropdownColor: Colors.black,
+            value: _selectedBusinessType,
+            items:
+                ["Retailer", "Wholesaler", "Manufacturer"]
+                    .map(
+                      (type) =>
+                          DropdownMenuItem(value: type, child: Text(type)),
+                    )
+                    .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedBusinessType = value!;
+              });
+            },
+            validator:
+                (value) =>
+                    value == null ? "Please select a business type" : null,
+          ),
 
           SizedBox(height: 20),
-          utils.PrimaryButton(text: AppString.submit, onPressed: _register)
+
+          // Terms & Conditions Checkbox
+          Row(
+            children: [
+              Checkbox(
+                value: _termsAgreed,
+                activeColor:
+                    AppColors
+                        .primaryColour, // Changes the box color when checked
+                checkColor: Colors.white,
+                onChanged: (value) {
+                  setState(() {
+                    _termsAgreed = value!;
+                  });
+                },
+              ),
+              Expanded(
+                child: Text(
+                  "I agree to the Terms & Conditions",
+                  style: TextStyleHelper.mediumWhite,
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 20),
+          utils.PrimaryButton(
+            text: AppString.submit,
+            onPressed: () {
+              if (_termsAgreed == false) {
+    utils.showCustomSnackbar("Please Accept T&C", false);
+              } else {
+                _register();
+              }
+            },
+          ),
         ],
       ),
     );
   }
-
 }

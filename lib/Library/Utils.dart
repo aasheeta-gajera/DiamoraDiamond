@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 Widget PrimaryButton({
   required String text,
   required VoidCallback onPressed,
-  Color backgroundColor = AppColors.primaryBlack,
-  Color textColor = AppColors.primaryWhite,
+  Color backgroundColor = AppColors.primaryWhite,
+  Color textColor = AppColors.primaryColour,
   Color borderColor = Colors.transparent,
   double width = double.infinity,
 }) {
@@ -36,7 +36,7 @@ void showCustomSnackbar(String message, bool isSuccess) {
     isSuccess ? 'Success' : 'Error',
     message,
     backgroundColor: isSuccess ? Colors.green : Colors.red,
-    colorText: AppColors.primaryWhite,
+    colorText: AppColors.primaryColour,
     snackPosition: SnackPosition.BOTTOM,
     margin: const EdgeInsets.all(10),
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -113,11 +113,11 @@ Widget buildDropdownField({
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.primaryWhite),
+          borderSide: BorderSide(color: AppColors.primaryColour),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.primaryWhite, width: 2),
+          borderSide: BorderSide(color: AppColors.primaryColour, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

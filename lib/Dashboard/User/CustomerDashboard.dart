@@ -24,18 +24,18 @@ class CustomerDashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
-        title: Text("Customer",style: TextStyleHelper.mediumWhite,),
+        backgroundColor: AppColors.primaryWhite,
+        title: Text("Customer",style: TextStyleHelper.mediumWhite.copyWith(color: AppColors.primaryColour),),
         leading: IconButton(
-          color: AppColors.primaryBlack,
+          color: AppColors.primaryColour,
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Icon(Icons.menu, color: AppColors.primaryWhite),
+          icon: Icon(Icons.menu, color: AppColors.primaryColour),
         ),
       ),
       key: _scaffoldKey,
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       drawer: CommonDrawer(), // Drawer`
       body: Stack(
         children: [

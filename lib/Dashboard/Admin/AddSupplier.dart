@@ -88,7 +88,7 @@ class _AddSupplierState extends State<AddSupplier> {
       resizeToAvoidBottomInset:false,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
+        backgroundColor: AppColors.primaryWhite,
         title: Text("Add Supplier", style: TextStyleHelper.mediumWhite),
         leading: IconButton(
           onPressed: () {
@@ -96,7 +96,7 @@ class _AddSupplierState extends State<AddSupplier> {
           },
           icon: Icon(
             Icons.arrow_back_ios_new_sharp,
-            color: AppColors.primaryWhite,
+            color: AppColors.primaryColour,
           ),
         ),
       ),
@@ -112,7 +112,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 utils.buildTextField(
                   "Supplier Name",
                   nameController,
-                  textColor: AppColors.primaryWhite,
+                  textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -124,7 +124,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 utils.buildTextField(
                   "Contact",
                   contactController,
-                  textColor: AppColors.primaryWhite,
+                  textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -136,7 +136,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 utils.buildTextField(
                   "Email",
                   emailController,
-                  textColor: AppColors.primaryWhite,
+                  textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -148,7 +148,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 utils.buildTextField(
                   "Address",
                   addressController,
-                  textColor: AppColors.primaryWhite,
+                  textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -160,7 +160,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 utils.buildTextField(
                   "GST Number",
                   gstController,
-                  textColor: AppColors.primaryWhite,
+                  textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -172,7 +172,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 utils.buildTextField(
                   "Company Name",
                   companyNameController,
-                  textColor: AppColors.primaryWhite,
+                  textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {

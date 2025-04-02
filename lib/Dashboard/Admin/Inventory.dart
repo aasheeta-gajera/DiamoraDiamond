@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:daimo/Library/ApiService.dart';
@@ -75,10 +76,10 @@ class _InventoryState extends State<Inventory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
+        backgroundColor: AppColors.primaryWhite,
         title: Text("Inventory", style: TextStyleHelper.mediumWhite),
         leading: IconButton(
           onPressed: () {
@@ -86,7 +87,7 @@ class _InventoryState extends State<Inventory> {
           },
           icon: Icon(
             Icons.arrow_back_ios_new_sharp,
-            color: AppColors.primaryWhite,
+            color: AppColors.primaryColour,
           ),
         ),
       ),
@@ -137,7 +138,7 @@ class _InventoryState extends State<Inventory> {
                                 horizontal: 8,
                               ),
                               child: Card(
-                                color: AppColors.primaryBlack,
+                                color: AppColors.primaryWhite,
                                 child: Column(
                                   children: [
                                     SizedBox(height: 5),

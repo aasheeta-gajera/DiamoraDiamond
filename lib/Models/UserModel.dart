@@ -12,6 +12,8 @@ class UserModel {
   String licenseCopy;
   String taxCertificate;
   String partnerCopy;
+  String business_type;
+  bool terms_agreed;
   List<Reference> references;
 
   UserModel({
@@ -28,6 +30,8 @@ class UserModel {
     required this.licenseCopy,
     required this.taxCertificate,
     required this.partnerCopy,
+    required this.business_type,
+    required this.terms_agreed,
     required this.references,
   });
 
@@ -46,6 +50,8 @@ class UserModel {
       "license_copy": licenseCopy,
       "tax_certificate": taxCertificate,
       "partner_copy": partnerCopy,
+      "business_type": business_type,
+      "terms_agreed": terms_agreed,
       "references": references.map((ref) => ref.toJson()).toList(),
     };
   }

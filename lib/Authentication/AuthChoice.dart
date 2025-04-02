@@ -20,7 +20,7 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       body: Stack(
         children: [
           Positioned.fill(
@@ -58,7 +58,7 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                   ),
                 ),
                 Positioned(
-                  bottom: MediaQuery.of(context).size.width * 0.2,
+                  bottom: MediaQuery.of(context).size.width * 0.3,
                   left: MediaQuery.of(context).size.width * 0.1,
                   child: Column(
                     children: [
@@ -66,9 +66,9 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: utils.PrimaryButton(
                           text: AppString.logIn,
-                          backgroundColor: AppColors.primaryWhite,
-                          textColor: AppColors.primaryBlack,
-                          borderColor: AppColors.primaryWhite,
+                          backgroundColor: AppColors.primaryColour,
+                          textColor: AppColors.primaryWhite,
+                          borderColor: AppColors.primaryColour,
                           onPressed: () {
                             Get.to(() => LogIn());
                           },
@@ -79,9 +79,9 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: utils.PrimaryButton(
                               text: AppString.register,
-                              backgroundColor: AppColors.primaryBlack,
-                              textColor: AppColors.primaryWhite,
-                              borderColor: AppColors.primaryBlack,
+                              backgroundColor: AppColors.primaryWhite,
+                              textColor: AppColors.primaryColour,
+                              borderColor: AppColors.primaryWhite,
                               onPressed: () {
                                 Get.to(() => Registration());
                               })),

@@ -23,18 +23,18 @@ class AdminDashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
+        backgroundColor: AppColors.primaryWhite,
         title: Text("ADMIN",style: TextStyleHelper.mediumWhite,),
         leading:  IconButton(
-          color: AppColors.primaryBlack,
+          color: AppColors.primaryWhite,
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Icon(Icons.menu, color: AppColors.primaryWhite),
+          icon: Icon(Icons.menu, color: AppColors.primaryColour),
         ),
       ),
       key: _scaffoldKey,
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       drawer: CommonDrawer(), // Drawer
       body: Stack(
         children: [
@@ -54,21 +54,21 @@ class AdminDashboard extends StatelessWidget {
                     height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryBlack,
+                      color: AppColors.primaryWhite,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryWhite),
+                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryColour),
                           SizedBox(height: 8),
                           Text(
                             "Sell Report",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.primaryWhite,
+                              color: AppColors.primaryColour,
                             ),
                           ),
                         ],
@@ -80,21 +80,21 @@ class AdminDashboard extends StatelessWidget {
                     height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryBlack,
+                      color: AppColors.primaryWhite,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryWhite),
+                          Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryColour),
                           SizedBox(height: 8),
                           Text(
                             "PURCHASE",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.primaryWhite,
+                              color: AppColors.primaryColour,
                             ),
                           ),
                         ],
@@ -108,7 +108,7 @@ class AdminDashboard extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primaryBlack,
+        backgroundColor: AppColors.primaryWhite,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey.shade500,
@@ -195,7 +195,7 @@ class _DiamondCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color:AppColors.primaryBlack,
+        color:AppColors.primaryWhite,
         elevation: 6,
         shadowColor: Colors.grey.withOpacity(0.4),
         shape: RoundedRectangleBorder(
@@ -208,14 +208,14 @@ class _DiamondCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: AppColors.primaryWhite, size: 40),
+              Icon(icon, color: AppColors.primaryColour, size: 40),
               const SizedBox(height: 10),
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryWhite,
+                  color: AppColors.primaryColour,
                 ),
                 textAlign: TextAlign.center,
               ),

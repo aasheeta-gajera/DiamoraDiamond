@@ -140,7 +140,7 @@ class _LogInState extends State<LogIn> {
                     style: TextStyleHelper.bigBlack.copyWith(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryWhite,
+                      color: AppColors.primaryColour,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -151,7 +151,7 @@ class _LogInState extends State<LogIn> {
                     AppString.email,
                     "Enter your email",
                     emailController,
-                    Icons.email, textColor: AppColors.primaryWhite, hintColor: Colors.grey,
+                    Icons.email, textColor: AppColors.primaryColour, hintColor: Colors.grey,
                   ),
                   const SizedBox(height: 15),
 
@@ -161,14 +161,14 @@ class _LogInState extends State<LogIn> {
                     "Enter your password",
                     passwordController,
                     Icons.lock,
-                    obscureText: true, textColor: AppColors.primaryWhite, hintColor: Colors.grey,
+                    obscureText: true, textColor: AppColors.primaryColour, hintColor: Colors.grey,
                   ),
 
                   const SizedBox(height: 20),
 
                   // Login Button
                   isLoading
-                      ? CircularProgressIndicator(color: AppColors.primaryWhite):
+                      ? CircularProgressIndicator(color: AppColors.primaryColour):
                   utils.PrimaryButton(text: AppString.submit, onPressed: _login),
                   const SizedBox(height: 15),
 

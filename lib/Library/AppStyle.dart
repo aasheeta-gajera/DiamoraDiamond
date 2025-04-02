@@ -6,7 +6,7 @@ class TextStyleHelper {
   // 🔹 Small Text Style
   static TextStyle smallBlack = const TextStyle(
     fontSize: 12,
-    color: AppColors.primaryBlack, // Black text for light mode
+    color: AppColors.backgroundBlack, // Black text for light mode
   );
 
   static TextStyle smallWhite = const TextStyle(
@@ -17,7 +17,7 @@ class TextStyleHelper {
   // 🔹 Medium Text Style
   static TextStyle mediumBlack = const TextStyle(
     fontSize: 16,
-    color: AppColors.primaryBlack,
+    color: AppColors.backgroundBlack,
   );
 
   static TextStyle mediumWhite = const TextStyle(
@@ -28,7 +28,7 @@ class TextStyleHelper {
   // 🔹 Big Text Style
   static TextStyle bigBlack = const TextStyle(
     fontSize: 20,
-    color: AppColors.primaryBlack,
+    color: AppColors.backgroundBlack,
   );
 
   static TextStyle bigWhite = const TextStyle(
@@ -39,7 +39,7 @@ class TextStyleHelper {
   // 🔹 Extra Large Text Style
   static TextStyle extraLargeBlack = const TextStyle(
     fontSize: 24,
-    color: AppColors.primaryBlack,
+    color: AppColors.backgroundBlack,
   );
 
   static TextStyle extraLargeWhite = const TextStyle(
@@ -49,7 +49,7 @@ class TextStyleHelper {
   );
 
   static TextStyle splashStyle = TextStyle(
-    color: AppColors.primaryBlack,
+    color: AppColors.backgroundBlack,
     fontSize: 18,
   );
 

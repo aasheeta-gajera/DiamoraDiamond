@@ -113,7 +113,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       body: Stack(
         children: [
           Positioned.fill(
@@ -136,7 +136,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
                       utils.buildTextField(
                         'Enter your email',
                         emailController,
-                        textColor: AppColors.primaryWhite,
+                        textColor: AppColors.primaryColour,
                         hintColor: Colors.white,
                         onChange: _onEmailChanged,
                       ),
@@ -148,13 +148,13 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
                       utils.buildTextField(
                         'New Password',
                         passwordController,
-                        textColor: AppColors.primaryBlack,
+                        textColor: AppColors.primaryWhite,
                         hintColor: Colors.grey,
                       ),
                       utils.buildTextField(
                         'Confirm Password',
                         confirmPasswordController,
-                        textColor: AppColors.primaryBlack,
+                        textColor: AppColors.primaryWhite,
                         hintColor: Colors.grey,
                       ),
                       SizedBox(height: 20),

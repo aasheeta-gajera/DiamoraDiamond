@@ -49,14 +49,14 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
+        backgroundColor: AppColors.primaryWhite,
         title: Text("PROFILE",style: TextStyleHelper.mediumWhite,),
         leading: IconButton(onPressed: (){
           Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
       ),
       body: Stack(
         children: [
@@ -80,7 +80,7 @@ class _ProfileState extends State<Profile> {
                     child: ElevatedButton(
                       onPressed: logout,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:AppColors.primaryBlack,
+                        backgroundColor:AppColors.primaryWhite,
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                         textStyle: TextStyleHelper.mediumBlack,
                       ),

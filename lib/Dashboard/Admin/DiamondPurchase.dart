@@ -43,73 +43,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   double tablePercentageMinValue = 50.0;
   double tablePercentageMaxValue = 75.0;
 
-  // final List<Map<String, String>> suppliers = [
-  //   {
-  //     "supplier": "Shree Diamond Suppliers",
-  //     "supplierContact": "+91 9876543210",
-  //     "itemCode": "ABC123",
-  //     "lotNumber": "LOT001",
-  //   },
-  //   {
-  //     "supplier": "XYZ Gems",
-  //     "supplierContact": "+91 9876543222",
-  //     "itemCode": "XYZ567",
-  //     "lotNumber": "LOT002",
-  //   },
-  //   {
-  //     "supplier": "GemStar Ltd.",
-  //     "supplierContact": "+1 212-555-7890",
-  //     "itemCode": "GEM890",
-  //     "lotNumber": "LOT003",
-  //   },
-  //   {
-  //     "supplier": "Shine Bright Co.",
-  //     "supplierContact": "+44 7896-123456",
-  //     "itemCode": "SBC456",
-  //     "lotNumber": "LOT004",
-  //   },
-  //   {
-  //     "supplier": "Luxury Stones",
-  //     "supplierContact": "+91 9876543333",
-  //     "itemCode": "LS789",
-  //     "lotNumber": "LOT005",
-  //   },
-  //   {
-  //     "supplier": "Blue Diamond Traders",
-  //     "supplierContact": "+1 305-555-6789",
-  //     "itemCode": "BDT234",
-  //     "lotNumber": "LOT006",
-  //   },
-  //   {
-  //     "supplier": "Opulent Gems",
-  //     "supplierContact": "+61 412-987-654",
-  //     "itemCode": "OG567",
-  //     "lotNumber": "LOT007",
-  //   },
-  //   {
-  //     "supplier": "Regal Diamonds",
-  //     "supplierContact": "+971 50-9876543",
-  //     "itemCode": "RD890",
-  //     "lotNumber": "LOT008",
-  //   },
-  //   {
-  //     "supplier": "Elite Carats",
-  //     "supplierContact": "+33 6-1234-5678",
-  //     "itemCode": "EC345",
-  //     "lotNumber": "LOT009",
-  //   },
-  //   {
-  //     "supplier": "Royal Jewelers",
-  //     "supplierContact": "+81 90-1234-5678",
-  //     "itemCode": "RJ678",
-  //     "lotNumber": "LOT010",
-  //   },
-  // ];
-
-  // RangeValues _priceRange = RangeValues(500, 3000);
-  // RangeValues _caratRange = RangeValues(0.5, 5.0);
-  // String _selectedClarity = "VS1";
-  // String _selectedCut = "Excellent";
   List<String> _selectedShapes = [];
 
   final Map<String, String> shapeImages = {
@@ -374,14 +307,14 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: AppColors.primaryColour,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryBlack,
+        backgroundColor: AppColors.primaryWhite,
         title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryWhite,)),
+        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
       ),
       body: Stack(
         children: [
@@ -425,8 +358,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                             decoration: BoxDecoration(
                               color:
                                   isSelected
-                                      ? AppColors.primaryBlack
-                                      : AppColors.primaryWhite, // Change background color
+                                      ? AppColors.primaryWhite
+                                      : AppColors.primaryColour, // Change background color
                               border: Border.all(
                                 color: Colors.white,
                               ), // Black border
@@ -442,7 +375,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                                   height: 40,
                                   color:
                                       isSelected
-                                          ? AppColors.primaryWhite
+                                          ? AppColors.primaryColour
                                           : Colors.black, // Change image color
                                 ),
                                 SizedBox(height: 5),
@@ -467,63 +400,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   ],
                 ),
 
-                // Wrap(
-                //   spacing: 8.0,
-                //   children: shapeImages.keys.map((shape) => ChoiceChip(
-                //     checkmarkColor: Colors.white,
-                //     backgroundColor: Colors.white,
-                //     selectedColor: Colors.black,
-                //     label: Row(
-                //       mainAxisSize: MainAxisSize.min,
-                //       children: [
-                //         Image.asset(
-                //           shapeImages[shape]!, // Fetch image dynamically
-                //           width: 24,
-                //           height: 24,
-                //         ),
-                //         SizedBox(width: 5),
-                //         Text(
-                //           shape,
-                //           style: TextStyle(
-                //             color: _selectedShapes.contains(shape) ? Colors.white : Colors.black,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //     selected: _selectedShapes.contains(shape),
-                //     onSelected: (selected) {
-                //       setState(() {
-                //         if (selected) {
-                //           _selectedShapes.add(shape);
-                //         } else {
-                //           _selectedShapes.remove(shape);
-                //         }
-                //       });
-                //     },
-                //     shape: RoundedRectangleBorder(
-                //       side: BorderSide(color: Colors.black),
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //   )).toList(),
-                // ),
                 SizedBox(height: 10),
 
-                // utils.buildDropdownField(
-                //   label: "Supplier",
-                //   value: _selectedSupplier,
-                //   items: suppliers,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       _selectedSupplier = value;
-                //       final selectedSupplierData = suppliers.firstWhere(
-                //         (supplier) => supplier["supplier"] == value,
-                //       );
-                //       _supplierContact = selectedSupplierData["supplierContact"]!;
-                //       _companyName = selectedSupplierData["itemCode"]!;
-                //       _supplierEmail = selectedSupplierData["lotNumber"]!;
-                //     });
-                //   },
-                // ),
                 utils.buildDropdownField(
                   label: "Supplier",
                   value: _selectedSupplier?.companyName, // Ensure this exists in the items list
@@ -556,7 +434,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 utils.buildTextField(
                   "Supplier Contact",
                   TextEditingController(text: _supplierContact),
-                  textColor: AppColors.primaryBlack,
+                  textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
                   readOnly: true,
                 ),
@@ -564,7 +442,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 utils.buildTextField(
                   "Supplier Email",
                   TextEditingController(text: _supplierEmail),
-                  textColor: AppColors.primaryBlack,
+                  textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
                   readOnly: true,
                 ),
@@ -572,7 +450,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 utils.buildTextField(
                   "company Name",
                   TextEditingController(text: _companyName),
-                  textColor: AppColors.primaryBlack,
+                  textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
                   readOnly: true,
                 ),
@@ -580,7 +458,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 utils.buildTextField(
                   "Invoice Number",
                   invoiceNumberController,
-                  textColor: AppColors.primaryBlack,
+                  textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
                 ),
 
@@ -691,30 +569,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   },
                 ),
 
-                // _buildSlider(
-                //   "Measurements",
-                //   measurementsValue,
-                //   0,
-                //   100,
-                //   List.generate(101, (index) => index.toString()),
-                //   (value) {
-                //     setState(() {
-                //       measurementsValue = value;
-                //     });
-                //   },
-                // ),
-                // _buildSlider(
-                //   "Table Percentage",
-                //   tablePercentageValue,
-                //   0,
-                //   100,
-                //   List.generate(101, (index) => "$index%"),
-                //   (value) {
-                //     setState(() {
-                //       tablePercentageValue = value;
-                //     });
-                //   },
-                // ),
                 _buildRangeSlider(
                   "Measurements",
                   measurementsMinValue,
@@ -743,16 +597,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   },
                 ),
 
-                // utils.buildTextField(
-                //   "Purchase Price",
-                //   purchaseController,
-                //   textColor: AppColors.primaryBlack,
-                //   hintColor: Colors.grey,
-                // ),
                 utils.buildTextField(
                   "Total Diamond",
                   totalDiamondsController,
-                  textColor: AppColors.primaryBlack,
+                  textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
                 ),
                 GestureDetector(
@@ -845,16 +693,16 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       title: Text(
         label,
         style: TextStyle(
-          color: AppColors.primaryWhite,
+          color: AppColors.primaryColour,
           fontWeight: FontWeight.bold,
         ),
       ),
       value: value,
       onChanged: onChanged,
-      activeColor: AppColors.primaryWhite,
-      activeTrackColor: AppColors.primaryBlack,
+      activeColor: AppColors.primaryColour,
+      activeTrackColor: AppColors.primaryWhite,
       inactiveTrackColor: AppColors.grey,
-      inactiveThumbColor: AppColors.primaryBlack,
+      inactiveThumbColor: AppColors.primaryWhite,
     );
   }
 
@@ -874,7 +722,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.primaryWhite, // Black text
+            color: AppColors.primaryColour, // Black text
           ),
         ),
         SizedBox(height: 8),
@@ -916,7 +764,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   min: min,
                   max: max,
                   divisions: (max - min).toInt(),
-                  activeColor: AppColors.primaryWhite, // Black active color
+                  activeColor: AppColors.primaryColour, // Black active color
                   inactiveColor: Colors.white12, // Light gray for inactive
                   onChanged: (newValue) {
                     onChanged(newValue);
@@ -979,7 +827,7 @@ Widget _buildRangeSlider(
         ),
         min: rangeMin,
         max: rangeMax,
-        activeColor: AppColors.primaryWhite,
+        activeColor: AppColors.primaryColour,
         inactiveColor: AppColors.greyLight,
         divisions: 10,
         labels: RangeLabels(
