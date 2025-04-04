@@ -89,7 +89,7 @@ class _AddSupplierState extends State<AddSupplier> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Add Supplier", style: TextStyleHelper.mediumWhite),
+        title: Text("Add Supplier", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

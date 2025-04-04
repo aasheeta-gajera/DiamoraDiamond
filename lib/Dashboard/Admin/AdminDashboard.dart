@@ -24,7 +24,7 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("ADMIN",style: TextStyleHelper.mediumWhite,),
+        title: Text("ADMIN",style: TextStyleHelper.mediumPrimaryColour,),
         leading:  IconButton(
           color: AppColors.primaryWhite,
           onPressed: () {

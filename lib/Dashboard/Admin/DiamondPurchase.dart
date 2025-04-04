@@ -311,7 +311,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
+        title: Text("PURCHASE",style: TextStyleHelper.mediumPrimaryColour,),
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
         }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
@@ -376,7 +376,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                                   color:
                                       isSelected
                                           ? AppColors.primaryColour
-                                          : Colors.black, // Change image color
+                                          : Colors.white, // Change image color
                                 ),
                                 SizedBox(height: 5),
                                 Text(
@@ -387,8 +387,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                                     fontWeight: FontWeight.w500,
                                     color:
                                         isSelected
-                                            ? Colors.white
-                                            : Colors.black, // Change text color
+                                            ? Colors.black
+                                            : Colors.white, // Change text color
                                   ),
                                 ),
                               ],

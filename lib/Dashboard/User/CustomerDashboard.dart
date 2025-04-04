@@ -55,21 +55,21 @@ class CustomerDashboard extends StatelessWidget {
                     height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey[900],
+                      color: AppColors.primaryWhite,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.attach_money, size: 50, color: AppColors.primaryWhite),
+                          Icon(Icons.attach_money, size: 50, color: AppColors.primaryColour),
                           SizedBox(height: 8),
                           Text(
                             "MY INVENTORY",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.primaryWhite,
+                              color: AppColors.primaryColour,
                             ),
                           ),
                         ],
@@ -83,10 +83,10 @@ class CustomerDashboard extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.primaryWhite,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey.shade500,
+        unselectedItemColor: AppColors.primaryColour,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
@@ -167,7 +167,7 @@ class _DiamondCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: Colors.grey[900],
+        color: AppColors.primaryWhite,
         elevation: 6,
         shadowColor: Colors.grey.withOpacity(0.4),
         shape: RoundedRectangleBorder(
@@ -180,14 +180,14 @@ class _DiamondCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: AppColors.primaryWhite, size: 40),
+              Icon(icon, color: AppColors.primaryColour, size: 40),
               const SizedBox(height: 10),
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryWhite,
+                  color: AppColors.primaryColour,
                 ),
                 textAlign: TextAlign.center,
               ),

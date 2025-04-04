@@ -90,7 +90,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Diamond Inventory", style: TextStyleHelper.mediumWhite),
+        title: Text("Diamond Inventory", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

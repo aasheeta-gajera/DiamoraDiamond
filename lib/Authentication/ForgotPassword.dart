@@ -134,7 +134,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
                   Column(
                     children: [
                       utils.buildTextField(
-                        'Enter your email',
+                        AppString.enterMail,
                         emailController,
                         textColor: AppColors.primaryColour,
                         hintColor: Colors.white,

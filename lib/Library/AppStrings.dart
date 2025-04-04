@@ -9,4 +9,5 @@ class AppString {
   static const String submit = "Submit";
   static const String resetPassword = "Reset Password";
   static const String forgotPassword = "Forgot Password?";
+  static const String enterMail = "Enter your email";
 }

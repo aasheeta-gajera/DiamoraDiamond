@@ -215,7 +215,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Diamond Search", style: TextStyleHelper.mediumWhite),
+        title: Text("Diamond Search", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
