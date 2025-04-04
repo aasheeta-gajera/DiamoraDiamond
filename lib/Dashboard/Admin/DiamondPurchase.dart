@@ -1,4 +1,5 @@
 
+import 'package:daimo/Library/AppStrings.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -311,7 +312,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("PURCHASE",style: TextStyleHelper.mediumPrimaryColour,),
+        title: Text(AppString.purchase,style: TextStyleHelper.mediumPrimaryColour,),
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
         }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
@@ -328,7 +329,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Shape ", style: TextStyleHelper.bigWhite),
+                    Text(AppString.shape, style: TextStyleHelper.bigWhite),
                     GridView.builder(
                       shrinkWrap: true,
                       physics:
@@ -403,7 +404,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 SizedBox(height: 10),
 
                 utils.buildDropdownField(
-                  label: "Supplier",
+                  label: AppString.supplier,
                   value: _selectedSupplier?.companyName, // Ensure this exists in the items list
                   items: suppliers.map((supplier) => {
                     "supplier": supplier.companyName,  // Primary identifier
@@ -432,7 +433,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
 
                 utils.buildTextField(
-                  "Supplier Contact",
+                  AppString.supplierContact,
                   TextEditingController(text: _supplierContact),
                   textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
@@ -440,7 +441,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 utils.buildTextField(
-                  "Supplier Email",
+                  AppString.supplierEmail,
                   TextEditingController(text: _supplierEmail),
                   textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
@@ -448,7 +449,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 utils.buildTextField(
-                  "company Name",
+                  AppString.companyName,
                   TextEditingController(text: _companyName),
                   textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
@@ -456,7 +457,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 utils.buildTextField(
-                  "Invoice Number",
+                  AppString.invoiceNumber,
                   invoiceNumberController,
                   textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
@@ -464,7 +465,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
                 SizedBox(height: 10),
 
-                _buildRangeSlider("Size (mm)", sizeMin, sizeMax, 3.0, 16.0, (
+                _buildRangeSlider(AppString.size, sizeMin, sizeMax, 3.0, 16.0, (
                   min,
                   max,
                 ) {
@@ -474,7 +475,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   });
                 }),
                 _buildRangeSlider(
-                  "Weight (Carat)",
+                  AppString.weight,
                   weightCaratMin,
                   weightCaratMax,
                   0.25,
@@ -487,7 +488,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   },
                 ),
                 _buildSlider(
-                  "Clarity",
+                  AppString.clarity,
                   clarityValue,
                   0,
                   clarityLevels.length - 1,
@@ -498,7 +499,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                     });
                   },
                 ),
-                _buildSlider("Cut", cutValue, 0, cutGrades.length - 1, cutGrades, (
+                _buildSlider(AppString.cut, cutValue, 0, cutGrades.length - 1, cutGrades, (
                   value,
                 ) {
                   setState(() {
@@ -506,7 +507,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   });
                 }),
                 _buildSlider(
-                  "Polish",
+                  AppString.polish,
                   polishValue,
                   0,
                   polishes.length - 1,
@@ -518,7 +519,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   },
                 ),
                 _buildSlider(
-                  "Symmetry",
+                  AppString.symmetry,
                   symmetryValue,
                   0,
                   symmetries.length - 1,
@@ -531,7 +532,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 _buildSlider(
-                  "Certifications",
+                  AppString.certifications,
                   _selectedCertification,
                   0,
                   certifications.length - 1,
@@ -544,7 +545,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 _buildSlider(
-                  "Locations",
+                  AppString.locations,
                   _selectedLocation,
                   0,
                   locations.length - 1,
@@ -557,7 +558,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 _buildSlider(
-                  "Fluorescence",
+                  AppString.fluorescence,
                   fluorescenceValue,
                   0,
                   5,
@@ -570,7 +571,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 _buildRangeSlider(
-                  "Measurements",
+                  AppString.measurements,
                   measurementsMinValue,
                   measurementsMaxValue,
                   4.0, // Min diamond size in mm
@@ -584,7 +585,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 _buildRangeSlider(
-                  "Table Percentage",
+                  AppString.tablePercentage,
                   tablePercentageMinValue,
                   tablePercentageMaxValue,
                   50.0, // Min table percentage
@@ -598,7 +599,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 utils.buildTextField(
-                  "Total Diamond",
+                  AppString.totalDiamond,
                   totalDiamondsController,
                   textColor: AppColors.primaryWhite,
                   hintColor: Colors.grey,
@@ -607,7 +608,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   onTap: () => _selectDate(context),
                   child: AbsorbPointer(
                     child: utils.buildTextField(
-                      "Purchase Date",
+                      AppString.purchaseDate,
                       TextEditingController(
                         text:
                             _selectedPurchaseDate != null
@@ -623,7 +624,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 ),
 
                 SizedBox(height: 10),
-                Text("Color:", style: TextStyle(fontSize: 18)),
+                Text(AppString.color, style: TextStyle(fontSize: 18)),
 
                 Wrap(
                   spacing: 8.0,
@@ -667,14 +668,14 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 Divider(height: 30),
 
                 _buildSwitch(
-                  "Diamond Pair:",
+                  AppString.diamondPair,
                   isPairSelected,
                   (value) => setState(() => isPairSelected = value),
                 ),
 
                 Center(
                   child: utils.PrimaryButton(
-                    text: "Purchase",
+                    text: AppString.purchase,
                     onPressed: () {
                       submitForm();
                     },

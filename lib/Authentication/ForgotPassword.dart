@@ -146,13 +146,13 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
                   Column(
                     children: [
                       utils.buildTextField(
-                        'New Password',
+                        AppString.newPassword,
                         passwordController,
                         textColor: AppColors.primaryWhite,
                         hintColor: Colors.grey,
                       ),
                       utils.buildTextField(
-                        'Confirm Password',
+                        AppString.confirmPassword,
                         confirmPasswordController,
                         textColor: AppColors.primaryWhite,
                         hintColor: Colors.grey,
@@ -160,7 +160,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
                       SizedBox(height: 20),
                       utils.PrimaryButton(
                         onPressed: _resetPassword,
-                        text: 'Reset Password',
+                        text: AppString.resetPassword,
                       ),
                     ],
                   ),

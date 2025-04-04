@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:daimo/Library/AppStrings.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Library/ApiService.dart';
@@ -89,7 +90,7 @@ class _AddSupplierState extends State<AddSupplier> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Add Supplier", style: TextStyleHelper.mediumPrimaryColour),
+        title: Text(AppString.addSupplier, style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -110,7 +111,7 @@ class _AddSupplierState extends State<AddSupplier> {
             child: Column(
               children: [
                 utils.buildTextField(
-                  "Supplier Name",
+                  AppString.supplierName,
                   nameController,
                   textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
@@ -122,7 +123,7 @@ class _AddSupplierState extends State<AddSupplier> {
                   },
                 ),
                 utils.buildTextField(
-                  "Contact",
+                  AppString.contact,
                   contactController,
                   textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
@@ -134,7 +135,7 @@ class _AddSupplierState extends State<AddSupplier> {
                   },
                 ),
                 utils.buildTextField(
-                  "Email",
+                 AppString.email,
                   emailController,
                   textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
@@ -146,7 +147,7 @@ class _AddSupplierState extends State<AddSupplier> {
                   },
                 ),
                 utils.buildTextField(
-                  "Address",
+                  AppString.address,
                   addressController,
                   textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
@@ -158,7 +159,7 @@ class _AddSupplierState extends State<AddSupplier> {
                   },
                 ),
                 utils.buildTextField(
-                  "GST Number",
+                  AppString.gstNumber,
                   gstController,
                   textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
@@ -170,7 +171,7 @@ class _AddSupplierState extends State<AddSupplier> {
                   },
                 ),
                 utils.buildTextField(
-                  "Company Name",
+                  AppString.companyName,
                   companyNameController,
                   textColor: AppColors.primaryColour,
                   hintColor: Colors.grey,
@@ -185,7 +186,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 isLoading
                     ? CircularProgressIndicator()
                     : utils.PrimaryButton(
-                      text: "Add Supplier",
+                      text: AppString.addSupplier,
                       onPressed: () {
                         addSupplier();
                       },

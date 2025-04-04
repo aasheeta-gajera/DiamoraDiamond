@@ -1,4 +1,5 @@
 
+import 'package:daimo/Library/AppStrings.dart';
 import 'package:flutter/material.dart';
 import '../../Library/AppImages.dart';
 import '../../Library/AppStyle.dart';
@@ -24,7 +25,7 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("ADMIN",style: TextStyleHelper.mediumPrimaryColour,),
+        title: Text(AppString.admin,style: TextStyleHelper.mediumPrimaryColour,),
         leading:  IconButton(
           color: AppColors.primaryWhite,
           onPressed: () {
@@ -64,7 +65,7 @@ class AdminDashboard extends StatelessWidget {
                           Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryColour),
                           SizedBox(height: 8),
                           Text(
-                            "Sell Report",
+                            AppString.sellReport,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -90,7 +91,7 @@ class AdminDashboard extends StatelessWidget {
                           Icon(Icons.report_gmailerrorred, size: 50, color: AppColors.primaryColour),
                           SizedBox(height: 8),
                           Text(
-                            "PURCHASE",
+                            AppString.purchase,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -151,10 +152,10 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "INVENTORY", icon: Icons.diamond, onTap: () {
+            _DiamondCard(title: AppString.inventory, icon: Icons.diamond, onTap: () {
               Get.to(Inventory());
             },),
-            _DiamondCard(title: "PURCHASE", icon: Icons.add_shopping_cart, onTap: () {
+            _DiamondCard(title: AppString.purchase, icon: Icons.add_shopping_cart, onTap: () {
               Get.to(DiamondPurchaseForm());
             },),
           ],
@@ -163,18 +164,18 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "ADD SUPPLIER", icon: Icons.opacity_rounded, onTap: () {
+            _DiamondCard(title: AppString.addSupplier, icon: Icons.opacity_rounded, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
             },),
-            _DiamondCard(title: "RECEIVE ORDER", icon: Icons.opacity_rounded, onTap: () {},),
+            _DiamondCard(title: AppString.receiveOrder, icon: Icons.opacity_rounded, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "INQUIRY", icon: Icons.add_task_outlined, onTap: () {},),
-            _DiamondCard(title: "HISTORY", icon: Icons.watch_later, onTap: () {},),
+            _DiamondCard(title: AppString.inquiry, icon: Icons.add_task_outlined, onTap: () {},),
+            _DiamondCard(title: AppString.history, icon: Icons.watch_later, onTap: () {},),
             // _DiamondCard(title: "My Purchase", icon: Icons.publish_rounded, onTap: () {},),
           ],
         ),

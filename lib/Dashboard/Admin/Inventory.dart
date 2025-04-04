@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:daimo/Library/ApiService.dart';
+import 'package:daimo/Library/AppStrings.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -90,7 +91,7 @@ class _InventoryState extends State<Inventory> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Diamond Inventory", style: TextStyleHelper.mediumWhite),
+        title: Text(AppString.diamondInventory, style: TextStyleHelper.mediumWhite),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -115,7 +116,7 @@ class _InventoryState extends State<Inventory> {
                     : diamonds.isEmpty
                     ? Center(
                   child: Text(
-                    "NO DATA FOUND",
+                    AppString.noDataFound,
                     style: TextStyleHelper.mediumWhite,
                   ),
                 )
@@ -136,11 +137,6 @@ class _InventoryState extends State<Inventory> {
                         .toList();
                     int? shapeCount =
                         validShapes?.length; // Count valid shapes
-
-                    print("diamond diamond${diamond}");
-                    print(
-                      "diamond diamond${diamonds[index].totalPurchasePrice}",
-                    );
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(
@@ -171,7 +167,7 @@ class _InventoryState extends State<Inventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Weight: ",
+                                            text: AppString.weight,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -198,7 +194,7 @@ class _InventoryState extends State<Inventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Color: ",
+                                            text: AppString.color,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -233,7 +229,7 @@ class _InventoryState extends State<Inventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Clarity:  ",
+                                            text: AppString.clarity,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -259,7 +255,7 @@ class _InventoryState extends State<Inventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Certified: ",
+                                            text: AppString.certified,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -395,7 +391,7 @@ class _InventoryState extends State<Inventory> {
                               ),
                             )
                                 : Text(
-                              "No shapes available",
+                              AppString.noshapesavailable,
                               style: TextStyleHelper.mediumWhite,
                             ),
 

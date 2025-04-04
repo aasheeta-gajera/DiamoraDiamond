@@ -149,7 +149,7 @@ class _LogInState extends State<LogIn> {
                   // Email Input Field
                   _buildInputField(
                     AppString.email,
-                    "Enter your email",
+                    AppString.enterMail,
                     emailController,
                     Icons.email, textColor: AppColors.primaryColour, hintColor: Colors.grey,
                   ),
@@ -158,7 +158,7 @@ class _LogInState extends State<LogIn> {
                   // Password Input Field
                   _buildInputField(
                     AppString.password,
-                    "Enter your password",
+                    AppString.enterPassword,
                     passwordController,
                     Icons.lock,
                     obscureText: true, textColor: AppColors.primaryColour, hintColor: Colors.grey,

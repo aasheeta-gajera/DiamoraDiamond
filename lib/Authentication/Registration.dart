@@ -380,7 +380,7 @@ class _RegistrationState extends State<Registration>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _buildImagePicker(
-                "ID Proof",
+                AppString.idProof,
                 selectedImageKYC,
                 (image) => setState(() => selectedImageKYC = image),
                 selectedImageKYC == null ? "ID Proof is required" : null,
@@ -393,7 +393,7 @@ class _RegistrationState extends State<Registration>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _buildImagePicker(
-                "Tax Certificate",
+                AppString.taxCertificate,
                 selectedTaxCertificate,
                 (image) => setState(() => selectedTaxCertificate = image),
                 null,
@@ -402,7 +402,7 @@ class _RegistrationState extends State<Registration>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _buildImagePicker(
-                "Partner Copy",
+              AppString.partnerCopy,
                 selectedPartnerCopy,
                 (image) => setState(() => selectedPartnerCopy = image),
                 null,
@@ -411,7 +411,7 @@ class _RegistrationState extends State<Registration>
 
             SizedBox(height: 20),
             utils.PrimaryButton(
-              text: "Next",
+              text: AppString.next,
               onPressed: () {
                 if (selectedImageKYC == null) {
                   utils.showCustomSnackbar("Please Attach ID Proof", false);}
@@ -542,7 +542,7 @@ class _RegistrationState extends State<Registration>
         padding: EdgeInsets.all(16.0),
         children: [
           utils.buildTextField(
-            "Company Name",
+            AppString.companyName,
             _companyNameController,
             textColor: AppColors.primaryColour,
             hintColor: Colors.grey,
@@ -554,14 +554,14 @@ class _RegistrationState extends State<Registration>
             // },
           ),
           utils.buildTextField(
-            "Reference Name",
+            AppString.referenceName,
             _refNameController,
             textColor: AppColors.primaryColour,
             hintColor: Colors.grey,
             validator: (value) {},
           ),
           utils.buildTextField(
-            "Reference Number",
+            AppString.referenceNumber,
             _refNumberController,
             textColor: AppColors.primaryColour,
             hintColor: Colors.grey,
@@ -570,7 +570,7 @@ class _RegistrationState extends State<Registration>
 
           // Business Type Dropdown
           Text(
-            "Business Type",
+            AppString.businessType,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -580,7 +580,7 @@ class _RegistrationState extends State<Registration>
 
           DropdownButtonFormField<String>(
             decoration: InputDecoration(
-              labelText: "Business Type",
+              labelText: AppString.businessType,
               labelStyle: TextStyle(
                 color: Colors.white,
               ), // Set label color to white
@@ -642,7 +642,7 @@ class _RegistrationState extends State<Registration>
               ),
               Expanded(
                 child: Text(
-                  "I agree to the Terms & Conditions",
+                  AppString.term,
                   style: TextStyleHelper.mediumWhite,
                 ),
               ),
