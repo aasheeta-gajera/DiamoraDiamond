@@ -69,5 +69,10 @@ class AppString {
   static const String contactName = "Contact Name";
   static const String mobileNo = "Mobile No";
   static const String city = "City";
+  static const String logout = "Logout";
+  static const String location = "Location";
+  static const String certification = "Certification";
+  static const String pairingAvailable = "Pairing Available";
+  static const String bill = "Bill";
 
 }

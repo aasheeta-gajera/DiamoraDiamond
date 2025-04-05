@@ -113,7 +113,7 @@ class CustomerDashboard extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
           BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'CART'),
           BottomNavigationBarItem(icon: Icon(Icons.opacity_rounded), label: 'ORDER'),
-          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'PURCHASE'),
+          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'INVENTORY'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'ACCOUNT'),
         ],
       ),
@@ -146,7 +146,7 @@ class CustomerDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: AppString.purchase, icon: Icons.watch_later, onTap: () {},),
+            _DiamondCard(title: AppString.bill, icon: Icons.watch_later, onTap: () {},),
             // _DiamondCard(title: "MEMO", icon: Icons.publish_rounded, onTap: () {},),
           ],
         ),

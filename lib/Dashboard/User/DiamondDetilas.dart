@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import '../../Models/DiamondModel.dart';
 import '../../Library/AppColour.dart';

@@ -7,6 +7,7 @@ import '../Library/AppColour.dart';
 import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
+import '../Library/SharedPrefService.dart';
 import '../Library/Utils.dart' as utils;
 import '../Library/ApiService.dart';
 import '../Models/UserModel.dart';
@@ -76,6 +77,7 @@ class _RegistrationState extends State<Registration>
     );
     var uuid = Uuid();
     String id = uuid.v4();
+    await SharedPrefService.setString('userId',id);
     UserModel user = UserModel(
       userId: id.toString(),
       password: _passwordController.text,

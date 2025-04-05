@@ -1,4 +1,5 @@
 
+import 'package:daimo/Library/AppColour.dart';
 import 'package:flutter/material.dart';
 import 'Authentication/Splash.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColour),
         useMaterial3: true,
       ),
       home: const SplashScreen(),

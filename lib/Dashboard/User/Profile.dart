@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../Authentication/Login.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/AppImages.dart';
+import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import '../../Library/SharedPrefService.dart';
 
