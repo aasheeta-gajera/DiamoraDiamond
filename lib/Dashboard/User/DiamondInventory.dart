@@ -90,7 +90,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Diamond Inventory", style: TextStyleHelper.mediumPrimaryColour),
+        title: Text(AppString.diamondInventory, style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -115,7 +115,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                     : diamonds.isEmpty
                     ? Center(
                   child: Text(
-                    "NO DATA FOUND",
+                    AppString.noDataFound,
                     style: TextStyleHelper.mediumWhite,
                   ),
                 )
@@ -171,7 +171,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Weight: ",
+                                            text: AppString.weight,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -198,7 +198,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Color: ",
+                                            text: AppString.color,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -233,7 +233,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Clarity:  ",
+                                            text: AppString.clarity,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -259,7 +259,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "Certified: ",
+                                            text: AppString.certified,
                                             style: TextStyleHelper
                                                 .mediumWhite
                                                 .copyWith(
@@ -395,7 +395,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                               ),
                             )
                                 : Text(
-                              "No shapes available",
+                              AppString.noshapesavailable,
                               style: TextStyleHelper.mediumWhite,
                             ),
 

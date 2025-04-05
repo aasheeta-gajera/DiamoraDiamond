@@ -15,7 +15,7 @@ class DiamondDetail extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("PURCHASE",style: TextStyleHelper.mediumWhite,),
+        title: Text(AppString.purchase,style: TextStyleHelper.mediumWhite,),
         leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
       ),
       body: Padding(

@@ -3,7 +3,7 @@ class AppString {
   static const String authTxt = "Diamond";
   static const String authThough = "Find your dream Diamond";
   static const String logIn = "Log In";
-  static const String register = "REGISTER";
+  static const String register = "Register";
   static const String email = "Email";
   static const String password = "Password";
   static const String submit = "Submit";
@@ -58,5 +58,16 @@ class AppString {
   static const String noDataFound = "No Data Found";
   static const String certified = "Certified:";
   static const String noshapesavailable = "No shapes available";
+  static const String customer = "Customer";
+  static const String myInventory = "My Inventory";
+  static const String search = "Search";
+  static const String cart = "Cart";
+  static const String order = "Order";
+  static const String diamondSearch = "Diamond Search";
+  static const String reset = "Reset";
+  static const String profile = "Profile";
+  static const String contactName = "Contact Name";
+  static const String mobileNo = "Mobile No";
+  static const String city = "City";
 
 }

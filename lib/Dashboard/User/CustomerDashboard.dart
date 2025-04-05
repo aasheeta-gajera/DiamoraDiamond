@@ -25,7 +25,7 @@ class CustomerDashboard extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Customer",style: TextStyleHelper.mediumWhite.copyWith(color: AppColors.primaryColour),),
+        title: Text(AppString.customer,style: TextStyleHelper.mediumWhite.copyWith(color: AppColors.primaryColour),),
         leading: IconButton(
           color: AppColors.primaryColour,
           onPressed: () {
@@ -65,7 +65,7 @@ class CustomerDashboard extends StatelessWidget {
                           Icon(Icons.attach_money, size: 50, color: AppColors.primaryColour),
                           SizedBox(height: 8),
                           Text(
-                            "MY INVENTORY",
+                            AppString.myInventory,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -126,10 +126,10 @@ class CustomerDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "INVENTORY", icon: Icons.diamond, onTap: () {
+            _DiamondCard(title: AppString.inventory, icon: Icons.diamond, onTap: () {
               Get.to(DiamondInventory());
             },),
-            _DiamondCard(title: "SEARCH", icon: Icons.search, onTap: () {
+            _DiamondCard(title: AppString.search, icon: Icons.search, onTap: () {
               Get.to(DiamondSearch());
             },),
           ],
@@ -138,15 +138,15 @@ class CustomerDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "CART", icon: Icons.add_shopping_cart, onTap: () {},),
-            _DiamondCard(title: "ORDER", icon: Icons.opacity_rounded, onTap: () {},),
+            _DiamondCard(title: AppString.cart, icon: Icons.add_shopping_cart, onTap: () {},),
+            _DiamondCard(title: AppString.order, icon: Icons.opacity_rounded, onTap: () {},),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(title: "PURCHASE", icon: Icons.watch_later, onTap: () {},),
+            _DiamondCard(title: AppString.purchase, icon: Icons.watch_later, onTap: () {},),
             // _DiamondCard(title: "MEMO", icon: Icons.publish_rounded, onTap: () {},),
           ],
         ),

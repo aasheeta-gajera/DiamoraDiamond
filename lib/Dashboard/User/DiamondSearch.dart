@@ -215,7 +215,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("Diamond Search", style: TextStyleHelper.mediumPrimaryColour),
+        title: Text(AppString.diamondSearch, style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -242,7 +242,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Shape Selection
-                            Text("Shape", style: TextStyleHelper.bigWhite),
+                            Text(AppString.shape, style: TextStyleHelper.bigWhite),
                             GridView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -300,7 +300,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Size Range Slider
                             _buildRangeSlider(
-                              "Size (mm)",
+                              AppString.size,
                               sizeMin,
                               sizeMax,
                               3.0,
@@ -315,7 +315,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Weight Range Slider
                             _buildRangeSlider(
-                              "Weight (Carat)",
+                              AppString.weight,
                               weightCaratMin,
                               weightCaratMax,
                               0.25,
@@ -330,7 +330,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Clarity Slider
                             _buildSlider(
-                              "Clarity",
+                              AppString.clarity,
                               clarityValue,
                               0,
                               clarities.length - 1,
@@ -344,7 +344,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Cut Slider
                             _buildSlider(
-                              "Cut",
+                              AppString.cut,
                               cutValue,
                               0,
                               cuts.length - 1,
@@ -358,7 +358,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Polish Slider
                             _buildSlider(
-                              "Polish",
+                              AppString.polish,
                               polishValue,
                               0,
                               polishes.length - 1,
@@ -372,7 +372,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Symmetry Slider
                             _buildSlider(
-                              "Symmetry",
+                              AppString.symmetry,
                               symmetryValue,
                               0,
                               symmetries.length - 1,
@@ -386,7 +386,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Certification Slider
                             _buildSlider(
-                              "Certification",
+                              AppString.certification,
                               _selectedCertification,
                               0,
                               certifications.length - 1,
@@ -400,7 +400,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Location Slider
                             _buildSlider(
-                              "Location",
+                              AppString.location,
                               _selectedLocation,
                               0,
                               locations.length - 1,
@@ -414,7 +414,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Fluorescence Slider
                             _buildSlider(
-                              "Fluorescence",
+                              AppString.fluorescence,
                               fluorescenceValue,
                               0,
                               4,
@@ -428,7 +428,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Measurements Range Slider
                             _buildRangeSlider(
-                              "Measurements",
+                              AppString.measurements,
                               measurementsMinValue,
                               measurementsMaxValue,
                               4.0,
@@ -443,7 +443,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Table Percentage Range Slider
                             _buildRangeSlider(
-                              "Table Percentage",
+                              AppString.tablePercentage,
                               tablePercentageMinValue,
                               tablePercentageMaxValue,
                               50.0,
@@ -457,7 +457,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             ),
                             
                             // Color Selection
-                            Text("Color:", style: TextStyleHelper.mediumWhite),
+                            Text(AppString.color, style: TextStyleHelper.mediumWhite),
                             Wrap(
                               spacing: 8.0,
                               children: colors.map((color) => ChoiceChip(
@@ -491,7 +491,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                             
                             // Pairing Switch
                             SwitchListTile(
-                              title: Text("Pairing Available", style: TextStyle(color: Colors.white)),
+                              title: Text(AppString.pairingAvailable, style: TextStyle(color: Colors.white)),
                               value: isPairSelected,
                               onChanged: (bool value) {
                                 setState(() {
@@ -509,7 +509,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                               children: [
                                 ElevatedButton(
                                   onPressed: resetFilters,
-                                  child: Text("Reset"),
+                                  child: Text(AppString.reset),
                                   style: ElevatedButton.styleFrom(
                                     // primary: Colors.grey,
                                   ),
@@ -526,7 +526,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
                                       ),
                                     );
                                   },
-                                  child: Text("Search"),
+                                  child: Text(AppString.search),
                                   style: ElevatedButton.styleFrom(
                                     // primary: AppColors.primaryColour,
                                   ),

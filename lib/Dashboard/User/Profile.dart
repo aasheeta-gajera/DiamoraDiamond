@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.primaryWhite,
-        title: Text("PROFILE",style: TextStyleHelper.mediumWhite,),
+        title: Text(AppString.profile,style: TextStyleHelper.mediumWhite,),
         leading: IconButton(onPressed: (){
           Navigator.of(context).pop();
         }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
@@ -69,12 +69,12 @@ class _ProfileState extends State<Profile> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  profileDetail("Contact Name", contactName),
-                  profileDetail("Email", email),
-                  profileDetail("Mobile No", mobileNo),
-                  profileDetail("city", city),
-                  profileDetail("Address", address),
-                  profileDetail("Company Name", address),
+                  profileDetail(AppString.contactName, contactName),
+                  profileDetail(AppString.email, email),
+                  profileDetail(AppString.mobileNo, mobileNo),
+                  profileDetail(AppString.city, city),
+                  profileDetail(AppString.address, address),
+                  profileDetail(AppString.companyName, address),
                   const SizedBox(height: 30),
                   Center(
                     child: ElevatedButton(
@@ -84,7 +84,7 @@ class _ProfileState extends State<Profile> {
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                         textStyle: TextStyleHelper.mediumBlack,
                       ),
-                      child: Text("Logout",style: TextStyleHelper.mediumWhite,),
+                      child: Text(AppString.logout,style: TextStyleHelper.mediumWhite,),
                     ),
                   ),
                 ],
