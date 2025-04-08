@@ -1,4 +1,3 @@
-
 import 'package:daimo/Library/ApiService.dart';
 import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:flutter/material.dart';
@@ -15,116 +14,123 @@ class CommonDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: AppColors.greyLight,
-      child: Column(
-        children: [
-          _buildDrawerHeader(),
-          ApiService.userTypes == 'admin'
-              ? Expanded(
-                child: ListView(
-                  children: [
-                    _buildDrawerItem(
-                      icon: Icons.person,
-                      text: "PROFILE",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () => Get.to(Profile()),
+      backgroundColor: AppColors.primaryWhite,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.primaryColour, AppColors.secondaryColour],
+          ),
+        ),
+        child: Column(
+          children: [
+            _buildDrawerHeader(),
+            ApiService.userTypes == 'admin'
+                ? Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      children: [
+                        _buildDrawerItem(
+                          icon: Icons.person,
+                          text: "PROFILE",
+                          onTap: () => Get.to(Profile()),
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.home,
+                          text: "HOME",
+                          onTap: () => Navigator.pop(context),
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.shopping_cart_checkout,
+                          text: "PURCHASE",
+                          onTap: () => Navigator.pop(context),
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.receipt_long,
+                          text: "ORDER",
+                          onTap: () {},
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.favorite_border,
+                          text: "INQUIRY",
+                          onTap: () {},
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.settings,
+                          text: "REPORT",
+                          onTap: () {},
+                        ),
+                        const Divider(
+                          color: AppColors.primaryWhite,
+                          height: 32,
+                          thickness: 0.5,
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.logout,
+                          text: "Logout",
+                          isLogout: true,
+                          onTap: () {
+                            ApiService apiService = ApiService();
+                            apiService.logout();
+                          },
+                        ),
+                      ],
                     ),
-                    _buildDrawerItem(
-                      icon: Icons.home,
-                      text: "HOME",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () => Navigator.pop(context),
+                  )
+                : Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      children: [
+                        _buildDrawerItem(
+                          icon: Icons.person,
+                          text: "PROFILE",
+                          onTap: () => Get.to(Profile()),
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.home,
+                          text: "HOME",
+                          onTap: () => Navigator.pop(context),
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.shopping_cart_checkout,
+                          text: "MY CART",
+                          onTap: () => Navigator.pop(context),
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.receipt_long,
+                          text: "ORDER",
+                          onTap: () {},
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.favorite_border,
+                          text: "WISHLIST",
+                          onTap: () {},
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.settings,
+                          text: "SETTING",
+                          onTap: () {},
+                        ),
+                        const Divider(
+                          color: AppColors.primaryWhite,
+                          height: 32,
+                          thickness: 0.5,
+                        ),
+                        _buildDrawerItem(
+                          icon: Icons.logout,
+                          text: "Logout",
+                          isLogout: true,
+                          onTap: () {
+                            ApiService apiService = ApiService();
+                            apiService.logout();
+                          },
+                        ),
+                      ],
                     ),
-                    _buildDrawerItem(
-                      icon: Icons.shopping_cart_checkout,
-                      text: "PURCHASE",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.receipt_long,
-                      text: "ORDER",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () {},
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.favorite_border,
-                      text: "INQUIRY",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () {},
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.settings,
-                      text: "REPORT",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () {},
-                    ),
-                    const Divider(color: AppColors.primaryColour),
-                    _buildDrawerItem(
-                      icon: Icons.logout,
-                      text: "Logout",
-                      iconColor: Colors.redAccent,
-                      onTap: () {
-                        ApiService apiService = ApiService();
-                        apiService.logout();
-                      },
-                    ),
-                  ],
-                ),
-              )
-              : Expanded(
-                child: ListView(
-                  children: [
-                    _buildDrawerItem(
-                      icon: Icons.person,
-                      text: "PROFILE",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () => Get.to(Profile()),
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.home,
-                      text: "HOME",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.shopping_cart_checkout,
-                      text: "MY CART",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.receipt_long,
-                      text: "ORDER",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () {},
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.favorite_border,
-                      text: "WISHLIST",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () {},
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.settings,
-                      text: "SETTING",
-                      iconColor: AppColors.primaryColour,
-                      onTap: () {},
-                    ),
-                    const Divider(color: AppColors.primaryColour),
-                    _buildDrawerItem(
-                      icon: Icons.logout,
-                      text: "Logout",
-                      iconColor: Colors.redAccent,
-                      onTap: () {
-                        ApiService apiService = ApiService();
-                        apiService.logout();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-        ],
+                  ),
+          ],
+        ),
       ),
     );
   }
@@ -135,15 +141,25 @@ class CommonDrawer extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(color: AppColors.greyLight),
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryWhite,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const CircleAvatar(
               radius: 40,
-              backgroundColor: AppColors.primaryColour,
+              backgroundColor: AppColors.primaryWhite,
               child: Icon(
                 Icons.person,
                 size: 50,
@@ -151,18 +167,22 @@ class CommonDrawer extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           Text(
             name,
-            style: const TextStyle(
-              color: AppColors.primaryColour,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            style: TextStyleHelper.extraLargeWhite.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
           ),
+          const SizedBox(height: 8),
           Text(
             email,
-            style: const TextStyle(color: AppColors.primaryColour, fontSize: 14),
+            style: TextStyleHelper.mediumWhite.copyWith(
+              fontSize: 14,
+              letterSpacing: 0.3,
+            ),
           ),
         ],
       ),
@@ -172,27 +192,37 @@ class CommonDrawer extends StatelessWidget {
   Widget _buildDrawerItem({
     required IconData icon,
     required String text,
-    required Color iconColor,
     required VoidCallback onTap,
+    bool isLogout = false,
   }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.primaryColour.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: iconColor),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: AppColors.primaryWhite.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
       ),
-      title: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.primaryColour,
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.primaryWhite.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            color: isLogout ? Colors.redAccent : AppColors.primaryWhite,
+          ),
         ),
+        title: Text(
+          text,
+          style: TextStyleHelper.mediumWhite.copyWith(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: isLogout ? Colors.redAccent : AppColors.primaryWhite,
+          ),
+        ),
+        onTap: onTap,
       ),
-      onTap: onTap,
     );
   }
 }

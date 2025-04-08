@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Authentication/Login.dart';
@@ -7,7 +6,6 @@ import '../../Library/AppImages.dart';
 import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import '../../Library/SharedPrefService.dart';
-
 
 class Profile extends StatefulWidget {
   @override
@@ -23,8 +21,6 @@ class _ProfileState extends State<Profile> {
   String city = "";
   String contactName = "";
 
-
-
   Future<void> getUserDetails() async {
     name = SharedPrefService.getString('user_name') ?? "N/A";
     email = SharedPrefService.getString('user_email') ?? "N/A";
@@ -33,7 +29,7 @@ class _ProfileState extends State<Profile> {
     city = SharedPrefService.getString('City') ?? "N/A";
     contactName = SharedPrefService.getString('contactName') ?? "N/A";
     companyName = SharedPrefService.getString('contactName') ?? "N/A";
-    setState(() {});  // Refresh UI after fetching data
+    setState(() {});
   }
 
   void logout() async {
@@ -50,46 +46,174 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColour,
+      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryWhite,
-        title: Text(AppString.profile,style: TextStyleHelper.mediumWhite,),
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
-      ),
-      body: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+        backgroundColor: AppColors.secondaryColour,
+        elevation: 1,
+        title: Text(
+          AppString.profile,
+          style: TextStyleHelper.mediumPrimaryColour,
+        ),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_sharp,
+            color: AppColors.primaryColour,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 50),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  profileDetail(AppString.contactName, contactName),
-                  profileDetail(AppString.email, email),
-                  profileDetail(AppString.mobileNo, mobileNo),
-                  profileDetail(AppString.city, city),
-                  profileDetail(AppString.address, address),
-                  profileDetail(AppString.companyName, address),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: logout,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:AppColors.primaryWhite,
-                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                        textStyle: TextStyleHelper.mediumBlack,
+        ),
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.primaryColour, AppColors.secondaryColour],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primaryWhite,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.person,
+                          size: 50,
+                          color: AppColors.primaryColour,
+                        ),
                       ),
-                      child: Text(AppString.logout,style: TextStyleHelper.mediumWhite,),
+                      const SizedBox(height: 16),
+                      Text(
+                        name,
+                        style: TextStyleHelper.extraLargeWhite.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        email,
+                        style: TextStyleHelper.mediumWhite.copyWith(
+                          fontSize: 14,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Profile Details
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  decoration: BoxDecoration(
+                    color: AppColors.overlayLight,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.cardShadow,
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      _buildProfileDetail(AppString.contactName, contactName),
+                      _buildDivider(),
+                      _buildProfileDetail(AppString.email, email),
+                      _buildDivider(),
+                      _buildProfileDetail(AppString.mobileNo, mobileNo),
+                      _buildDivider(),
+                      _buildProfileDetail(AppString.city, city),
+                      _buildDivider(),
+                      _buildProfileDetail(AppString.address, address),
+                      _buildDivider(),
+                      _buildProfileDetail(AppString.companyName, companyName),
+                    ],
+                  ),
+                ),
+
+                // Logout Button
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: ElevatedButton(
+                    onPressed: logout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.overlayLight,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          AppString.logout,
+                          style: TextStyleHelper.mediumWhite.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileDetail(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyleHelper.mediumWhite.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyleHelper.mediumWhite.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -97,26 +221,11 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-
-  Widget profileDetail(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TextStyleHelper.mediumBlack.copyWith(fontWeight: FontWeight.bold)),
-          SizedBox(height: 5),
-          Container(
-            padding: EdgeInsets.all(12),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(value, style: TextStyle(fontSize: 16)),
-          ),
-        ],
-      ),
+  Widget _buildDivider() {
+    return Container(
+      height: 1,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      color: Colors.white.withOpacity(0.1),
     );
   }
 }

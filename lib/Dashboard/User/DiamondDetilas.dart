@@ -43,7 +43,7 @@ class DiamondDetail extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text("💎 Quantity: ${diamond.totalDiamonds}"),
+              Text("💎 Quantity: ${diamond.totalDiamonds}"),
           ],
         ),
       ),

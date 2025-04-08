@@ -1,17 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../Dashboard/Admin/AdminDashboard.dart';
 import '../Dashboard/User/CustomerDashboard.dart';
+import '../Library/ApiService.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
+import '../Library/SharedPrefService.dart';
+import 'ForgotPassword.dart';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import '../Library/Utils.dart' as utils;
 import '../Library/ApiService.dart';
-import '../Library/SharedPrefService.dart';
-import 'ForgotPassword.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -24,6 +27,7 @@ class _LogInState extends State<LogIn> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -115,151 +119,193 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.primaryColour,
+              AppColors.secondaryColour,
+            ],
           ),
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 50),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // App Logo
-                  Image.asset(
-                    AppImages.splashImage, // Ensure logo is in assets/images
-                    height: 100,
-                  ),
-                  const SizedBox(height: 20),
+                  // Logo with blur effect
+                  Center(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Blurred backdrop inside a circle
+                        Container(
+                          width: 140,
+                          height: 140,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.transparent,
+                                Colors.white.withOpacity(0.05),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
 
-                  // Login Text
-                  Text(
-                    AppString.logIn,
-                    style: TextStyleHelper.bigBlack.copyWith(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryWhite,
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.4),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Center(
+                            child: ClipOval(
+                              child: Image.asset(
+                                AppImages.splashImage,
+                                width: 90,
+                                height: 90,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ClipOval(
+                          child: Image.asset(
+                            AppImages.splashImage,
+                            width: 90,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 28),
 
-                  // Email Input Field
-                  // Email Input Field
-                  _buildInputField(
-                    AppString.email,
-                    AppString.enterMail,
-                    emailController,
-                    Icons.email, textColor: AppColors.primaryColour, hintColor: Colors.grey,
+                  Text(
+                    AppString.welcomeBack,
+                    style: TextStyleHelper.extraLargeWhite.copyWith(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 15),
-
-                  // Password Input Field
-                  _buildInputField(
-                    AppString.password,
-                    AppString.enterPassword,
-                    passwordController,
-                    Icons.lock,
-                    obscureText: true, textColor: AppColors.primaryColour, hintColor: Colors.grey,
+                  const SizedBox(height: 8),
+                  Text(
+                    AppString.pleaseSignIn,
+                    style: TextStyleHelper.mediumWhite.copyWith(
+                      fontSize: 15,
+                      letterSpacing: 0.5,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 32),
 
-                  const SizedBox(height: 20),
+                  // Email
+                  TextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyleHelper.mediumBlack,
+                    decoration: InputDecoration(
+                      labelText: AppString.email,
+                      prefixIcon: const Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.primaryWhite,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
-                  // Login Button
-                  isLoading
-                      ? CircularProgressIndicator(color: AppColors.primaryColour):
-                  utils.PrimaryButton(text: AppString.submit, onPressed: _login),
-                  const SizedBox(height: 15),
+                  // Password
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: !_isPasswordVisible,
+                    style: TextStyleHelper.mediumBlack,
+                    decoration: InputDecoration(
+                      labelText: AppString.password,
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        icon: Icon(_isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility),
+                        onPressed: () =>
+                            setState(() => _isPasswordVisible = !_isPasswordVisible),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.primaryWhite,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
 
-                  // Forgot Password
-                  GestureDetector(
-                    onTap: () => Get.to(ForgotResetPassword()),
-                    child: Text(
-                      AppString.forgotPassword,
-                      style: TextStyleHelper.mediumBlack.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                  // Login button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryWhite,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 6,
+                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator()
+                          : Text(
+                        AppString.logIn,
+                        style: TextStyleHelper.mediumBlack.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 16),
+
+                  // Forgot Password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () => Get.to(() => const ForgotResetPassword()),
+                      icon: const Icon(
+                        Icons.lock_outline,
+                        size: 18,
+                        color: Colors.white70,
+                      ),
+                      label: Text(
+                        "Forgot Password?",
+                        style: TextStyleHelper.mediumWhite.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,
+                          color: Colors.white.withOpacity(0.9),
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        alignment: Alignment.centerRight,
+                      ),
+                    ),
+                  ),
+
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Build Input Field with Custom Styling
-  Widget _buildInputField(
-      String label,
-      String hint,
-      TextEditingController controller,
-      IconData icon, {
-        bool readOnly = false,
-        required Color textColor,
-        required MaterialColor hintColor,
-        TextInputType keyboardType = TextInputType.text,
-        bool obscureText = false,
-        Function(String)? onChange,
-      }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        onChanged: onChange,
-        controller: controller,
-        obscureText: obscureText,
-        readOnly: readOnly,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: hint,
-          labelText: label,
-          hintStyle: const TextStyle(color: Colors.white), // Set hint text color to white
-          labelStyle: const TextStyle(color: Colors.white), // Optional: Set label text color to white
-          prefixIcon: Icon(icon, color: Colors.white),
-          filled: true,
-          fillColor: Colors.white.withOpacity(0.2),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 15),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.white,
-              width: 2,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
-  // Build Gradient Button
-  Widget _buildGradientButton(String text, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: double.infinity,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.deepPurpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          text,
-          style: TextStyleHelper.mediumBlack.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ),

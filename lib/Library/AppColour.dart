@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -8,7 +7,7 @@ class AppColors {
   // **Primary Colors**
   static const Color primaryWhite = Color(0xffe8e1e1);
   static const Color secondaryColour = Color(0x202A38FF);
-  static const Color primaryColour = Color(0xFF202A38);
+  static const Color primaryColour = Color(0xFF1A237E);
   static const Color primaryAmber = Color(0xFFFFC107);
   static const Color transparent = Colors.transparent;
   static const Color primaryBrown = Color(0xFF795548);
@@ -31,11 +30,11 @@ class AppColors {
   static const Color textAmber = Color(0xFFFFC107);
 
   // **Button Colors**
-  static const Color buttonPrimary = Color(0xFF795548);
-  static const Color buttonSecondary = Color(0xFFFFFFFF);
+  static const Color buttonPrimary = Color(0xFF1A237E);
+  static const Color buttonSecondary = Color(0xFF0D47A1);
   static const Color buttonBorder = Color(0xFF795548);
   static const Color buttonTextPrimary = Color(0xFFFFFFFF);
-  static const Color buttonTextSecondary = Color(0xFF795548);
+  static const Color buttonTextSecondary = Color(0xFF0D47A1);
 
   // **Border Colors**
   static const Color borderBrown = Color(0xFF795548);
@@ -43,7 +42,7 @@ class AppColors {
 
   // **Card Colors**
   static const Color cardBackground = Color(0xFFF5F5F5);
-  static const Color cardShadow = Color(0x40000000);
+  static const Color cardShadow = Color(0x1A000000);
 
   // **Red Shades**
   static const Color red = Color(0xFFF44336);
@@ -156,6 +155,52 @@ class AppColors {
   static const Color blueGreyLight = Color(0xFFB0BEC5);
   static const Color blueGreyDark = Color(0xFF455A64);
 
+  // Brand Colors
+  static const Color accentColour = Color(0xFF2196F3);
 
+  // Background Colors
+  static const Color backgroundPrimary = Color(0xFFF5F5F5);
+  static const Color backgroundSecondary = Color(0xFFE0E0E0);
+  static const Color backgroundLight = Color(0xFFFFFFFF);
+  static const Color backgroundDark = Color(0xFF212121);
+
+  // Text Colors
+  static const Color textPrimary = Color(0xFF212121);
+  static const Color textSecondary = Color(0xFF757575);
+  static const Color textMuted = Color(0xFF9E9E9E);
+  static const Color primaryBlack = Color(0xFF000000);
+
+  // Status Colors
+  static const Color success = Color(0xFF4CAF50);
+  static const Color warning = Color(0xFFFFC107);
+  static const Color error = Color(0xFFF44336);
+  static const Color info = Color(0xFF2196F3);
+
+  // Border Colors
+  static const Color borderLight = Color(0xFFE0E0E0);
+  static const Color borderDark = Color(0xFFBDBDBD);
+
+  // Overlay Colors
+  static const Color overlayLight = Color(0x1AFFFFFF);
+  static const Color overlayDark = Color(0x1A000000);
+
+  // Gradient Colors
+  static const LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [primaryColour, secondaryColour],
+  );
+
+  static const LinearGradient accentGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [accentColour, primaryColour],
+  );
+
+  // Component Colors
+  static const Color buttonAccent = accentColour;
+
+  // Shadow Colors
+  static const Color primaryShadow = Color(0x33000000);
 }
 

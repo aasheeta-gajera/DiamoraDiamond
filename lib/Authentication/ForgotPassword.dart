@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:daimo/Authentication/Login.dart';
@@ -11,23 +10,36 @@ import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotResetPassword extends StatefulWidget {
   const ForgotResetPassword({super.key});
 
   @override
-  _ForgotResetPasswordState createState() => _ForgotResetPasswordState();
+  State<ForgotResetPassword> createState() => _ForgotResetPasswordState();
 }
 
 class _ForgotResetPasswordState extends State<ForgotResetPassword> {
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+  bool _isResetMode = false;
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
 
   Timer? _debounce;
   String? _resetToken;
-  bool isResetMode = false;
+  // bool isResetMode = false;
 
   void _onEmailChanged(String email) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -56,7 +68,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
       if (response.statusCode == 200) {
         setState(() {
           _resetToken = data["resetToken"];
-          isResetMode = true;
+          _isResetMode = true;
         });
         utils.showCustomSnackbar(
           'Reset token received. Enter new password.',
@@ -96,7 +108,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
         utils.showCustomSnackbar("Password reset successful!", true);
         Get.to(() => LogIn());
         setState(() {
-          isResetMode = false;
+          _isResetMode = false;
           emailController.clear();
           passwordController.clear();
           confirmPasswordController.clear();
@@ -110,65 +122,211 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColour,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.primaryColour,
+              AppColors.secondaryColour,
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Column(
               children: [
+                // Logo
+                Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Blurred backdrop inside a circle
+                      Container(
+                        width: 140,
+                        height: 140,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.transparent,
+                              Colors.white.withOpacity(0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.4),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: ClipOval(
+                            child: Image.asset(
+                              AppImages.splashImage,
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ClipOval(
+                        child: Image.asset(
+                          AppImages.splashImage,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Headline
                 Text(
-                  isResetMode == false?AppString.forgotPassword:AppString.resetPassword,
+                  _isResetMode ? AppString.resetPassword : AppString.forgotPassword,
                   style: TextStyleHelper.extraLargeWhite.copyWith(
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
-                if (!isResetMode)
-                  Column(
-                    children: [
-                      utils.buildTextField(
-                        AppString.enterMail,
-                        emailController,
-                        textColor: AppColors.primaryColour,
-                        hintColor: Colors.white,
-                        onChange: _onEmailChanged,
-                      ),
-                    ],
+                const SizedBox(height: 8),
+                Text(
+                  _isResetMode ? AppString.enterNewPassword : AppString.enterEmailToReset,
+                  style: TextStyleHelper.mediumWhite.copyWith(
+                    fontSize: 14,
+                    color: Colors.white70,
                   ),
-                if (isResetMode)
-                  Column(
-                    children: [
-                      utils.buildTextField(
-                        AppString.newPassword,
-                        passwordController,
-                        textColor: AppColors.primaryWhite,
-                        hintColor: Colors.grey,
-                      ),
-                      utils.buildTextField(
-                        AppString.confirmPassword,
-                        confirmPasswordController,
-                        textColor: AppColors.primaryWhite,
-                        hintColor: Colors.grey,
-                      ),
-                      SizedBox(height: 20),
-                      utils.PrimaryButton(
-                        onPressed: _resetPassword,
-                        text: AppString.resetPassword,
-                      ),
-                    ],
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+
+                // Email field (auto send when typed)
+                if (!_isResetMode)
+                  _buildField(
+                    controller: emailController,
+                    hint: AppString.email,
+                    icon: Icons.email_outlined,
+                    inputType: TextInputType.emailAddress,
+                    onChanged: _onEmailChanged,
                   ),
+
+                // Reset fields
+                if (_isResetMode) ...[
+                  _buildField(
+                    controller: passwordController,
+                    hint: AppString.newPassword,
+                    icon: Icons.lock_outline,
+                    obscureText: !_isPasswordVisible,
+                    suffix: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                        color: AppColors.primaryColour,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildField(
+                    controller: confirmPasswordController,
+                    hint: AppString.confirmPassword,
+                    icon: Icons.lock_outline,
+                    obscureText: !_isConfirmPasswordVisible,
+                    suffix: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                        color: AppColors.primaryColour,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _resetPassword,
+                      style: ElevatedButton.styleFrom(
+                        elevation: 4,
+                        backgroundColor: AppColors.primaryWhite,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                      )
+                          : Text(
+                        AppString.resetPassword,
+                        style: TextStyleHelper.mediumBlack.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
+Widget _buildField({
+  required TextEditingController controller,
+  required String hint,
+  required IconData icon,
+  bool obscureText = false,
+  Widget? suffix,
+  TextInputType inputType = TextInputType.text,
+  void Function(String)? onChanged,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: TextFormField(
+      controller: controller,
+      keyboardType: inputType,
+      obscureText: obscureText,
+      onChanged: onChanged,
+      style: TextStyleHelper.mediumBlack,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        hintText: hint,
+        hintStyle: TextStyleHelper.mediumBlack.copyWith(
+          color: Colors.black45,
+        ),
+        prefixIcon: Icon(icon, color: AppColors.primaryColour),
+        suffixIcon: suffix,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    ),
+  );
+}
+

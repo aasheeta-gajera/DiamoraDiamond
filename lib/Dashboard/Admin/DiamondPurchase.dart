@@ -1,4 +1,3 @@
-
 import 'package:daimo/Library/AppStrings.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   double purchasePriceValue = 0.0;
   double totalDiamondsValue = 0.0;
 
-    String _supplierContact = "";
+  String _supplierContact = "";
 
   List<Supplier> suppliers = [];
   Supplier? _selectedSupplier;
@@ -173,7 +172,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
   final TextEditingController supplierController = TextEditingController();
   final TextEditingController supplierContactController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController lotNumberController = TextEditingController();
   final TextEditingController itemCodeController = TextEditingController();
   final TextEditingController invoiceNumberController = TextEditingController();
@@ -308,383 +307,461 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColour,
+      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryWhite,
-        title: Text(AppString.purchase,style: TextStyleHelper.mediumPrimaryColour,),
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+        backgroundColor: AppColors.secondaryColour,
+        elevation: 1,
+        title: Text(
+          AppString.purchase,
+          style: TextStyleHelper.mediumPrimaryColour,
+        ),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppColors.primaryColour,
           ),
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-            child: Column(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(AppString.shape, style: TextStyleHelper.bigWhite),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics:
-                          NeverScrollableScrollPhysics(), // Prevents scrolling inside a scrollable parent
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: shapeImages.length,
-                      itemBuilder: (context, index) {
-                        String shape = shapeImages.keys.elementAt(index);
-                        bool isSelected = _selectedShapes.contains(shape);
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (isSelected) {
-                                _selectedShapes.remove(shape);
-                              } else {
-                                _selectedShapes.add(shape);
-                              }
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  isSelected
-                                      ? AppColors.primaryWhite
-                                      : AppColors.primaryColour, // Change background color
-                              border: Border.all(
-                                color: Colors.white,
-                              ), // Black border
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  shapeImages[shape]!,
-                                  width: 40,
-                                  height: 40,
-                                  color:
-                                      isSelected
-                                          ? AppColors.primaryColour
-                                          : Colors.white, // Change image color
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  shape,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        isSelected
-                                            ? Colors.black
-                                            : Colors.white, // Change text color
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 10),
-
-                utils.buildDropdownField(
-                  label: AppString.supplier,
-                  value: _selectedSupplier?.companyName, // Ensure this exists in the items list
-                  items: suppliers.map((supplier) => {
-                    "supplier": supplier.companyName,  // Primary identifier
-                    "supplierContact": supplier.contact,
-                    "itemCode": supplier.gstNumber,
-                    "lotNumber": supplier.email,
-                  }).toList(), // Convert to List<Map<String, String>>
-                  onChanged: (value) {
-                    setState(() {
-                      final selectedSupplierData = suppliers.firstWhere(
-                            (supplier) => supplier.companyName == value,
-                        orElse: () => Supplier.empty(), // Provide a default empty Supplier object
-                      );
-
-                      if (selectedSupplierData.companyName.isNotEmpty) {
-                        _selectedSupplier = selectedSupplierData;
-                        _supplierContact = selectedSupplierData.contact;
-                        _companyName = selectedSupplierData.companyName;
-                        _supplierEmail = selectedSupplierData.email;
-                      }
-                    });
-                  },
-                ),
-
-
-
-
-                utils.buildTextField(
-                  AppString.supplierContact,
-                  TextEditingController(text: _supplierContact),
-                  textColor: AppColors.primaryWhite,
-                  hintColor: Colors.grey,
-                  readOnly: true,
-                ),
-
-                utils.buildTextField(
-                  AppString.supplierEmail,
-                  TextEditingController(text: _supplierEmail),
-                  textColor: AppColors.primaryWhite,
-                  hintColor: Colors.grey,
-                  readOnly: true,
-                ),
-
-                utils.buildTextField(
-                  AppString.companyName,
-                  TextEditingController(text: _companyName),
-                  textColor: AppColors.primaryWhite,
-                  hintColor: Colors.grey,
-                  readOnly: true,
-                ),
-
-                utils.buildTextField(
-                  AppString.invoiceNumber,
-                  invoiceNumberController,
-                  textColor: AppColors.primaryWhite,
-                  hintColor: Colors.grey,
-                ),
-
-                SizedBox(height: 10),
-
-                _buildRangeSlider(AppString.size, sizeMin, sizeMax, 3.0, 16.0, (
-                  min,
-                  max,
-                ) {
-                  setState(() {
-                    sizeMin = min;
-                    sizeMax = max;
-                  });
-                }),
-                _buildRangeSlider(
-                  AppString.weight,
-                  weightCaratMin,
-                  weightCaratMax,
-                  0.25,
-                  10.0,
-                  (min, max) {
-                    setState(() {
-                      weightCaratMin = min;
-                      weightCaratMax = max;
-                    });
-                  },
-                ),
-                _buildSlider(
-                  AppString.clarity,
-                  clarityValue,
-                  0,
-                  clarityLevels.length - 1,
-                  clarityLevels,
-                  (value) {
-                    setState(() {
-                      clarityValue = value;
-                    });
-                  },
-                ),
-                _buildSlider(AppString.cut, cutValue, 0, cutGrades.length - 1, cutGrades, (
-                  value,
-                ) {
-                  setState(() {
-                    cutValue = value;
-                  });
-                }),
-                _buildSlider(
-                  AppString.polish,
-                  polishValue,
-                  0,
-                  polishes.length - 1,
-                  polishes,
-                  (value) {
-                    setState(() {
-                      polishValue = value;
-                    });
-                  },
-                ),
-                _buildSlider(
-                  AppString.symmetry,
-                  symmetryValue,
-                  0,
-                  symmetries.length - 1,
-                  symmetries,
-                  (value) {
-                    setState(() {
-                      symmetryValue = value;
-                    });
-                  },
-                ),
-
-                _buildSlider(
-                  AppString.certifications,
-                  _selectedCertification,
-                  0,
-                  certifications.length - 1,
-                  certifications,
-                  (value) {
-                    setState(() {
-                      _selectedCertification = value;
-                    });
-                  },
-                ),
-
-                _buildSlider(
-                  AppString.locations,
-                  _selectedLocation,
-                  0,
-                  locations.length - 1,
-                  locations,
-                  (value) {
-                    setState(() {
-                      _selectedLocation = value;
-                    });
-                  },
-                ),
-
-                _buildSlider(
-                  AppString.fluorescence,
-                  fluorescenceValue,
-                  0,
-                  5,
-                  ["None", "Faint", "Medium", "Strong", "Very Strong"],
-                  (value) {
-                    setState(() {
-                      fluorescenceValue = value;
-                    });
-                  },
-                ),
-
-                _buildRangeSlider(
-                  AppString.measurements,
-                  measurementsMinValue,
-                  measurementsMaxValue,
-                  4.0, // Min diamond size in mm
-                  11.0, // Max diamond size in mm
-                  (start, end) {
-                    setState(() {
-                      measurementsMinValue = start;
-                      measurementsMaxValue = end;
-                    });
-                  },
-                ),
-
-                _buildRangeSlider(
-                  AppString.tablePercentage,
-                  tablePercentageMinValue,
-                  tablePercentageMaxValue,
-                  50.0, // Min table percentage
-                  75.0, // Max table percentage
-                  (start, end) {
-                    setState(() {
-                      tablePercentageMinValue = start;
-                      tablePercentageMaxValue = end;
-                    });
-                  },
-                ),
-
-                utils.buildTextField(
-                  AppString.totalDiamond,
-                  totalDiamondsController,
-                  textColor: AppColors.primaryWhite,
-                  hintColor: Colors.grey,
-                ),
-                GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: AbsorbPointer(
-                    child: utils.buildTextField(
-                      AppString.purchaseDate,
-                      TextEditingController(
-                        text:
-                            _selectedPurchaseDate != null
-                                ? "${_selectedPurchaseDate!.year}-${_selectedPurchaseDate!.month.toString().padLeft(2, '0')}-${_selectedPurchaseDate!.day.toString().padLeft(2, '0')}"
-                                : "",
-                      ),
-                      textColor: Colors.black, // Text color set to black
-                      hintColor: Colors.grey, // Hint color remains grey
-                      readOnly: true, // Non-editable field
-                      icon: Icons.calendar_today, // Calendar icon
-                    ),
+        ),
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.primaryColour, AppColors.secondaryColour],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.overlayLight,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.cardShadow,
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
                   ),
-                ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // Shape Selection
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppString.shape,
+                          style: TextStyleHelper.mediumWhite.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: shapeImages.length,
+                          itemBuilder: (context, index) {
+                            String shape = shapeImages.keys.elementAt(index);
+                            bool isSelected = _selectedShapes.contains(shape);
 
-                SizedBox(height: 10),
-                Text(AppString.color, style: TextStyle(fontSize: 18)),
-
-                Wrap(
-                  spacing: 8.0,
-                  children:
-                      colors
-                          .map(
-                            (color) => ChoiceChip(
-                              checkmarkColor: Colors.white,
-                              backgroundColor: Colors.transparent,
-                              selectedColor: Colors.black,
-                              label: Text(
-                                color,
-                                style: TextStyle(
-                                  color:
-                                      _selectedColors.contains(color)
-                                          ? Colors.white
-                                          : Colors.black,
-                                ),
-                              ),
-                              selected: _selectedColors.contains(color),
-                              onSelected: (selected) {
+                            return GestureDetector(
+                              onTap: () {
                                 setState(() {
-                                  if (selected) {
-                                    _selectedColors.add(color);
+                                  if (isSelected) {
+                                    _selectedShapes.remove(shape);
                                   } else {
-                                    _selectedColors.remove(color);
+                                    _selectedShapes.add(shape);
                                   }
                                 });
                               },
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: Colors.black,
-                                ), // Keeps the border black
-                                borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColors.transparent
+                                      : AppColors.secondaryColour,
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? AppColors.backgroundBlack
+                                        : AppColors.primaryWhite,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                // padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      shapeImages[shape]!,
+                                      width: 40,
+                                      height: 40,
+                                      color: isSelected
+                                          ? AppColors.backgroundBlack
+                                          : Colors.white,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      shape,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: isSelected
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Supplier Selection
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: utils.buildDropdownField(
+                      label: AppString.supplier,
+                      value: _selectedSupplier?.companyName,
+                      items: suppliers.map((supplier) => {
+                        "supplier": supplier.companyName,
+                        "supplierContact": supplier.contact,
+                        "itemCode": supplier.gstNumber,
+                        "lotNumber": supplier.email,
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          final selectedSupplierData = suppliers.firstWhere(
+                                (supplier) => supplier.companyName == value,
+                            orElse: () => Supplier.empty(),
+                          );
+
+                          if (selectedSupplierData.companyName.isNotEmpty) {
+                            _selectedSupplier = selectedSupplierData;
+                            _supplierContact = selectedSupplierData.contact;
+                            _companyName = selectedSupplierData.companyName;
+                            _supplierEmail = selectedSupplierData.email;
+                          }
+                        });
+                      },
+                    ),
+                  ),
+
+                  // Supplier Details
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        utils.buildTextField(
+                          AppString.supplierContact,
+                          TextEditingController(text: _supplierContact),
+                          textColor: AppColors.primaryWhite,
+                          hintColor: Colors.grey,
+                          readOnly: true,
+                        ),
+                        utils.buildTextField(
+                          AppString.supplierEmail,
+                          TextEditingController(text: _supplierEmail),
+                          textColor: AppColors.primaryWhite,
+                          hintColor: Colors.grey,
+                          readOnly: true,
+                        ),
+                        utils.buildTextField(
+                          AppString.companyName,
+                          TextEditingController(text: _companyName),
+                          textColor: AppColors.primaryWhite,
+                          hintColor: Colors.grey,
+                          readOnly: true,
+                        ),
+                        utils.buildTextField(
+                          AppString.invoiceNumber,
+                          invoiceNumberController,
+                          textColor: AppColors.primaryWhite,
+                          hintColor: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Diamond Specifications
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildRangeSlider(
+                          AppString.size,
+                          sizeMin,
+                          sizeMax,
+                          3.0,
+                          16.0,
+                              (min, max) {
+                            setState(() {
+                              sizeMin = min;
+                              sizeMax = max;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildRangeSlider(
+                          AppString.weight,
+                          weightCaratMin,
+                          weightCaratMax,
+                          0.25,
+                          10.0,
+                              (min, max) {
+                            setState(() {
+                              weightCaratMin = min;
+                              weightCaratMax = max;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.clarity,
+                          clarityValue,
+                          0,
+                          clarityLevels.length - 1,
+                          clarityLevels,
+                              (value) {
+                            setState(() {
+                              clarityValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.cut,
+                          cutValue,
+                          0,
+                          cutGrades.length - 1,
+                          cutGrades,
+                              (value) {
+                            setState(() {
+                              cutValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.polish,
+                          polishValue,
+                          0,
+                          polishes.length - 1,
+                          polishes,
+                              (value) {
+                            setState(() {
+                              polishValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.symmetry,
+                          symmetryValue,
+                          0,
+                          symmetries.length - 1,
+                          symmetries,
+                              (value) {
+                            setState(() {
+                              symmetryValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.certifications,
+                          _selectedCertification,
+                          0,
+                          certifications.length - 1,
+                          certifications,
+                              (value) {
+                            setState(() {
+                              _selectedCertification = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.locations,
+                          _selectedLocation,
+                          0,
+                          locations.length - 1,
+                          locations,
+                              (value) {
+                            setState(() {
+                              _selectedLocation = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.fluorescence,
+                          fluorescenceValue,
+                          0,
+                          5,
+                          ["None", "Faint", "Medium", "Strong", "Very Strong"],
+                              (value) {
+                            setState(() {
+                              fluorescenceValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildRangeSlider(
+                          AppString.measurements,
+                          measurementsMinValue,
+                          measurementsMaxValue,
+                          4.0,
+                          11.0,
+                              (start, end) {
+                            setState(() {
+                              measurementsMinValue = start;
+                              measurementsMaxValue = end;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildRangeSlider(
+                          AppString.tablePercentage,
+                          tablePercentageMinValue,
+                          tablePercentageMaxValue,
+                          50.0,
+                          75.0,
+                              (start, end) {
+                            setState(() {
+                              tablePercentageMinValue = start;
+                              tablePercentageMaxValue = end;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Color Selection
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppString.color,
+                          style: TextStyleHelper.mediumWhite.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8.0,
+                          children: colors.map((color) => ChoiceChip(
+                            checkmarkColor: Colors.white,
+                            backgroundColor: Colors.transparent,
+                            selectedColor: Colors.black,
+                            label: Text(
+                              color,
+                              style: TextStyle(
+                                color: _selectedColors.contains(color)
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
-                          )
-                          .toList(),
-                ),
-
-                Divider(height: 30),
-
-                _buildSwitch(
-                  AppString.diamondPair,
-                  isPairSelected,
-                  (value) => setState(() => isPairSelected = value),
-                ),
-
-                Center(
-                  child: utils.PrimaryButton(
-                    text: AppString.purchase,
-                    onPressed: () {
-                      submitForm();
-                    },
+                            selected: _selectedColors.contains(color),
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _selectedColors.add(color);
+                                } else {
+                                  _selectedColors.remove(color);
+                                }
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          )).toList(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+
+                  // Additional Details
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        utils.buildTextField(
+                          AppString.totalDiamond,
+                          totalDiamondsController,
+                          textColor: AppColors.primaryWhite,
+                          hintColor: Colors.grey,
+                        ),
+                        const SizedBox(height: 16),
+                        GestureDetector(
+                          onTap: () => _selectDate(context),
+                          child: AbsorbPointer(
+                            child: utils.buildTextField(
+                              AppString.purchaseDate,
+                              TextEditingController(
+                                text: _selectedPurchaseDate != null
+                                    ? "${_selectedPurchaseDate!.year}-${_selectedPurchaseDate!.month.toString().padLeft(2, '0')}-${_selectedPurchaseDate!.day.toString().padLeft(2, '0')}"
+                                    : "",
+                              ),
+                              textColor: Colors.black,
+                              hintColor: Colors.grey,
+                              readOnly: true,
+                              icon: Icons.calendar_today,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSwitch(
+                          AppString.diamondPair,
+                          isPairSelected,
+                              (value) => setState(() => isPairSelected = value),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Submit Button
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: utils.PrimaryButton(
+                        text: AppString.purchase,
+                        onPressed: () {
+                          submitForm();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -708,13 +785,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   }
 
   Widget _buildSlider(
-    String label,
-    double value,
-    double min,
-    double max,
-    List<String> options,
-    Function(double) onChanged,
-  ) {
+      String label,
+      double value,
+      double min,
+      double max,
+      List<String> options,
+      Function(double) onChanged,
+      ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -734,17 +811,17 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:
-                options.map((option) {
-                  return Text(
-                    option,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color:
-                          Colors.white, // Slightly gray for better visibility
-                      fontWeight: FontWeight.w500,
-                    ),
-                  );
-                }).toList(),
+            options.map((option) {
+              return Text(
+                option,
+                style: TextStyle(
+                  fontSize: 12,
+                  color:
+                  Colors.white, // Slightly gray for better visibility
+                  fontWeight: FontWeight.w500,
+                ),
+              );
+            }).toList(),
           ),
         ),
 
@@ -807,13 +884,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 }
 
 Widget _buildRangeSlider(
-  String label,
-  double min,
-  double max,
-  double rangeMin,
-  double rangeMax,
-  Function(double, double) onChanged,
-) {
+    String label,
+    double min,
+    double max,
+    double rangeMin,
+    double rangeMax,
+    Function(double, double) onChanged,
+    ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

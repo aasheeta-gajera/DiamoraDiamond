@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:daimo/Library/ApiService.dart';
 import 'package:daimo/Library/AppStyle.dart';
@@ -212,376 +211,420 @@ class _DiamondSearchState extends State<DiamondSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColour,
+      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryWhite,
-        title: Text(AppString.diamondSearch, style: TextStyleHelper.mediumPrimaryColour),
+        backgroundColor: AppColors.secondaryColour,
+        elevation: 1,
+        title: Text(
+          AppString.diamondSearch,
+          style: TextStyleHelper.mediumPrimaryColour,
+        ),
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
             Icons.arrow_back_ios_new_sharp,
             color: AppColors.primaryColour,
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.primaryColour, AppColors.secondaryColour],
           ),
-          Column(
-            children: [
-              Expanded(
-                child: isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : SingleChildScrollView(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Shape Selection
-                            Text(AppString.shape, style: TextStyleHelper.bigWhite),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 4,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 1,
-                              ),
-                              itemCount: shapeImages.length,
-                              itemBuilder: (context, index) {
-                                String shape = shapeImages.keys.elementAt(index);
-                                bool isSelected = _selectedShapes.contains(shape);
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (isSelected) {
-                                        _selectedShapes.remove(shape);
-                                      } else {
-                                        _selectedShapes.add(shape);
-                                      }
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: isSelected ? AppColors.primaryColour : Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: Colors.black),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          shapeImages[shape]!,
-                                          width: 40,
-                                          height: 40,
-                                          color: isSelected ? Colors.white : Colors.black,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          shape,
-                                          style: TextStyle(
-                                            color: isSelected ? Colors.white : Colors.black,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.overlayLight,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.cardShadow,
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // Shape Selection
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppString.shape,
+                          style: TextStyleHelper.mediumWhite.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: shapeImages.length,
+                          itemBuilder: (context, index) {
+                            String shape = shapeImages.keys.elementAt(index);
+                            bool isSelected = _selectedShapes.contains(shape);
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (isSelected) {
+                                    _selectedShapes.remove(shape);
+                                  } else {
+                                    _selectedShapes.add(shape);
+                                  }
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColors.transparent
+                                      : AppColors.secondaryColour,
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? AppColors.backgroundBlack
+                                        : AppColors.primaryWhite,
                                   ),
-                                );
-                              },
-                            ),
-                            
-                            SizedBox(height: 16),
-                            
-                            // Size Range Slider
-                            _buildRangeSlider(
-                              AppString.size,
-                              sizeMin,
-                              sizeMax,
-                              3.0,
-                              16.0,
-                              (min, max) {
-                                setState(() {
-                                  sizeMin = min;
-                                  sizeMax = max;
-                                });
-                              },
-                            ),
-                            
-                            // Weight Range Slider
-                            _buildRangeSlider(
-                              AppString.weight,
-                              weightCaratMin,
-                              weightCaratMax,
-                              0.25,
-                              10.0,
-                              (min, max) {
-                                setState(() {
-                                  weightCaratMin = min;
-                                  weightCaratMax = max;
-                                });
-                              },
-                            ),
-                            
-                            // Clarity Slider
-                            _buildSlider(
-                              AppString.clarity,
-                              clarityValue,
-                              0,
-                              clarities.length - 1,
-                              clarities,
-                              (value) {
-                                setState(() {
-                                  clarityValue = value;
-                                });
-                              },
-                            ),
-                            
-                            // Cut Slider
-                            _buildSlider(
-                              AppString.cut,
-                              cutValue,
-                              0,
-                              cuts.length - 1,
-                              cuts,
-                              (value) {
-                                setState(() {
-                                  cutValue = value;
-                                });
-                              },
-                            ),
-                            
-                            // Polish Slider
-                            _buildSlider(
-                              AppString.polish,
-                              polishValue,
-                              0,
-                              polishes.length - 1,
-                              polishes,
-                              (value) {
-                                setState(() {
-                                  polishValue = value;
-                                });
-                              },
-                            ),
-                            
-                            // Symmetry Slider
-                            _buildSlider(
-                              AppString.symmetry,
-                              symmetryValue,
-                              0,
-                              symmetries.length - 1,
-                              symmetries,
-                              (value) {
-                                setState(() {
-                                  symmetryValue = value;
-                                });
-                              },
-                            ),
-                            
-                            // Certification Slider
-                            _buildSlider(
-                              AppString.certification,
-                              _selectedCertification,
-                              0,
-                              certifications.length - 1,
-                              certifications,
-                              (value) {
-                                setState(() {
-                                  _selectedCertification = value;
-                                });
-                              },
-                            ),
-                            
-                            // Location Slider
-                            _buildSlider(
-                              AppString.location,
-                              _selectedLocation,
-                              0,
-                              locations.length - 1,
-                              locations,
-                              (value) {
-                                setState(() {
-                                  _selectedLocation = value;
-                                });
-                              },
-                            ),
-                            
-                            // Fluorescence Slider
-                            _buildSlider(
-                              AppString.fluorescence,
-                              fluorescenceValue,
-                              0,
-                              4,
-                              ["None", "Faint", "Medium", "Strong", "Very Strong"],
-                              (value) {
-                                setState(() {
-                                  fluorescenceValue = value;
-                                });
-                              },
-                            ),
-                            
-                            // Measurements Range Slider
-                            _buildRangeSlider(
-                              AppString.measurements,
-                              measurementsMinValue,
-                              measurementsMaxValue,
-                              4.0,
-                              11.0,
-                              (min, max) {
-                                setState(() {
-                                  measurementsMinValue = min;
-                                  measurementsMaxValue = max;
-                                });
-                              },
-                            ),
-                            
-                            // Table Percentage Range Slider
-                            _buildRangeSlider(
-                              AppString.tablePercentage,
-                              tablePercentageMinValue,
-                              tablePercentageMaxValue,
-                              50.0,
-                              75.0,
-                              (min, max) {
-                                setState(() {
-                                  tablePercentageMinValue = min;
-                                  tablePercentageMaxValue = max;
-                                });
-                              },
-                            ),
-                            
-                            // Color Selection
-                            Text(AppString.color, style: TextStyleHelper.mediumWhite),
-                            Wrap(
-                              spacing: 8.0,
-                              children: colors.map((color) => ChoiceChip(
-                                checkmarkColor: Colors.white,
-                                backgroundColor: Colors.transparent,
-                                selectedColor: Colors.black,
-                                label: Text(
-                                  color,
-                                  style: TextStyle(
-                                    color: _selectedColors.contains(color) ? Colors.white : Colors.black,
-                                  ),
-                                ),
-                                selected: _selectedColors.contains(color),
-                                onSelected: (selected) {
-                                  setState(() {
-                                    if (selected) {
-                                      _selectedColors.add(color);
-                                    } else {
-                                      _selectedColors.remove(color);
-                                    }
-                                  });
-                                },
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.black),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                              )).toList(),
-                            ),
-                            
-                            SizedBox(height: 16),
-                            
-                            // Pairing Switch
-                            SwitchListTile(
-                              title: Text(AppString.pairingAvailable, style: TextStyle(color: Colors.white)),
-                              value: isPairSelected,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  isPairSelected = value;
-                                });
-                              },
-                              activeColor: AppColors.primaryColour,
-                            ),
-                            
-                            SizedBox(height: 16),
-                            
-                            // Action Buttons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: resetFilters,
-                                  child: Text(AppString.reset),
-                                  style: ElevatedButton.styleFrom(
-                                    // primary: Colors.grey,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    applyFilters();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DiamondInventory(
-                                          diamonds: filteredDiamonds,
-                                        ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      shapeImages[shape]!,
+                                      width: 40,
+                                      height: 40,
+                                      color: isSelected
+                                          ? AppColors.backgroundBlack
+                                          : Colors.white,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      shape,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: isSelected
+                                            ? Colors.black
+                                            : Colors.white,
                                       ),
-                                    );
-                                  },
-                                  child: Text(AppString.search),
-                                  style: ElevatedButton.styleFrom(
-                                    // primary: AppColors.primaryColour,
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Diamond Specifications
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildRangeSlider(
+                          AppString.size,
+                          sizeMin,
+                          sizeMax,
+                          3.0,
+                          16.0,
+                          (min, max) {
+                            setState(() {
+                              sizeMin = min;
+                              sizeMax = max;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildRangeSlider(
+                          AppString.weight,
+                          weightCaratMin,
+                          weightCaratMax,
+                          0.25,
+                          10.0,
+                          (min, max) {
+                            setState(() {
+                              weightCaratMin = min;
+                              weightCaratMax = max;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.clarity,
+                          clarityValue,
+                          0,
+                          clarities.length - 1,
+                          clarities,
+                          (value) {
+                            setState(() {
+                              clarityValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.cut,
+                          cutValue,
+                          0,
+                          cuts.length - 1,
+                          cuts,
+                          (value) {
+                            setState(() {
+                              cutValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.polish,
+                          polishValue,
+                          0,
+                          polishes.length - 1,
+                          polishes,
+                          (value) {
+                            setState(() {
+                              polishValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.symmetry,
+                          symmetryValue,
+                          0,
+                          symmetries.length - 1,
+                          symmetries,
+                          (value) {
+                            setState(() {
+                              symmetryValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.certification,
+                          _selectedCertification,
+                          0,
+                          certifications.length - 1,
+                          certifications,
+                          (value) {
+                            setState(() {
+                              _selectedCertification = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.location,
+                          _selectedLocation,
+                          0,
+                          locations.length - 1,
+                          locations,
+                          (value) {
+                            setState(() {
+                              _selectedLocation = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSlider(
+                          AppString.fluorescence,
+                          fluorescenceValue,
+                          0,
+                          4,
+                          ["None", "Faint", "Medium", "Strong", "Very Strong"],
+                          (value) {
+                            setState(() {
+                              fluorescenceValue = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildRangeSlider(
+                          AppString.measurements,
+                          measurementsMinValue,
+                          measurementsMaxValue,
+                          4.0,
+                          11.0,
+                          (min, max) {
+                            setState(() {
+                              measurementsMinValue = min;
+                              measurementsMaxValue = max;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildRangeSlider(
+                          AppString.tablePercentage,
+                          tablePercentageMinValue,
+                          tablePercentageMaxValue,
+                          50.0,
+                          75.0,
+                          (min, max) {
+                            setState(() {
+                              tablePercentageMinValue = min;
+                              tablePercentageMaxValue = max;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Color Selection
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppString.color,
+                          style: TextStyleHelper.mediumWhite.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8.0,
+                          children: colors.map((color) => ChoiceChip(
+                            checkmarkColor: Colors.white,
+                            backgroundColor: Colors.transparent,
+                            selectedColor: Colors.black,
+                            label: Text(
+                              color,
+                              style: TextStyle(
+                                color: _selectedColors.contains(color)
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
-                          ],
+                            selected: _selectedColors.contains(color),
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _selectedColors.add(color);
+                                } else {
+                                  _selectedColors.remove(color);
+                                }
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          )).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Pairing Switch
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: SwitchListTile(
+                      title: Text(
+                        AppString.pairingAvailable,
+                        style: TextStyleHelper.mediumWhite.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                      value: isPairSelected,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isPairSelected = value;
+                        });
+                      },
+                      activeColor: AppColors.primaryColour,
+                      activeTrackColor: AppColors.primaryWhite,
+                      inactiveTrackColor: AppColors.grey,
+                      inactiveThumbColor: AppColors.primaryWhite,
+                    ),
+                  ),
 
-  Widget _buildRangeSlider(
-    String label,
-    double min,
-    double max,
-    double rangeMin,
-    double rangeMax,
-    Function(double, double) onChanged,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "$label: ${min.toStringAsFixed(2)} - ${max.toStringAsFixed(2)}",
-          style: TextStyleHelper.mediumWhite,
-        ),
-        RangeSlider(
-          values: RangeValues(
-            min.clamp(rangeMin, rangeMax),
-            max.clamp(rangeMin, rangeMax),
+                  // Action Buttons
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: resetFilters,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.overlayLight,
+                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            AppString.reset,
+                            style: TextStyleHelper.mediumWhite.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            applyFilters();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DiamondInventory(
+                                  diamonds: filteredDiamonds,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColour,
+                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            AppString.search,
+                            style: TextStyleHelper.mediumWhite.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          min: rangeMin,
-          max: rangeMax,
-          activeColor: AppColors.primaryColour,
-          inactiveColor: AppColors.greyLight,
-          divisions: 10,
-          labels: RangeLabels(
-            min.clamp(rangeMin, rangeMax).toStringAsFixed(2),
-            max.clamp(rangeMin, rangeMax).toStringAsFixed(2),
-          ),
-          onChanged: (values) {
-            onChanged(
-              values.start.clamp(rangeMin, rangeMax),
-              values.end.clamp(rangeMin, rangeMax),
-            );
-          },
         ),
-      ],
+      ),
     );
   }
 
@@ -598,41 +641,113 @@ class _DiamondSearchState extends State<DiamondSearch> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: TextStyleHelper.mediumWhite.copyWith(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.primaryColour,
           ),
         ),
-        SizedBox(height: 8),
-        SliderTheme(
-          data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.primaryColour,
-            inactiveTrackColor: AppColors.greyLight,
-            thumbColor: AppColors.primaryColour,
-            overlayColor: AppColors.primaryColour.withOpacity(0.2),
-          ),
-          child: Slider(
-            value: value,
-            min: min,
-            max: max,
-            divisions: (max - min).toInt(),
-            label: options[value.toInt()],
-            onChanged: onChanged,
-          ),
-        ),
+        const SizedBox(height: 8),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: options.map((option) => Text(
               option,
-              style: TextStyle(
+              style: TextStyleHelper.mediumWhite.copyWith(
                 fontSize: 12,
-                color: Colors.white,
+                fontWeight: FontWeight.w500,
               ),
             )).toList(),
           ),
+        ),
+        const SizedBox(height: 15),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            double sliderWidth = constraints.maxWidth - 40;
+            double positionLeft = ((value - min) / (max - min) * sliderWidth)
+                .clamp(0, sliderWidth);
+
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Slider(
+                  value: value,
+                  min: min,
+                  max: max,
+                  divisions: (max - min).toInt(),
+                  activeColor: AppColors.primaryColour,
+                  inactiveColor: Colors.white12,
+                  onChanged: onChanged,
+                ),
+                Positioned(
+                  top: -10,
+                  left: positionLeft,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black26, blurRadius: 4),
+                        ],
+                      ),
+                      child: Text(
+                        options[value.toInt()],
+                        style: TextStyleHelper.mediumBlack.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRangeSlider(
+    String label,
+    double min,
+    double max,
+    double rangeMin,
+    double rangeMax,
+    Function(double, double) onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$label: ${min.toStringAsFixed(2)} - ${max.toStringAsFixed(2)}",
+          style: TextStyleHelper.mediumWhite.copyWith(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        RangeSlider(
+          values: RangeValues(
+            min.clamp(rangeMin, rangeMax),
+            max.clamp(rangeMin, rangeMax),
+          ),
+          min: rangeMin,
+          max: rangeMax,
+          activeColor: AppColors.primaryColour,
+          inactiveColor: Colors.white12,
+          divisions: 10,
+          labels: RangeLabels(
+            min.clamp(rangeMin, rangeMax).toStringAsFixed(2),
+            max.clamp(rangeMin, rangeMax).toStringAsFixed(2),
+          ),
+          onChanged: (values) {
+            onChanged(
+              values.start.clamp(rangeMin, rangeMax),
+              values.end.clamp(rangeMin, rangeMax),
+            );
+          },
         ),
       ],
     );

@@ -1,6 +1,6 @@
-
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:daimo/Library/ApiService.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,9 @@ class DiamondInventory extends StatefulWidget {
 class _DiamondInventoryState extends State<DiamondInventory> {
   List<Diamond> diamonds = [];
   bool isLoading = true;
+  List<Diamond> selectedDiamonds = [];
+  final ScreenshotController screenshotController = ScreenshotController();
+  Diamond diamond = Diamond();
 
   @override
   void initState() {
@@ -37,14 +40,9 @@ class _DiamondInventoryState extends State<DiamondInventory> {
         isLoading = false;
       });
     } else {
-      // Otherwise fetch diamonds from the API
       fetchDiamonds();
     }
   }
-
-  // Diamond? selectedDiamond;
-  List<Diamond> selectedDiamonds = [];
-
 
   Future<void> fetchDiamonds() async {
     final String apiUrl = "${ApiService.baseUrl}/getAllPurchasedDiamonds";
@@ -55,10 +53,8 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          diamonds =
-              (data["diamonds"] as List).map((json) => Diamond.fromJson(json)).toList();
+          diamonds = (data["diamonds"] as List).map((json) => Diamond.fromJson(json)).toList();
           isLoading = false;
-          print("Total Purchase Price: ${data['totalPurchasePrice']}",); // ✅ Debugging
         });
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
@@ -69,12 +65,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
     }
   }
 
-  Future<void> addToCart(
-    BuildContext context,
-    String userId,
-    String itemCode,
-    int quantity,
-  ) async {
+  Future<void> addToCart(BuildContext context, String userId, String itemCode, int quantity) async {
     final String apiUrl = "${ApiService.baseUrl}/addToCart";
     try {
       final response = await http.post(
@@ -111,338 +102,440 @@ class _DiamondInventoryState extends State<DiamondInventory> {
     "Radiant": "Assets/Images/Round.png",
   };
 
-  final ScreenshotController screenshotController = ScreenshotController();
-
-  Diamond diamond = Diamond();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColour,
+      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryWhite,
+        backgroundColor: AppColors.secondaryColour,
+        elevation: 1,
         title: Text(
           AppString.diamondInventory,
           style: TextStyleHelper.mediumPrimaryColour,
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_new_sharp,
-            color: AppColors.primaryColour,
-          ),
-        ),
         actions: [
           if (selectedDiamonds.isNotEmpty)
             IconButton(
-              icon: Icon(Icons.school, color: AppColors.primaryColour),
+              icon: Icon(Icons.inventory, color: AppColors.primaryColour),
               tooltip: "Training Info",
               onPressed: () {
                 showAddToCartBottomSheet(
                   context: context,
-                  diamonds: selectedDiamonds, // ✅ correct parameter name
+                  diamonds: selectedDiamonds,
                   addToCartFn: (userId, itemCode, quantity) {
                     for (var diamond in selectedDiamonds) {
                       if (diamond.itemCode != null) {
-                        addToCart(context, userId, diamond.itemCode!, quantity); // Use ! after null check
+                        addToCart(context, userId, diamond.itemCode!, quantity);
                       }
                     }
                   },
                 );
-
               },
             ),
         ],
-
-
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(AppImages.authChoice, fit: BoxFit.cover),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.primaryColour, AppColors.secondaryColour],
           ),
-          Column(
+        ),
+        child: SafeArea(
+          child: Column(
             children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    Text(
+                      AppString.diamondInventory,
+                      style: TextStyleHelper.extraLargeWhite.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Manage your diamond inventory',
+                      style: TextStyleHelper.mediumWhite.copyWith(
+                        fontSize: 14,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Stats Cards
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatCard(
+                        'Total Diamonds',
+                        diamonds.length.toString(),
+                        Icons.diamond_outlined,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildStatCard(
+                        'Total Value',
+                        '30000',
+                        Icons.attach_money_outlined,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Diamond List
               Expanded(
-                child:
-                    isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : diamonds.isEmpty
-                        ? Center(
-                          child: Text(AppString.noDataFound, style: TextStyleHelper.mediumWhite,),
-                        ) : ListView.builder(
-                          itemCount: diamonds.length,
-                          itemBuilder: (context, index) {
-                            final diamond = diamonds[index];
-                            List<String>? selectedShapes = diamond.shape?.split(",").map((s) => s.trim()).toList();
-                            List<String>? validShapes =
-                                selectedShapes
-                                    ?.where((shape) => shapeImages.containsKey(shape),).toList();
-                            int? shapeCount = validShapes?.length; // Count valid shapes
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8,),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (selectedDiamonds.contains(diamond)) {
-                                      selectedDiamonds.remove(diamond);
-                                    } else {
-                                      selectedDiamonds.add(diamond);
-                                    }
-                                  });
-                                },
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: selectedDiamonds.contains(diamond)
-                                      ? Colors.black // selected card background
-                                      : AppColors.primaryWhite, // white border
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  color: Colors.transparent,
-                                  // color: selectedDiamond == diamond
-                                  //     ? Colors.black // selected card background
-                                  //     : AppColors.secondaryColour, // default background
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: 5),
-                                      Text("──── Range ────", style: TextStyleHelper.mediumWhite,),
-                                      SizedBox(height: 5),
-                                      Padding(padding: const EdgeInsets.symmetric(horizontal: 10.0,),
-                                        child: IntrinsicHeight(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start, // Align properly
-                                            children: [
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: AppString.weight,
-                                                      style: TextStyleHelper.mediumWhite.copyWith(fontWeight: FontWeight.bold,),
-                                                    ),
-                                                    TextSpan(
-                                                      text: "${diamond.weightCarat}",
-                                                      style: TextStyleHelper.mediumWhite,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              VerticalDivider(
-                                                color: Colors.white,
-                                                thickness: 2,
-                                                width: 20,
-                                              ),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: AppString.color,
-                                                      style: TextStyleHelper.mediumWhite.copyWith(fontWeight: FontWeight.bold,),
-                                                    ),
-                                                    TextSpan(
-                                                      text: "${diamond.color}",
-                                                      style: TextStyleHelper.mediumWhite,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                child: Container(
+                  margin: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.overlayLight,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.cardShadow,
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryWhite,
+                          ),
+                        )
+                      : diamonds.isEmpty
+                          ? Center(
+                              child: Text(
+                                AppString.noDataFound,
+                                style: TextStyleHelper.mediumWhite,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: diamonds.length,
+                              itemBuilder: (context, index) {
+                                final diamond = diamonds[index];
+                                List<String>? selectedShapes = diamond.shape?.split(",").map((s) => s.trim()).toList();
+                                List<String>? validShapes = selectedShapes?.where((shape) => shapeImages.containsKey(shape)).toList();
+                                int? shapeCount = validShapes?.length;
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (selectedDiamonds.contains(diamond)) {
+                                        selectedDiamonds.remove(diamond);
+                                      } else {
+                                        selectedDiamonds.add(diamond);
+                                      }
+                                    });
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(bottom: 12),
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.08),
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(
+                                            color: selectedDiamonds.contains(diamond)
+                                                ? AppColors.primaryWhite
+                                                : Colors.white.withOpacity(0.2),
+                                            width: 2,
                                           ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.15),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0,
-                                        ),
-                                        child: IntrinsicHeight(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start, // Align properly
-                                            children: [
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: AppString.clarity,
-                                                      style: TextStyleHelper.mediumWhite.copyWith(fontWeight: FontWeight.bold,),
-                                                    ),
-                                                    TextSpan(
-                                                      text: "${diamond.clarity}",
-                                                      style: TextStyleHelper.mediumWhite,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              VerticalDivider(color: Colors.white, thickness: 2, width: 20,),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: AppString.certified,
-                                                      style: TextStyleHelper.mediumWhite.copyWith(fontWeight: FontWeight.bold,),),
-                                                    TextSpan(
-                                                      text: "${diamond.certification}",
-                                                      style: TextStyleHelper.mediumWhite,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text("──── Shapes ────", style: TextStyleHelper.mediumWhite,),
-                                      shapeCount! > 0
-                                          ? shapeCount == 1
-                                              ? Padding(padding: const EdgeInsets.all(8.0,),
-                                                child: Align(
-                                                  alignment: Alignment.centerLeft,
-                                                  child: SizedBox(width: 80, // Fixed width for a single shape
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: [
-                                                        Image.asset(
-                                                          shapeImages[validShapes![0]]!,
-                                                          width: 40,
-                                                          height: 40,
-                                                          color: Colors.white,
-                                                        ),
-                                                        SizedBox(height: 5),
-                                                        Text(
-                                                          validShapes[0],
-                                                          textAlign: TextAlign.center,
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.w500,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                              : shapeCount <= 3 // Use Row for 2-3 shapes
-                                              ? Padding(padding: const EdgeInsets.all(8.0,),
+                                        child: Column(
+                                          children: [
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "──── Range ────",
+                                              style: TextStyleHelper.mediumWhite,
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                              child: IntrinsicHeight(
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: List.generate(shapeCount, (index,
-                                                  ) {
-                                                    return Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 4.0,), // Adjust spacing
-                                                      child: SizedBox(
-                                                        width: 80, // Fixed width for consistency
-                                                        child: Column(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            Image.asset(
-                                                              shapeImages[validShapes![index]]!,
-                                                              width: 40,
-                                                              height: 40,
-                                                              color: Colors.white,
-                                                            ),
-                                                            SizedBox(height: 5),
-                                                            Text(
-                                                              validShapes[index],
-                                                              textAlign: TextAlign.center,
-                                                              style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }),
-                                                ),
-                                              )
-                                              : Padding(padding: const EdgeInsets.all(6.0,),
-                                                child: GridView.builder(
-                                                  shrinkWrap: true,
-                                                  physics: NeverScrollableScrollPhysics(),
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: shapeCount > 4 ? 4 : shapeCount, // Grid for 4+
-                                                        crossAxisSpacing: 4,
-                                                        mainAxisSpacing: 8,
-                                                        childAspectRatio: 1,
-                                                      ),
-                                                  itemCount: shapeCount,
-                                                  itemBuilder: (context, index) {
-                                                    return SizedBox(
-                                                      width: 80, // Fixed width
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Text.rich(
+                                                      TextSpan(
                                                         children: [
-                                                          Image.asset(
-                                                            shapeImages[validShapes![index]]!,
-                                                            width: 40,
-                                                            height: 40,
-                                                            color: Colors.white,
-                                                          ),
-                                                          SizedBox(height: 5),
-                                                          Text(
-                                                            validShapes[index],
-                                                            textAlign: TextAlign.center,
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight: FontWeight.w500,
-                                                              color: Colors.white,
+                                                          TextSpan(
+                                                            text: AppString.weight,
+                                                            style: TextStyleHelper.mediumWhite.copyWith(
+                                                              fontWeight: FontWeight.bold,
                                                             ),
+                                                          ),
+                                                          TextSpan(
+                                                            text: "${diamond.weightCarat}",
+                                                            style: TextStyleHelper.mediumWhite,
                                                           ),
                                                         ],
                                                       ),
-                                                    );
-                                                  },
+                                                    ),
+                                                    const VerticalDivider(
+                                                      color: Colors.white,
+                                                      thickness: 2,
+                                                      width: 20,
+                                                    ),
+                                                    Text.rich(
+                                                      TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                            text: AppString.color,
+                                                            style: TextStyleHelper.mediumWhite.copyWith(
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                            text: "${diamond.color}",
+                                                            style: TextStyleHelper.mediumWhite,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              )
-                                          : Text(
-                                            AppString.noshapesavailable,
-                                            style: TextStyleHelper.mediumWhite,
-                                          ),
-                                    ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                              child: IntrinsicHeight(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: [
+                                                    Text.rich(
+                                                      TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                            text: AppString.clarity,
+                                                            style: TextStyleHelper.mediumWhite.copyWith(
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                            text: "${diamond.clarity}",
+                                                            style: TextStyleHelper.mediumWhite,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const VerticalDivider(
+                                                      color: Colors.white,
+                                                      thickness: 2,
+                                                      width: 20,
+                                                    ),
+                                                    Text.rich(
+                                                      TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                            text: AppString.certified,
+                                                            style: TextStyleHelper.mediumWhite.copyWith(
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                            text: "${diamond.certification}",
+                                                            style: TextStyleHelper.mediumWhite,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "──── Shapes ────",
+                                              style: TextStyleHelper.mediumWhite,
+                                            ),
+                                            if (shapeCount! > 0)
+                                              shapeCount == 1
+                                                  ? Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: SizedBox(
+                                                          width: 80,
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              Image.asset(
+                                                                shapeImages[validShapes![0]]!,
+                                                                width: 40,
+                                                                height: 40,
+                                                                color: Colors.white,
+                                                              ),
+                                                              const SizedBox(height: 5),
+                                                              Text(
+                                                                validShapes[0],
+                                                                textAlign: TextAlign.center,
+                                                                style: const TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight: FontWeight.w500,
+                                                                  color: Colors.white,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : shapeCount <= 3
+                                                      ? Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: List.generate(shapeCount, (index) {
+                                                              return Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                                child: SizedBox(
+                                                                  width: 80,
+                                                                  child: Column(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    children: [
+                                                                      Image.asset(
+                                                                        shapeImages[validShapes![index]]!,
+                                                                        width: 40,
+                                                                        height: 40,
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                      const SizedBox(height: 5),
+                                                                      Text(
+                                                                        validShapes[index],
+                                                                        textAlign: TextAlign.center,
+                                                                        style: const TextStyle(
+                                                                          fontSize: 12,
+                                                                          fontWeight: FontWeight.w500,
+                                                                          color: Colors.white,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }),
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: const EdgeInsets.all(6.0),
+                                                          child: GridView.builder(
+                                                            shrinkWrap: true,
+                                                            physics: const NeverScrollableScrollPhysics(),
+                                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount: shapeCount > 4 ? 4 : shapeCount,
+                                                              crossAxisSpacing: 4,
+                                                              mainAxisSpacing: 8,
+                                                              childAspectRatio: 1,
+                                                            ),
+                                                            itemCount: shapeCount,
+                                                            itemBuilder: (context, index) {
+                                                              return SizedBox(
+                                                                width: 80,
+                                                                child: Column(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  children: [
+                                                                    Image.asset(
+                                                                      shapeImages[validShapes![index]]!,
+                                                                      width: 40,
+                                                                      height: 40,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                    const SizedBox(height: 5),
+                                                                    Text(
+                                                                      validShapes[index],
+                                                                      textAlign: TextAlign.center,
+                                                                      style: const TextStyle(
+                                                                        fontSize: 12,
+                                                                        fontWeight: FontWeight.w500,
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        )
+                                            else
+                                              Text(
+                                                AppString.noshapesavailable,
+                                                style: TextStyleHelper.mediumWhite,
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                                );
+                              },
+                            ),
+                ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.overlayLight,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cardShadow,
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            final capturedImage = await screenshotController.capture();
-            if (capturedImage != null) {
-              final directory = await getApplicationDocumentsDirectory();
-              final path = '${directory.path}/screenshot.png';
-              final file = File(path);
-              await file.writeAsBytes(capturedImage);
-
-              await Share.shareFiles([path], text: 'Check out this content!');
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Failed to capture screenshot.')),
-              );
-            }
-          } catch (e) {
-            print('Error capturing screenshot: $e');
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Error capturing screenshot.')),
-            );
-          }
-        },
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.share, color: Colors.white),
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.primaryWhite, size: 32),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyleHelper.extraLargeWhite.copyWith(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyleHelper.mediumWhite.copyWith(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

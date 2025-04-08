@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'package:daimo/Authentication/AuthChoice.dart';
 import 'package:http/http.dart' as http;
 import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:get/get.dart';
@@ -8,7 +7,7 @@ import '../Authentication/Login.dart';
 import '../Models/DiamondModel.dart';
 
 class ApiService {
-  static const String baseUrl = "https://8241-2409-40c1-1009-229d-69d7-c75f-4f83-794e.ngrok-free.app/api/user";
+  static const String baseUrl = "https://7a60-2402-3a80-4528-c19a-dc7a-5706-2c96-20a9.ngrok-free.app/api/user";
   static String? userTypes = SharedPrefService.getString('userType') ?? "";
 
   Future logout() async {
