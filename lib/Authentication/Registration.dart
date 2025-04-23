@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -6,14 +7,10 @@ import '../Library/AppColour.dart';
 import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
-import '../Library/SharedPrefService.dart';
-import '../Library/Utils.dart' as utils;
 import '../Library/ApiService.dart';
-import '../Models/UserModel.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'Login.dart';
-import 'package:uuid/uuid.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -56,14 +53,6 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
   @override
   void dispose() {
     _tabController.dispose();
-    // _nameController.dispose();
-    // _emailController.dispose();
-    // _passwordController.dispose();
-    // _confirmPasswordController.dispose();
-    // _mobileController.dispose();
-    // _addressController.dispose();
-    // _cityController.dispose();
-    // _contactNameController.dispose();
     super.dispose();
   }
 

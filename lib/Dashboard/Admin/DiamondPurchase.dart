@@ -1,3 +1,4 @@
+
 import 'package:daimo/Library/AppStrings.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
-import '../../Library/AppImages.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import '../../Models/SupplierModel.dart';
@@ -93,20 +93,20 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       symmetry,
       lab;
 
-  final List<String> shapes = [
-    "Round",
-    "Princess",
-    "Cushion",
-    "Oval",
-    "Pear",
-    "Marquise",
-    "Heart",
-    "Emerald",
-    "Radiant",
-    "Asscher",
-    "Mitchell",
-    "Other",
-  ];
+  // final List<String> shapes = [
+  //   "Round",
+  //   "Princess",
+  //   "Cushion",
+  //   "Oval",
+  //   "Pear",
+  //   "Marquise",
+  //   "Heart",
+  //   "Emerald",
+  //   "Radiant",
+  //   "Asscher",
+  //   "Mitchell",
+  //   "Other",
+  // ];
   final List<String> clarities = [
     "FL",
     "IF",
@@ -287,9 +287,9 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                 .map((json) => Supplier.fromJson(json))
                 .toList();
 
-            for (var supplier in suppliers) {
-              _supplierContact = suppliers.first.contact;
-            }
+            // for (var supplier in suppliers) {
+            //   _supplierContact = suppliers.first.contact;
+            // }
           });
         }
         else {
@@ -736,11 +736,11 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildSwitch(
-                          AppString.diamondPair,
-                          isPairSelected,
-                              (value) => setState(() => isPairSelected = value),
-                        ),
+                        // _buildSwitch(
+                        //   AppString.diamondPair,
+                        //   isPairSelected,
+                        //       (value) => setState(() => isPairSelected = value),
+                        // ),
                       ],
                     ),
                   ),

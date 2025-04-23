@@ -7,6 +7,7 @@ import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import 'package:get/get.dart';
 
+import 'AddCart.dart';
 import 'DiamondInventory.dart';
 import 'DiamondSearch.dart';
 
@@ -271,7 +272,9 @@ class CustomerDashboard extends StatelessWidget {
             _DiamondCard(
               title: AppString.cart,
               icon: Icons.add_shopping_cart,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CardDiamonds()));
+              },
             ),
             _DiamondCard(
               title: AppString.order,

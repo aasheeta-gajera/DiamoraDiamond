@@ -150,6 +150,7 @@ class _AddSupplierState extends State<AddSupplier> {
                       utils.buildTextField(
                         AppString.contact,
                         contactController,
+                        maxLength: 10,
                         textColor: AppColors.primaryWhite,
                         hintColor: Colors.grey,
                         validator: (value) {

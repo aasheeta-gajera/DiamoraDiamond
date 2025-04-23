@@ -49,6 +49,7 @@ Widget buildTextField(
     String label,
     TextEditingController controller, {
       bool obscureText = false,
+      int? maxLength,
       IconData? icon,
       Color? textColor, // Removed required, now optional
       Color? hintColor, // Removed required, now optional
@@ -65,6 +66,7 @@ Widget buildTextField(
       obscureText: obscureText,
       readOnly: readOnly,
       keyboardType: keyboardType,
+      maxLength: maxLength,
       style: const TextStyle(color: Colors.white),
       // style: TextStyle(color: textColor), // Optional text color
       decoration: InputDecoration(
@@ -138,3 +140,43 @@ Widget buildDropdownField({
   );
 }
 
+void showNoInternetDialog() {
+  if (Get.isDialogOpen ?? false) return;
+
+  Get.dialog(
+    WillPopScope(
+      onWillPop: () async => false,
+      child: AlertDialog(
+        title: const Text("No Internet Connection"),
+        content: const Text("Please check your internet and try again."),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // TextButton(
+              //   onPressed: () {
+              //     Get.back(); // Cancel button dismisses the dialog
+              //   },
+              //   child: const Text("Cancel"),
+              // ),
+              const SizedBox(width: 8),
+              TextButton(
+                onPressed: () {
+                  // You can optionally retry a specific function here
+                },
+                child: const Text("Retry"),
+              ),
+            ],
+          )
+        ],
+      ),
+    ),
+    barrierDismissible: false,
+  );
+}
+
+void closeNoInternetDialog() {
+  if (Get.isDialogOpen ?? false) {
+    Get.back();
+  }
+}

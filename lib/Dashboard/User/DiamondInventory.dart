@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -65,8 +66,9 @@ class _DiamondInventoryState extends State<DiamondInventory> {
     }
   }
 
-  Future<void> addToCart(BuildContext context, String userId, String itemCode, int quantity) async {
+  Future<void> addToCart(BuildContext context, String itemCode, int quantity) async {
     final String apiUrl = "${ApiService.baseUrl}/addToCart";
+    final userId = await SharedPrefService.getString('userId') ?? '';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -80,9 +82,11 @@ class _DiamondInventoryState extends State<DiamondInventory> {
 
       if (response.statusCode == 200) {
         utils.showCustomSnackbar("Added to cart successfully!", true);
+        fetchDiamonds();
       } else {
         final error = jsonDecode(response.body)['message'];
         utils.showCustomSnackbar("Error: $error", false);
+        print("Aaaa  ${error}");
       }
     } catch (e) {
       utils.showCustomSnackbar("Error: $e", false);
@@ -125,7 +129,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                   addToCartFn: (userId, itemCode, quantity) {
                     for (var diamond in selectedDiamonds) {
                       if (diamond.itemCode != null) {
-                        addToCart(context, userId, diamond.itemCode!, quantity);
+                        addToCart(context, diamond.itemCode!, quantity);
                       }
                     }
                   },
