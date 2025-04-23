@@ -284,21 +284,26 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                               child: IntrinsicHeight(
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.weight,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
+                                                    Flexible(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: AppString.weight,
+                                                              style: TextStyleHelper.mediumWhite.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.weightCarat}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
+                                                            TextSpan(
+                                                              text: "${diamond.weightCarat}",
+                                                              style: TextStyleHelper.mediumWhite,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.visible,
                                                       ),
                                                     ),
                                                     const VerticalDivider(
@@ -306,20 +311,24 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                                       thickness: 2,
                                                       width: 20,
                                                     ),
-                                                    Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.color,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
+                                                    Flexible(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: AppString.color,
+                                                              style: TextStyleHelper.mediumWhite.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.color}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
+                                                            TextSpan(
+                                                              text: "${diamond.color}",
+                                                              style: TextStyleHelper.mediumWhite,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.visible,
                                                       ),
                                                     ),
                                                   ],
@@ -331,21 +340,26 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                               child: IntrinsicHeight(
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.clarity,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
+                                                    Flexible(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: AppString.clarity,
+                                                              style: TextStyleHelper.mediumWhite.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.clarity}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
+                                                            TextSpan(
+                                                              text: "${diamond.clarity}",
+                                                              style: TextStyleHelper.mediumWhite,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.visible,
                                                       ),
                                                     ),
                                                     const VerticalDivider(
@@ -353,20 +367,80 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                                       thickness: 2,
                                                       width: 20,
                                                     ),
-                                                    Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.certified,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
+                                                    Flexible(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: AppString.certified,
+                                                              style: TextStyleHelper.mediumWhite.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.certification}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
+                                                            TextSpan(
+                                                              text: "${diamond.certification}",
+                                                              style: TextStyleHelper.mediumWhite,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.visible,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                              child: IntrinsicHeight(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: "size: ",
+                                                              style: TextStyleHelper.mediumWhite.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: "${diamond.size}",
+                                                              style: TextStyleHelper.mediumWhite,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.visible,
+                                                      ),
+                                                    ),
+                                                    const VerticalDivider(
+                                                      color: Colors.white,
+                                                      thickness: 2,
+                                                      width: 20,
+                                                    ),
+                                                    Flexible(
+                                                      child: Text.rich(
+                                                        TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: "Supplier: ",
+                                                              style: TextStyleHelper.mediumWhite.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: "${diamond.supplier}",
+                                                              style: TextStyleHelper.mediumWhite,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.visible,
                                                       ),
                                                     ),
                                                   ],

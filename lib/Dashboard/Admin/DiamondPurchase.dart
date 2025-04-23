@@ -4,11 +4,13 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:get/get.dart';
 import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import '../../Models/SupplierModel.dart';
+import 'Inventory.dart';
 
 class DiamondPurchaseForm extends StatefulWidget {
   @override
@@ -38,6 +40,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   Supplier? _selectedSupplier;
   String _companyName = "";
   String _supplierEmail = "";
+  String supplierGst = "";
+  String _supplierName = "";
   double measurementsMinValue = 4.0;
   double measurementsMaxValue = 11.0;
   double tablePercentageMinValue = 50.0;
@@ -184,6 +188,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       _selectedSupplier = null;
       _supplierContact = "";
       _companyName = "";
+      _supplierName = "";
+      supplierGst = "";
       _supplierEmail = "";
       _selectedShapes = [];
       sizeMin = 0.0;
@@ -213,9 +219,9 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
     try {
       Diamond diamond = Diamond(
-        supplier: _selectedSupplier?.name??'',
+        supplier: _supplierName.toString() ?? '',
         supplierContact: _supplierContact ?? "",
-        itemCode: _companyName ?? "",
+        itemCode: supplierGst ?? "",
         lotNumber: _supplierEmail ?? "",
         shape: _selectedShapes.isNotEmpty ? _selectedShapes.join(", ") : "",
         size: sizeMin,
@@ -249,11 +255,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       setState(() => isLoading = false);
 
       print("Response Status Code: ${response.statusCode}");
+      print("_supplierName.toString() : ${_supplierName.toString() }");
       print("Response Body: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         utils.showCustomSnackbar('Diamond purchased successfully!', true);
         resetForm();
+        // Get.toEnd(Inventory());
       } else {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         String message = jsonData["message"];
@@ -438,7 +446,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: utils.buildDropdownField(
-                      label: AppString.supplier,
+                      label: "Company",
                       value: _selectedSupplier?.companyName,
                       items: suppliers.map((supplier) => {
                         "supplier": supplier.companyName,
@@ -455,9 +463,11 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
                           if (selectedSupplierData.companyName.isNotEmpty) {
                             _selectedSupplier = selectedSupplierData;
+                            _supplierName = selectedSupplierData.name;
                             _supplierContact = selectedSupplierData.contact;
                             _companyName = selectedSupplierData.companyName;
                             _supplierEmail = selectedSupplierData.email;
+                            supplierGst = selectedSupplierData.gstNumber;
                           }
                         });
                       },
@@ -469,6 +479,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
+                        utils.buildTextField(
+                          AppString.supplier,
+                          TextEditingController(text: _supplierName),
+                          textColor: AppColors.primaryWhite,
+                          hintColor: Colors.grey,
+                          readOnly: true,
+                        ),
                         utils.buildTextField(
                           AppString.supplierContact,
                           TextEditingController(text: _supplierContact),
@@ -483,13 +500,13 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                           hintColor: Colors.grey,
                           readOnly: true,
                         ),
-                        utils.buildTextField(
-                          AppString.companyName,
-                          TextEditingController(text: _companyName),
-                          textColor: AppColors.primaryWhite,
-                          hintColor: Colors.grey,
-                          readOnly: true,
-                        ),
+                        // utils.buildTextField(
+                        //   AppString.companyName,
+                        //   TextEditingController(text: _companyName),
+                        //   textColor: AppColors.primaryWhite,
+                        //   hintColor: Colors.grey,
+                        //   readOnly: true,
+                        // ),
                         utils.buildTextField(
                           AppString.invoiceNumber,
                           invoiceNumberController,
@@ -716,6 +733,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                           totalDiamondsController,
                           textColor: AppColors.primaryWhite,
                           hintColor: Colors.grey,
+                          keyboardType: TextInputType.number
                         ),
                         const SizedBox(height: 16),
                         GestureDetector(

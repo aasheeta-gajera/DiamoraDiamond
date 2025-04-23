@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import '../Library/Utils.dart' as utils;
 import '../Library/ApiService.dart';
+import 'Registration.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -286,6 +287,33 @@ class _LogInState extends State<LogIn> {
                       ),
                       label: Text(
                         "Forgot Password?",
+                        style: TextStyleHelper.mediumWhite.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,
+                          color: Colors.white.withOpacity(0.9),
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        alignment: Alignment.centerRight,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () => Get.to(() => const Registration()),
+                      icon: const Icon(
+                        Icons.app_registration,
+                        size: 18,
+                        color: Colors.white70,
+                      ),
+                      label: Text(
+                        "Sign Up",
                         style: TextStyleHelper.mediumWhite.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
