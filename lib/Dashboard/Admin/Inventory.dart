@@ -90,6 +90,10 @@ class _InventoryState extends State<Inventory> {
           AppString.inventory,
           style: TextStyleHelper.mediumPrimaryColour,
         ),
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        },color: AppColors.primaryColour, icon: Icon(Icons.arrow_back_ios_new_sharp),),
+
       ),
       body: Container(
         width: double.infinity,
@@ -105,34 +109,34 @@ class _InventoryState extends State<Inventory> {
           child: Column(
             children: [
               // Header
-              Container(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Text(
-                      AppString.diamondInventory,
-                      style: TextStyleHelper.extraLargeWhite.copyWith(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Manage your diamond inventory',
-                      style: TextStyleHelper.mediumWhite.copyWith(
-                        fontSize: 14,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.all(24),
+              //   child: Column(
+              //     children: [
+              //       const SizedBox(height: 16),
+              //       Text(
+              //         AppString.diamondInventory,
+              //         style: TextStyleHelper.extraLargeWhite.copyWith(
+              //           fontSize: 24,
+              //           fontWeight: FontWeight.w600,
+              //           letterSpacing: 0.5,
+              //         ),
+              //       ),
+              //       const SizedBox(height: 8),
+              //       Text(
+              //         'Manage your diamond inventory',
+              //         style: TextStyleHelper.mediumWhite.copyWith(
+              //           fontSize: 14,
+              //           letterSpacing: 0.3,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
               // Stats Cards
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 15),
                 child: Row(
                   children: [
                     Expanded(
@@ -157,55 +161,10 @@ class _InventoryState extends State<Inventory> {
               // Diamond List
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: AppColors.overlayLight,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.cardShadow,
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
+                  margin: const EdgeInsets.all(15),
                   child: Column(
                     children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.all(16),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       Text(
-                      //         'Diamond List',
-                      //         style: TextStyleHelper.mediumWhite.copyWith(
-                      //           fontSize: 18,
-                      //           fontWeight: FontWeight.w600,
-                      //         ),
-                      //       ),
-                      //       IconButton(
-                      //         onPressed: () async {
-                      //           try {
-                      //             final capturedImage = await screenshotController.capture();
-                      //             if (capturedImage != null) {
-                      //               final directory = await getApplicationDocumentsDirectory();
-                      //               final path = '${directory.path}/screenshot.png';
-                      //               final file = File(path);
-                      //               await file.writeAsBytes(capturedImage);
-                      //               await Share.shareFiles([path], text: 'Check out this content!');
-                      //             }
-                      //           } catch (e) {
-                      //             utils.showCustomSnackbar('Error sharing: $e', false);
-                      //           }
-                      //         },
-                      //         icon: const Icon(
-                      //           Icons.share,
-                      //           color: AppColors.primaryWhite,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+
                       Expanded(
                         child:
                             isLoading
@@ -274,7 +233,7 @@ class _InventoryState extends State<Inventory> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text.rich(
                                                           TextSpan(
                                                             children: [
@@ -299,7 +258,7 @@ class _InventoryState extends State<Inventory> {
                                                         thickness: 2,
                                                         width: 20,
                                                       ),
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text.rich(
                                                           TextSpan(
                                                             children: [
@@ -330,7 +289,7 @@ class _InventoryState extends State<Inventory> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text.rich(
                                                           TextSpan(
                                                             children: [
@@ -355,7 +314,7 @@ class _InventoryState extends State<Inventory> {
                                                         thickness: 2,
                                                         width: 20,
                                                       ),
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text.rich(
                                                           TextSpan(
                                                             children: [
@@ -386,7 +345,7 @@ class _InventoryState extends State<Inventory> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text.rich(
                                                           TextSpan(
                                                             children: [
@@ -411,7 +370,7 @@ class _InventoryState extends State<Inventory> {
                                                         thickness: 2,
                                                         width: 20,
                                                       ),
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text.rich(
                                                           TextSpan(
                                                             children: [

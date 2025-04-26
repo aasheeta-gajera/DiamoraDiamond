@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:ui';
 import 'package:daimo/Library/ApiService.dart';
@@ -21,12 +20,10 @@ class CardDiamonds extends StatefulWidget {
 }
 
 class _CardDiamondsState extends State<CardDiamonds> {
-
   @override
   void initState() {
     super.initState();
-      fetchCartDiamonds();
-
+    fetchCartDiamonds();
   }
 
   List<CartDiamond> cartDiamonds = [];
@@ -41,13 +38,14 @@ class _CardDiamondsState extends State<CardDiamonds> {
         final Map<String, dynamic> data = json.decode(response.body);
 
         setState(() {
-          cartDiamonds = (data['cartItems'] as List)
-              .map((item) => CartDiamond.fromJson(item))
-              .toList();
+          cartDiamonds =
+              (data['cartItems'] as List)
+                  .map((item) => CartDiamond.fromJson(item))
+                  .toList();
           isLoading = false;
         });
       } else {
-        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        // utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
         setState(() => isLoading = false);
       }
     } catch (e) {
@@ -55,23 +53,6 @@ class _CardDiamondsState extends State<CardDiamonds> {
       utils.showCustomSnackbar('$e', false);
     }
   }
-  Future<void> removeFromCart(String cartId) async {
-    final String url = "${ApiService.baseUrl}/cartDiamonds/$cartId";
-
-    try {
-      final response = await http.delete(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        utils.showCustomSnackbar("Removed from cart!", true);
-        fetchCartDiamonds(); // refresh list
-      } else {
-        utils.showCustomSnackbar("Error: ${jsonDecode(response.body)['message']}", false);
-      }
-    } catch (e) {
-      utils.showCustomSnackbar("Error: $e", false);
-    }
-  }
-
 
   final Map<String, String> shapeImages = {
     "Round": "Assets/Images/Round.png",
@@ -94,6 +75,13 @@ class _CardDiamondsState extends State<CardDiamonds> {
         backgroundColor: AppColors.secondaryColour,
         elevation: 1,
         title: Text("Cart", style: TextStyleHelper.mediumPrimaryColour),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: AppColors.primaryColour,
+          icon: Icon(Icons.arrow_back_ios_new_sharp),
+        ),
       ),
       body: Container(
         width: double.infinity,
@@ -110,18 +98,7 @@ class _CardDiamondsState extends State<CardDiamonds> {
             children: [
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: AppColors.overlayLight,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.cardShadow,
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
+                  margin: const EdgeInsets.all(15),
                   child:
                       isLoading
                           ? const Center(
@@ -164,280 +141,312 @@ class _CardDiamondsState extends State<CardDiamonds> {
                                     // }
                                   });
                                 },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                      sigmaX: 8,
-                                      sigmaY: 8,
-                                    ),
-                                    child: Container(
-                                      margin: const EdgeInsets.only(bottom: 12),
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.08),
-                                        borderRadius: BorderRadius.circular(20),
-                                        // border: Border.all(
-                                        //   color:
-                                        //       selectedDiamonds.contains(diamond)
-                                        //           ? AppColors.primaryWhite
-                                        //           : Colors.white.withOpacity(
-                                        //             0.2,
-                                        //           ),
-                                        //   width: 2,
-                                        // ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.15,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                          sigmaX: 8,
+                                          sigmaY: 8,
+                                        ),
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                            bottom: 12,
+                                          ),
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(
+                                              0.08,
                                             ),
-                                            blurRadius: 12,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "──── Range ────",
-                                            style: TextStyleHelper.mediumWhite,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                            child: IntrinsicHeight(
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Flexible(
-                                                    child: Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.weight,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.diamondDetails.weightCarat}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.visible,
-                                                    ),
-                                                  ),
-                                                  const VerticalDivider(
-                                                    color: Colors.white,
-                                                    thickness: 2,
-                                                    width: 20,
-                                                  ),
-                                                  Flexible(
-                                                    child: Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.color,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.diamondDetails.color}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.visible,
-                                                    ),
-                                                  ),
-                                                ],
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.15,
+                                                ),
+                                                blurRadius: 12,
+                                                offset: const Offset(0, 6),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                            child: IntrinsicHeight(
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Flexible(
-                                                    child: Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.clarity,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.diamondDetails.clarity}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.visible,
-                                                    ),
-                                                  ),
-                                                  const VerticalDivider(
-                                                    color: Colors.white,
-                                                    thickness: 2,
-                                                    width: 20,
-                                                  ),
-                                                  Flexible(
-                                                    child: Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: AppString.certified,
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.diamondDetails.certification}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.visible,
-                                                    ),
-                                                  ),
-                                                ],
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                "──── Range ────",
+                                                style:
+                                                    TextStyleHelper.mediumWhite,
                                               ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                            child: IntrinsicHeight(
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Flexible(
-                                                    child: Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: "size: ",
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.diamondDetails.size}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.visible,
+                                              const SizedBox(height: 5),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10.0,
                                                     ),
-                                                  ),
-                                                  const VerticalDivider(
-                                                    color: Colors.white,
-                                                    thickness: 2,
-                                                    width: 20,
-                                                  ),
-                                                  Flexible(
-                                                    child: Text.rich(
-                                                      TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: "supplier: ",
-                                                            style: TextStyleHelper.mediumWhite.copyWith(
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: "${diamond.diamondDetails.supplier}",
-                                                            style: TextStyleHelper.mediumWhite,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.visible,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "──── Shapes ────",
-                                            style: TextStyleHelper.mediumWhite,
-                                          ),
-                                          if (shapeCount! > 0)
-                                            shapeCount == 1
-                                                ? Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    8.0,
-                                                  ),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: SizedBox(
-                                                      width: 80,
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Image.asset(
-                                                            shapeImages[validShapes![0]]!,
-                                                            width: 40,
-                                                            height: 40,
-                                                            color: Colors.white,
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            validShapes[0],
-                                                            textAlign:
-                                                                TextAlign
-                                                                    .center,
-                                                            style:
-                                                                const TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                                : shapeCount <= 3
-                                                ? Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    8.0,
-                                                  ),
+                                                child: IntrinsicHeight(
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
-                                                    children: List.generate(shapeCount, (
-                                                      index,
-                                                    ) {
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              horizontal: 4.0,
-                                                            ),
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text:
+                                                                    AppString
+                                                                        .weight,
+                                                                style: TextStyleHelper
+                                                                    .mediumWhite
+                                                                    .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    "${diamond.diamondDetails.weightCarat}",
+                                                                style:
+                                                                    TextStyleHelper
+                                                                        .mediumWhite,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          softWrap: true,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .visible,
+                                                        ),
+                                                      ),
+                                                      const VerticalDivider(
+                                                        color: Colors.white,
+                                                        thickness: 2,
+                                                        width: 20,
+                                                      ),
+                                                      Expanded(
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text:
+                                                                    AppString
+                                                                        .color,
+                                                                style: TextStyleHelper
+                                                                    .mediumWhite
+                                                                    .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    "${diamond.diamondDetails.color}",
+                                                                style:
+                                                                    TextStyleHelper
+                                                                        .mediumWhite,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          softWrap: true,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .visible,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10.0,
+                                                    ),
+                                                child: IntrinsicHeight(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text:
+                                                                    AppString
+                                                                        .clarity,
+                                                                style: TextStyleHelper
+                                                                    .mediumWhite
+                                                                    .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    "${diamond.diamondDetails.clarity}",
+                                                                style:
+                                                                    TextStyleHelper
+                                                                        .mediumWhite,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          softWrap: true,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .visible,
+                                                        ),
+                                                      ),
+                                                      const VerticalDivider(
+                                                        color: Colors.white,
+                                                        thickness: 2,
+                                                        width: 20,
+                                                      ),
+                                                      Expanded(
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text:
+                                                                    AppString
+                                                                        .certified,
+                                                                style: TextStyleHelper
+                                                                    .mediumWhite
+                                                                    .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    "${diamond.diamondDetails.certification}",
+                                                                style:
+                                                                    TextStyleHelper
+                                                                        .mediumWhite,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          softWrap: true,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .visible,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10.0,
+                                                    ),
+                                                child: IntrinsicHeight(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: "size: ",
+                                                                style: TextStyleHelper
+                                                                    .mediumWhite
+                                                                    .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    "${diamond.diamondDetails.size}",
+                                                                style:
+                                                                    TextStyleHelper
+                                                                        .mediumWhite,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          softWrap: true,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .visible,
+                                                        ),
+                                                      ),
+                                                      const VerticalDivider(
+                                                        color: Colors.white,
+                                                        thickness: 2,
+                                                        width: 20,
+                                                      ),
+                                                      Expanded(
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text:
+                                                                    "supplier: ",
+                                                                style: TextStyleHelper
+                                                                    .mediumWhite
+                                                                    .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    "${diamond.diamondDetails.supplier}",
+                                                                style:
+                                                                    TextStyleHelper
+                                                                        .mediumWhite,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          softWrap: true,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .visible,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                "──── Shapes ────",
+                                                style:
+                                                    TextStyleHelper.mediumWhite,
+                                              ),
+                                              if (shapeCount! > 0)
+                                                shapeCount == 1
+                                                    ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            8.0,
+                                                          ),
+                                                      child: Align(
+                                                        alignment:
+                                                            Alignment
+                                                                .centerLeft,
                                                         child: SizedBox(
                                                           width: 80,
                                                           child: Column(
@@ -446,7 +455,7 @@ class _CardDiamondsState extends State<CardDiamonds> {
                                                                     .min,
                                                             children: [
                                                               Image.asset(
-                                                                shapeImages[validShapes![index]]!,
+                                                                shapeImages[validShapes![0]]!,
                                                                 width: 40,
                                                                 height: 40,
                                                                 color:
@@ -457,7 +466,7 @@ class _CardDiamondsState extends State<CardDiamonds> {
                                                                 height: 5,
                                                               ),
                                                               Text(
-                                                                validShapes[index],
+                                                                validShapes[0],
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
@@ -474,80 +483,188 @@ class _CardDiamondsState extends State<CardDiamonds> {
                                                             ],
                                                           ),
                                                         ),
-                                                      );
-                                                    }),
-                                                  ),
-                                                )
-                                                : Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    6.0,
-                                                  ),
-                                                  child: GridView.builder(
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(),
-                                                    gridDelegate:
-                                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount:
-                                                              shapeCount > 4
-                                                                  ? 4
-                                                                  : shapeCount,
-                                                          crossAxisSpacing: 4,
-                                                          mainAxisSpacing: 8,
-                                                          childAspectRatio: 1,
-                                                        ),
-                                                    itemCount: shapeCount,
-                                                    itemBuilder: (
-                                                      context,
-                                                      index,
-                                                    ) {
-                                                      return SizedBox(
-                                                        width: 80,
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Image.asset(
-                                                              shapeImages[validShapes![index]]!,
-                                                              width: 40,
-                                                              height: 40,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            Text(
-                                                              validShapes[index],
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: const TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color:
-                                                                    Colors
-                                                                        .white,
+                                                      ),
+                                                    )
+                                                    : shapeCount <= 3
+                                                    ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            8.0,
+                                                          ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: List.generate(shapeCount, (
+                                                          index,
+                                                        ) {
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      4.0,
+                                                                ),
+                                                            child: SizedBox(
+                                                              width: 80,
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Image.asset(
+                                                                    shapeImages[validShapes![index]]!,
+                                                                    width: 40,
+                                                                    height: 40,
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 5,
+                                                                  ),
+                                                                  Text(
+                                                                    validShapes[index],
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: const TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                )
-                                          else
-                                            Text(
-                                              AppString.noshapesavailable,
-                                              style:
-                                                  TextStyleHelper.mediumWhite,
-                                            ),
-                                        ],
+                                                          );
+                                                        }),
+                                                      ),
+                                                    )
+                                                    : Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            6.0,
+                                                          ),
+                                                      child: GridView.builder(
+                                                        shrinkWrap: true,
+                                                        physics:
+                                                            const NeverScrollableScrollPhysics(),
+                                                        gridDelegate:
+                                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount:
+                                                                  shapeCount > 4
+                                                                      ? 4
+                                                                      : shapeCount,
+                                                              crossAxisSpacing:
+                                                                  4,
+                                                              mainAxisSpacing:
+                                                                  8,
+                                                              childAspectRatio:
+                                                                  1,
+                                                            ),
+                                                        itemCount: shapeCount,
+                                                        itemBuilder: (
+                                                          context,
+                                                          index,
+                                                        ) {
+                                                          return SizedBox(
+                                                            width: 80,
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                Image.asset(
+                                                                  shapeImages[validShapes![index]]!,
+                                                                  width: 40,
+                                                                  height: 40,
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                  validShapes[index],
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: const TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                              else
+                                                Text(
+                                                  AppString.noshapesavailable,
+                                                  style:
+                                                      TextStyleHelper
+                                                          .mediumWhite,
+                                                ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      top: 3,
+                                      right: 9,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                            final success = await removeDiamondFromCart(diamond.id ?? "",);
+                                            if (success) {
+                                                fetchCartDiamonds();
+                                              utils.showCustomSnackbar("Diamond removed from cart", true,);
+                                            } else {
+                                              fetchCartDiamonds(); // fallback if API fails
+                                            }
+
+                                        },
+                                        icon: Icon(
+                                          Icons.remove_circle_outline_sharp,
+                                        ),
+                                        color: AppColors.primaryWhite,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 3,
+                                      right: 35,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                            final success = await removeDiamondFromCart(diamond.id ?? "",);
+                                            if (success) {
+                                                fetchCartDiamonds();
+                                              utils.showCustomSnackbar("Diamond removed from cart", true,);
+                                            } else {
+                                              fetchCartDiamonds(); // fallback if API fails
+                                            }
+
+                                        },
+                                        icon: Icon(
+                                          Icons.add_box_outlined,
+                                        ),
+                                        color: AppColors.primaryWhite,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -595,5 +712,112 @@ class _CardDiamondsState extends State<CardDiamonds> {
         ],
       ),
     );
+  }
+
+  Future<bool> removeDiamondFromCart(String diamondId) async {
+    try {
+      final String apiUrl = "${ApiService.baseUrl}/cartDiamonds/$diamondId";
+      final response = await http.delete(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        utils.showCustomSnackbar("Failed to remove diamond", false);
+        return false;
+      }
+    } catch (e) {
+      utils.showCustomSnackbar("Error: ${e.toString()}", false);
+      return false;
+    }
+  }
+
+  Future<bool> showRemoveConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                backgroundColor: Colors.white,
+                titlePadding: const EdgeInsets.only(top: 20),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                actionsPadding: const EdgeInsets.only(bottom: 15, right: 10),
+                title: Column(
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.orange,
+                      size: 40,
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Remove from Cart",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                content: const Text(
+                  "Are you sure you want to remove this diamond from the cart?",
+                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                  textAlign: TextAlign.center,
+                ),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        "No",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        "Yes",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 }

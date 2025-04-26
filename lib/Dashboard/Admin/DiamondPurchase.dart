@@ -458,7 +458,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                         setState(() {
                           final selectedSupplierData = suppliers.firstWhere(
                                 (supplier) => supplier.companyName == value,
-                            orElse: () => Supplier.empty(),
+                            // orElse: () => Supplier.empty(),
                           );
 
                           if (selectedSupplierData.companyName.isNotEmpty) {
@@ -467,7 +467,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                             _supplierContact = selectedSupplierData.contact;
                             _companyName = selectedSupplierData.companyName;
                             _supplierEmail = selectedSupplierData.email;
-                            supplierGst = selectedSupplierData.gstNumber;
+                              supplierGst = selectedSupplierData.gstNumber;
                           }
                         });
                       },

@@ -124,126 +124,126 @@ class CustomerDashboard extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppColors.overlayLight,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          child: BottomNavigationBar(
-            backgroundColor: AppColors.overlayLight,
-            currentIndex: _selectedIndex,
-            selectedItemColor: AppColors.primaryColour,
-            unselectedItemColor: AppColors.secondaryColour.withOpacity(0.5),
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            elevation: 0,
-            selectedLabelStyle: TextStyleHelper.mediumWhite.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-            unselectedLabelStyle: TextStyleHelper.mediumWhite.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              // opacity: 0.5,
-            ),
-            onTap: (index) {
-              _selectedIndex = index;
-              switch (index) {
-                case 0:
-                  Get.to(() => CustomerDashboard());
-                  break;
-                case 1:
-                  // Get.to(() => DiamondListScreen());
-                  break;
-                case 2:
-                  // Get.to(() => OrdersPage());
-                  break;
-                case 3:
-                  // Get.to(() => PurchasePage());
-                  break;
-                case 4:
-                  // Get.to(() => AccountPage());
-                  break;
-              }
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _selectedIndex == 0 
-                        ? AppColors.primaryWhite.withOpacity(0.2)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.home),
-                ),
-                label: 'HOME',
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _selectedIndex == 1 
-                        ? AppColors.primaryWhite.withOpacity(0.2)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.add_shopping_cart),
-                ),
-                label: 'CART',
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _selectedIndex == 2 
-                        ? AppColors.primaryWhite.withOpacity(0.2)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.opacity_rounded),
-                ),
-                label: 'ORDER',
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _selectedIndex == 3 
-                        ? AppColors.primaryWhite.withOpacity(0.2)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.publish_rounded),
-                ),
-                label: 'INVENTORY',
-              ),
-              BottomNavigationBarItem(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _selectedIndex == 4 
-                        ? AppColors.primaryWhite.withOpacity(0.2)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.person),
-                ),
-                label: 'ACCOUNT',
-              ),
-            ],
-          ),
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   decoration: BoxDecoration(
+      //     color: AppColors.overlayLight,
+      //     boxShadow: [
+      //       BoxShadow(
+      //         color: Colors.black.withOpacity(0.1),
+      //         blurRadius: 10,
+      //         offset: const Offset(0, -2),
+      //       ),
+      //     ],
+      //   ),
+      //   child: ClipRRect(
+      //     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      //     child: BottomNavigationBar(
+      //       backgroundColor: AppColors.overlayLight,
+      //       currentIndex: _selectedIndex,
+      //       selectedItemColor: AppColors.primaryColour,
+      //       unselectedItemColor: AppColors.secondaryColour.withOpacity(0.5),
+      //       showUnselectedLabels: true,
+      //       type: BottomNavigationBarType.fixed,
+      //       elevation: 0,
+      //       selectedLabelStyle: TextStyleHelper.mediumWhite.copyWith(
+      //         fontSize: 12,
+      //         fontWeight: FontWeight.w500,
+      //       ),
+      //       unselectedLabelStyle: TextStyleHelper.mediumWhite.copyWith(
+      //         fontSize: 12,
+      //         fontWeight: FontWeight.w400,
+      //         // opacity: 0.5,
+      //       ),
+      //       onTap: (index) {
+      //         _selectedIndex = index;
+      //         switch (index) {
+      //           case 0:
+      //             Get.to(() => CustomerDashboard());
+      //             break;
+      //           case 1:
+      //             Get.to(() => CardDiamonds());
+      //             break;
+      //           case 2:
+      //             // Get.to(() => OrdersPage());
+      //             break;
+      //           case 3:
+      //             // Get.to(() => PurchasePage());
+      //             break;
+      //           case 4:
+      //             // Get.to(() => AccountPage());
+      //             break;
+      //         }
+      //       },
+      //       items: [
+      //         BottomNavigationBarItem(
+      //           icon: Container(
+      //             padding: const EdgeInsets.all(8),
+      //             decoration: BoxDecoration(
+      //               color: _selectedIndex == 0
+      //                   ? AppColors.primaryWhite.withOpacity(0.2)
+      //                   : Colors.transparent,
+      //               borderRadius: BorderRadius.circular(12),
+      //             ),
+      //             child: const Icon(Icons.home),
+      //           ),
+      //           label: 'HOME',
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Container(
+      //             padding: const EdgeInsets.all(8),
+      //             decoration: BoxDecoration(
+      //               color: _selectedIndex == 1
+      //                   ? AppColors.primaryWhite.withOpacity(0.2)
+      //                   : Colors.transparent,
+      //               borderRadius: BorderRadius.circular(12),
+      //             ),
+      //             child: const Icon(Icons.add_shopping_cart),
+      //           ),
+      //           label: 'CART',
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Container(
+      //             padding: const EdgeInsets.all(8),
+      //             decoration: BoxDecoration(
+      //               color: _selectedIndex == 2
+      //                   ? AppColors.primaryWhite.withOpacity(0.2)
+      //                   : Colors.transparent,
+      //               borderRadius: BorderRadius.circular(12),
+      //             ),
+      //             child: const Icon(Icons.opacity_rounded),
+      //           ),
+      //           label: 'ORDER',
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Container(
+      //             padding: const EdgeInsets.all(8),
+      //             decoration: BoxDecoration(
+      //               color: _selectedIndex == 3
+      //                   ? AppColors.primaryWhite.withOpacity(0.2)
+      //                   : Colors.transparent,
+      //               borderRadius: BorderRadius.circular(12),
+      //             ),
+      //             child: const Icon(Icons.publish_rounded),
+      //           ),
+      //           label: 'INVENTORY',
+      //         ),
+      //         BottomNavigationBarItem(
+      //           icon: Container(
+      //             padding: const EdgeInsets.all(8),
+      //             decoration: BoxDecoration(
+      //               color: _selectedIndex == 4
+      //                   ? AppColors.primaryWhite.withOpacity(0.2)
+      //                   : Colors.transparent,
+      //               borderRadius: BorderRadius.circular(12),
+      //             ),
+      //             child: const Icon(Icons.person),
+      //           ),
+      //           label: 'ACCOUNT',
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 

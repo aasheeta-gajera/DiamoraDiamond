@@ -1,6 +1,8 @@
 import 'package:daimo/Library/ApiService.dart';
 import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:flutter/material.dart';
+import '../Dashboard/User/AddCart.dart';
+import '../Dashboard/User/CustomerDashboard.dart';
 import '../Dashboard/User/Profile.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
@@ -90,23 +92,23 @@ class CommonDrawer extends StatelessWidget {
                         _buildDrawerItem(
                           icon: Icons.home,
                           text: "HOME",
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>CustomerDashboard())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.shopping_cart_checkout,
                           text: "MY CART",
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>CardDiamonds())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.receipt_long,
                           text: "ORDER",
                           onTap: () {},
                         ),
-                        _buildDrawerItem(
-                          icon: Icons.favorite_border,
-                          text: "WISHLIST",
-                          onTap: () {},
-                        ),
+                        // _buildDrawerItem(
+                        //   icon: Icons.favorite_border,
+                        //   text: "WISHLIST",
+                        //   onTap: () {},
+                        // ),
                         _buildDrawerItem(
                           icon: Icons.settings,
                           text: "SETTING",

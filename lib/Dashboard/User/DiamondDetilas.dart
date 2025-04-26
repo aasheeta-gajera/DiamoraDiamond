@@ -1,51 +1,48 @@
-
 import 'package:flutter/material.dart';
-import '../../Library/AppStrings.dart';
-import '../../Library/AppStyle.dart';
-import '../../Models/DiamondModel.dart';
-import '../../Library/AppColour.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
+import '../../Models/DiamondModel.dart'; // Assuming this is your model file for Diamond
 
-class DiamondDetail extends StatelessWidget {
+class Diamond3DViewScreen extends StatelessWidget {
   final Diamond diamond;
 
-  const DiamondDetail({super.key, required this.diamond});
+  const Diamond3DViewScreen({Key? key, required this.diamond}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.primaryWhite,
-        title: Text(AppString.purchase,style: TextStyleHelper.mediumWhite,),
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back_ios_new_sharp,color: AppColors.primaryColour,)),
+        title: const Text('Diamond 3D View'),
+        backgroundColor: Colors.transparent,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${diamond.itemCode} - ${diamond.shape}",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      body: Column(
+        children: [
+          // 3D Model viewer
+          Expanded(
+            child: ModelViewer(
+              src: 'assets/models/scene.gltf', // Path to the .glb or .gltf file
+              alt: "A 3D diamond model",
+              autoRotate: true,  // Enable auto-rotation
+              cameraControls: true, // Enable zoom and rotation controls
+              backgroundColor: Colors.transparent, // Transparent background
             ),
-            SizedBox(height: 10),
-            Text("Supplier: ${diamond.supplier}"),
-            Text("Size: ${diamond.size} ct"),
-            Text("Weight: ${diamond.weightCarat} carat"),
-            Text("Color: ${diamond.color}, Clarity: ${diamond.clarity}"),
-            Text("Cut: ${diamond.cut}, Polish: ${diamond.polish}"),
-            Text("Storage: ${diamond.storageLocation}"),
-            SizedBox(height: 20),
-            Text(
-              "Status: ${diamond.status}",
-              style: TextStyle(
-                color: diamond.status == "Sold" ? Colors.red : Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          // Information about the diamond
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: Colors.white10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Name: ${diamond.supplier}", style: TextStyle(color: Colors.white)),
+                Text("Carat: ${diamond.certification}", style: TextStyle(color: Colors.white70)),
+                Text("Clarity: ${diamond.clarity}", style: TextStyle(color: Colors.white70)),
+                Text("Cut: ${diamond.cut}", style: TextStyle(color: Colors.white70)),
+                Text("Price: ${diamond.totalDiamonds}", style: TextStyle(color: Colors.white70)),
+              ],
             ),
-              Text("💎 Quantity: ${diamond.totalDiamonds}"),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

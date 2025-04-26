@@ -27,7 +27,8 @@ class Diamond {
   int? totalPurchasePrice;
 
   Diamond(
-      {this.supplier,
+      {
+        this.supplier,
         this.supplierContact,
         this.itemCode,
         this.lotNumber,
