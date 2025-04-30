@@ -45,7 +45,7 @@ class CommonDrawer extends StatelessWidget {
                         ),
                         _buildDrawerItem(
                           icon: Icons.shopping_cart_checkout,
-                          text: "PURCHASE",
+                          text: "CART",
                           onTap: () => Navigator.pop(context),
                         ),
                         _buildDrawerItem(

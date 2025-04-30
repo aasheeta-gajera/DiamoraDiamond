@@ -754,11 +754,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // _buildSwitch(
-                        //   AppString.diamondPair,
-                        //   isPairSelected,
-                        //       (value) => setState(() => isPairSelected = value),
-                        // ),
                       ],
                     ),
                   ),
@@ -781,24 +776,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSwitch(String label, bool value, Function(bool) onChanged) {
-    return SwitchListTile(
-      title: Text(
-        label,
-        style: TextStyle(
-          color: AppColors.primaryColour,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      value: value,
-      onChanged: onChanged,
-      activeColor: AppColors.primaryColour,
-      activeTrackColor: AppColors.primaryWhite,
-      inactiveTrackColor: AppColors.grey,
-      inactiveThumbColor: AppColors.primaryWhite,
     );
   }
 

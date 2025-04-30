@@ -47,6 +47,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       fetchDiamonds();
     }
   }
+  var totleValue = 0;
 
   Future<void> fetchDiamonds() async {
     final String apiUrl = "${ApiService.baseUrl}/getAllPurchasedDiamonds";
@@ -57,9 +58,20 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          diamonds = (data["diamonds"] as List).map((json) => Diamond.fromJson(json)).toList();
+          diamonds = (data["diamonds"] as List)
+              .map((json) {
+            final diamond = Diamond.fromJson(json);
+            // Accumulate the total value for each diamond
+            final diamondValue = (diamond.purchasePrice ?? 0) * (diamond.totalDiamonds ?? 0);
+            totleValue += diamondValue;  // Add the current diamond's value to total
+            print('Diamond Value: $diamondValue');  // Print value for each diamond
+            return diamond;
+          })
+              .toList();
+          print('Total Value of all Diamonds: $totleValue'); // Print total value after all diamonds are processed
           isLoading = false;
         });
+
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
       }
@@ -180,7 +192,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                     Expanded(
                       child: _buildStatCard(
                         'Total Value',
-                        '30000',
+                        '$totleValue',
                         Icons.attach_money_outlined,
                       ),
                     ),
@@ -213,7 +225,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                 List<String>? validShapes = selectedShapes?.where((shape) => shapeImages.containsKey(shape)).toList();
                                 int? shapeCount = validShapes?.length;
 
-                                return Stack(
+                                return totleValue > 0 ? Stack(
                                   children: [
                                     InkWell(
                                       onTap: (){
@@ -459,7 +471,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                           );
                                         },icon: Icon(Icons.more),color: AppColors.primaryWhite,)),
                                   ],
-                                );
+                                ): SizedBox.shrink();
                               },
                             ),
                 ),

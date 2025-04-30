@@ -39,7 +39,7 @@ class _InventoryState extends State<Inventory> {
       fetchDiamonds();
     }
   }
-
+  var totleValue = 0;
   Future<void> fetchDiamonds() async {
     final String apiUrl = "${ApiService.baseUrl}/getAllPurchasedDiamonds";
 
@@ -49,10 +49,14 @@ class _InventoryState extends State<Inventory> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          diamonds =
-              (data["diamonds"] as List)
-                  .map((json) => Diamond.fromJson(json))
-                  .toList();
+          diamonds = (data["diamonds"] as List)
+              .map((json) {
+            final diamond = Diamond.fromJson(json);
+            totleValue = (diamond.purchasePrice ?? 0) * (diamond.totalDiamonds ?? 0);
+
+            return diamond;
+          })
+              .toList();
           isLoading = false;
         });
       } else {
@@ -150,7 +154,7 @@ class _InventoryState extends State<Inventory> {
                     Expanded(
                       child: _buildStatCard(
                         'Total Value',
-                        '',
+                        '$totleValue',
                         Icons.attach_money_outlined,
                       ),
                     ),

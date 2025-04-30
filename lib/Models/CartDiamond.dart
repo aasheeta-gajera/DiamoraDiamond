@@ -4,7 +4,7 @@ class CartDiamond {
   final String id;
   final String userId;
   final String itemCode;
-  final int quantity;
+  int quantity;  // Remove final here to make it mutable
   final double price;
   final Diamond diamondDetails;
 

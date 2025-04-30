@@ -61,51 +61,51 @@ class AdminDashboard extends StatelessWidget {
                     title: AppString.sellReport,
                   ),
                   const SizedBox(height: 16),
-                  _ReportCard(
-                    icon: Icons.assessment_outlined,
-                    title: AppString.purchase,
-                  ),
+                  // _ReportCard(
+                  //   icon: Icons.assessment_outlined,
+                  //   title: AppString.purchase,
+                  // ),
                 ],
               ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primaryWhite,
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.primaryColour,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          _selectedIndex = index;
-          switch (index) {
-            case 0:
-              Get.to(() => AdminDashboard());
-              break;
-            case 1:
-            // Get.to(() => DiamondListScreen());
-              break;
-            case 2:
-            // Get.to(() => OrdersPage());
-              break;
-            case 3:
-            // Get.to(() => PurchasePage());
-              break;
-            case 4:
-            // Get.to(() => AccountPage());
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'PURCHASE'),
-          BottomNavigationBarItem(icon: Icon(Icons.opacity_rounded), label: 'ORDER'),
-          BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'INQUIRY'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'REPORT'),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   backgroundColor: AppColors.primaryWhite,
+      //   currentIndex: _selectedIndex,
+      //   selectedItemColor: AppColors.primaryColour,
+      //   unselectedItemColor: Colors.grey,
+      //   showUnselectedLabels: true,
+      //   type: BottomNavigationBarType.fixed,
+      //   onTap: (index) {
+      //     _selectedIndex = index;
+      //     switch (index) {
+      //       case 0:
+      //         Get.to(() => AdminDashboard());
+      //         break;
+      //       case 1:
+      //       // Get.to(() => DiamondListScreen());
+      //         break;
+      //       case 2:
+      //       // Get.to(() => OrdersPage());
+      //         break;
+      //       case 3:
+      //       // Get.to(() => PurchasePage());
+      //         break;
+      //       case 4:
+      //       // Get.to(() => AccountPage());
+      //         break;
+      //     }
+      //   },
+      //   items: const [
+      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'PURCHASE'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.opacity_rounded), label: 'ORDER'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'INQUIRY'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'REPORT'),
+      //   ],
+      // ),
     );
   }
 

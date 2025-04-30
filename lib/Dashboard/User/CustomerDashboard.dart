@@ -72,45 +72,50 @@ class CustomerDashboard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppString.myInventory,
-                              style: TextStyleHelper.mediumWhite.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                  child: GestureDetector(
+                    onTap: (){
+
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppString.myInventory,
+                                style: TextStyleHelper.mediumWhite.copyWith(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'View your diamond collection',
-                              style: TextStyleHelper.mediumWhite.copyWith(
-                                fontSize: 14,
-                                // opacity: 0.8,
+                              const SizedBox(height: 8),
+                              Text(
+                                'View your diamond collection',
+                                style: TextStyleHelper.mediumWhite.copyWith(
+                                  fontSize: 14,
+                                  // opacity: 0.8,
+                                ),
                               ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryWhite.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryWhite.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
+                            child: const Icon(
+                              Icons.attach_money,
+                              size: 40,
+                              color: AppColors.primaryWhite,
+                            ),
                           ),
-                          child: const Icon(
-                            Icons.attach_money,
-                            size: 40,
-                            color: AppColors.primaryWhite,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -290,6 +295,11 @@ class CustomerDashboard extends StatelessWidget {
             _DiamondCard(
               title: AppString.bill,
               icon: Icons.watch_later,
+              onTap: () {},
+            ),
+            _DiamondCard(
+              title: AppString.inquiry,
+              icon: Icons.inventory,
               onTap: () {},
             ),
           ],

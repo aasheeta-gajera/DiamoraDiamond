@@ -648,15 +648,15 @@ class _CardDiamondsState extends State<CardDiamonds> {
                                       top: 3,
                                       right: 35,
                                       child: IconButton(
-                                        onPressed: () async {
-                                            final success = await removeDiamondFromCart(diamond.id ?? "",);
-                                            if (success) {
-                                                fetchCartDiamonds();
-                                              utils.showCustomSnackbar("Diamond removed from cart", true,);
-                                            } else {
-                                              fetchCartDiamonds(); // fallback if API fails
-                                            }
-
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                            ),
+                                            builder: (context) => SellConfirmationSheet(cartDiamonds: cartDiamonds),
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.add_box_outlined,
@@ -819,5 +819,140 @@ class _CardDiamondsState extends State<CardDiamonds> {
               ),
         ) ??
         false;
+  }
+
+}
+
+class SellConfirmationSheet extends StatefulWidget {
+  final List<CartDiamond> cartDiamonds;
+
+  const SellConfirmationSheet({Key? key, required this.cartDiamonds}) : super(key: key);
+
+  @override
+  _SellConfirmationSheetState createState() => _SellConfirmationSheetState();
+}
+
+class _SellConfirmationSheetState extends State<SellConfirmationSheet> {
+  bool isLoading = false; // Add the loading state flag
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Confirm Diamond Sales",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+
+          const SizedBox(height: 16),
+
+          // Diamond List
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              itemCount: widget.cartDiamonds.length,
+              itemBuilder: (context, index) {
+                final diamond = widget.cartDiamonds[index];
+                return ListTile(
+                  title: Text("ItemCode: ${diamond.itemCode}"),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Customer: ${diamond.diamondDetails.supplier}"),
+                      Text("Quantity: ${diamond.quantity}"),
+                      Text("Price: \$${diamond.diamondDetails.totalPurchasePrice?.toStringAsFixed(2)}"),
+                    ],
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Decrease Button
+                      ElevatedButton(
+                        onPressed: diamond.quantity > 1 // Disable if quantity is 1 or less
+                            ? () {
+                          setState(() {
+                            diamond.quantity--; // Decrease quantity safely
+                          });
+                        }
+                            : null, // Disable if quantity is 1 or less
+                        child: Icon(Icons.remove),
+                      ),
+                      SizedBox(width: 10),
+                      // Quantity Display
+                      Text(diamond.quantity.toString(), style: TextStyle(fontSize: 16)),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: (diamond.quantity ?? 0) < (diamond.diamondDetails.totalDiamonds ?? 0) // Ensure quantity doesn't exceed totalDiamonds
+                            ? () {
+                          setState(() {
+                            diamond.quantity = (diamond.quantity ?? 0) + 1; // Safely increase quantity
+                          });
+                        }
+                            : null, // Disable if quantity equals totalDiamonds
+                        child: Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Confirm Purchase Button
+          isLoading
+              ? Center(child: CircularProgressIndicator()) // Show loading indicator while processing
+              : ElevatedButton.icon(
+            onPressed: () async {
+              setState(() => isLoading = true); // Start loading
+              for (CartDiamond diamond in widget.cartDiamonds) {
+                final sellData = {
+                  "itemCode": diamond.itemCode,
+                  "customerName": diamond.diamondDetails.supplier,
+                  "quantity": diamond.quantity,
+                  "totlePrice": diamond.diamondDetails.totalPurchasePrice,
+                  "paymentStatus": "Paid",
+                };
+
+                final url = Uri.parse("${ApiService.baseUrl}/sellDiamond");
+
+                try {
+                  final response = await http.post(
+                    url,
+                    headers: {"Content-Type": "application/json"},
+                    body: json.encode(sellData),
+                  );
+
+                  if (response.statusCode == 200 || response.statusCode == 201) {
+                    final res = json.decode(response.body);
+                    print("Sold: ${res['message']}");
+                  } else {
+                    print("Error selling ${diamond.itemCode}: ${response.body}");
+                  }
+                } catch (e) {
+                  setState(() => isLoading = false); // Stop loading on error
+                  print("Exception selling ${diamond.itemCode}: $e");
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                  return; // Exit the loop early if there's an error
+                }
+              }
+
+              setState(() => isLoading = false); // Stop loading after the API request completes
+              Navigator.pop(context); // Close BottomSheet
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Diamonds sold successfully!")));
+            },
+            icon: Icon(Icons.shopping_cart_checkout),
+            label: Text("Confirm Purchase"),
+            style: ElevatedButton.styleFrom(
+              // primary: Theme.of(context).primaryColor, // Use primary color for the button
+              // onPrimary: Theme.of(context).accentColor, // Icon color based on theme
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
