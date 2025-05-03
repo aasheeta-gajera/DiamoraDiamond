@@ -158,6 +158,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         );
         Get.off(() => const LogIn());
       } else {
+        print(decodedResponse['message']);
         Get.snackbar(
           'Error',
           decodedResponse['message'] ?? 'Registration failed',

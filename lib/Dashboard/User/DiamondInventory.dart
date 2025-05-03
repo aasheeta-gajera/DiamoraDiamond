@@ -150,33 +150,6 @@ class _DiamondInventoryState extends State<DiamondInventory> {
         child: SafeArea(
           child: Column(
             children: [
-              // // Header
-              // Container(
-              //   padding: const EdgeInsets.all(24),
-              //   child: Column(
-              //     children: [
-              //       const SizedBox(height: 16),
-              //       Text(
-              //         AppString.diamondInventory,
-              //         style: TextStyleHelper.extraLargeWhite.copyWith(
-              //           fontSize: 24,
-              //           fontWeight: FontWeight.w600,
-              //           letterSpacing: 0.5,
-              //         ),
-              //       ),
-              //       const SizedBox(height: 8),
-              //       Text(
-              //         'Manage your diamond inventory',
-              //         style: TextStyleHelper.mediumWhite.copyWith(
-              //           fontSize: 14,
-              //           letterSpacing: 0.3,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-
-              // Stats Cards
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 10),
                 child: Row(
@@ -225,7 +198,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
                                 List<String>? validShapes = selectedShapes?.where((shape) => shapeImages.containsKey(shape)).toList();
                                 int? shapeCount = validShapes?.length;
 
-                                return totleValue > 0 ? Stack(
+                                return totleValue > 1 ? Stack(
                                   children: [
                                     InkWell(
                                       onTap: (){

@@ -20,6 +20,11 @@ class _ProfileState extends State<Profile> {
   String companyName = "";
   String city = "";
   String contactName = "";
+  String idProof = "";
+  String licenseCopy = "";
+  String taxCertificate = "";
+  String partnerCopy = "";
+  String userType = "";
 
   Future<void> getUserDetails() async {
     name = SharedPrefService.getString('user_name') ?? "N/A";
@@ -28,9 +33,15 @@ class _ProfileState extends State<Profile> {
     address = SharedPrefService.getString('Address') ?? "N/A";
     city = SharedPrefService.getString('City') ?? "N/A";
     contactName = SharedPrefService.getString('contactName') ?? "N/A";
-    companyName = SharedPrefService.getString('contactName') ?? "N/A";
+    companyName = SharedPrefService.getString('companyName') ?? "N/A";
+    idProof = SharedPrefService.getString('id_proof') ?? "N/A";
+    licenseCopy = SharedPrefService.getString('license_copy') ?? "N/A";
+    taxCertificate = SharedPrefService.getString('tax_certificate') ?? "N/A";
+    partnerCopy = SharedPrefService.getString('partner_copy') ?? "N/A";
+    userType = SharedPrefService.getString('userType') ?? "N/A";
     setState(() {});
   }
+
 
   void logout() async {
     await SharedPrefService.clearAll();
@@ -45,187 +56,112 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
+        title: Text(AppString.profile, style: theme.textTheme.titleLarge),
         backgroundColor: AppColors.secondaryColour,
-        elevation: 1,
-        title: Text(
-          AppString.profile,
-          style: TextStyleHelper.mediumPrimaryColour,
-        ),
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(
-            Icons.arrow_back_ios_new_sharp,
-            color: AppColors.primaryColour,
-          ),
-        ),
+        elevation: 0,
+        leading: BackButton(color: AppColors.primaryColour),
       ),
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
+            colors: [AppColors.primaryColour, AppColors.secondaryColour],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.primaryColour, AppColors.secondaryColour],
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Header
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.primaryWhite,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.person,
-                          size: 50,
-                          color: AppColors.primaryColour,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        name,
-                        style: TextStyleHelper.extraLargeWhite.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        email,
-                        style: TextStyleHelper.mediumWhite.copyWith(
-                          fontSize: 14,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
 
-                // Profile Details
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: AppColors.overlayLight,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.cardShadow,
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
+                  // Profile Info Card
+                  Card(
+                    color: Colors.white.withOpacity(0.1),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          _buildProfileRow(AppString.contactName, contactName, theme),
+                          _buildProfileRow(AppString.email, email, theme),
+                          _buildProfileRow(AppString.mobileNo, mobileNo, theme),
+                          _buildProfileRow(AppString.city, city, theme),
+                          _buildProfileRow(AppString.address, address, theme),
+                          _buildProfileRow(AppString.companyName, companyName, theme),
+                          _buildProfileRow("ID Proof", idProof, theme),
+                          _buildProfileRow("License Copy", licenseCopy, theme),
+                          _buildProfileRow("Tax Certificate", taxCertificate, theme),
+                          _buildProfileRow("Partner Copy", partnerCopy, theme),
+                          _buildProfileRow("User Type", userType, theme),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      _buildProfileDetail(AppString.contactName, contactName),
-                      _buildDivider(),
-                      _buildProfileDetail(AppString.email, email),
-                      _buildDivider(),
-                      _buildProfileDetail(AppString.mobileNo, mobileNo),
-                      _buildDivider(),
-                      _buildProfileDetail(AppString.city, city),
-                      _buildDivider(),
-                      _buildProfileDetail(AppString.address, address),
-                      _buildDivider(),
-                      _buildProfileDetail(AppString.companyName, companyName),
-                    ],
-                  ),
-                ),
 
-                // Logout Button
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: ElevatedButton(
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Logout Button
+                  ElevatedButton.icon(
                     onPressed: logout,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.overlayLight,
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    label: Text(
+                      AppString.logout,
+                      style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          AppString.logout,
-                          style: TextStyleHelper.mediumWhite.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 2,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
+
     );
   }
 
-  Widget _buildProfileDetail(String title, String value) {
+  Widget _buildProfileRow(String label, String value, ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyleHelper.mediumWhite.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.3,
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyleHelper.mediumWhite.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Container(
-      height: 1,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: Colors.white.withOpacity(0.1),
     );
   }
 }

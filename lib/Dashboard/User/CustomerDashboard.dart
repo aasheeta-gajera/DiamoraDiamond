@@ -8,6 +8,7 @@ import '../../Library/AppStyle.dart';
 import 'package:get/get.dart';
 
 import 'AddCart.dart';
+import 'AddInquiry.dart';
 import 'DiamondInventory.dart';
 import 'DiamondSearch.dart';
 
@@ -300,7 +301,9 @@ class CustomerDashboard extends StatelessWidget {
             _DiamondCard(
               title: AppString.inquiry,
               icon: Icons.inventory,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>InquiryScreen()));
+              },
             ),
           ],
         ),

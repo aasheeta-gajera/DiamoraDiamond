@@ -1,6 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
-import '../../Models/DiamondModel.dart'; // Assuming this is your model file for Diamond
+import '../../Models/DiamondModel.dart';
 
 class Diamond3DViewScreen extends StatelessWidget {
   final Diamond diamond;
@@ -19,12 +20,12 @@ class Diamond3DViewScreen extends StatelessWidget {
         children: [
           // 3D Model viewer
           Expanded(
-            child: ModelViewer(
-              src: 'assets/models/scene.gltf', // Path to the .glb or .gltf file
-              alt: "A 3D diamond model",
-              autoRotate: true,  // Enable auto-rotation
-              cameraControls: true, // Enable zoom and rotation controls
-              backgroundColor: Colors.transparent, // Transparent background
+            child:ModelViewer(
+              src: 'http://127.0.0.1:41455/diamond.glb', // Your model file URL
+              alt: 'A 3D model of a shoe',
+              autoRotate: true,
+              cameraControls: true,
+              ar: true, // Enable AR if needed
             ),
           ),
           // Information about the diamond
