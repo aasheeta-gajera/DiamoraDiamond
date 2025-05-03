@@ -61,10 +61,12 @@ class _InventoryState extends State<Inventory> {
         });
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        print(jsonDecode(response.body)['message']);
       }
     } catch (e) {
       setState(() => isLoading = false);
       utils.showCustomSnackbar('${e}', false);
+      print("eeeeeeeeeee  ${e}");
     }
   }
 

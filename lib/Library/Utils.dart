@@ -32,19 +32,43 @@ Widget PrimaryButton({
 }
 
 void showCustomSnackbar(String message, bool isSuccess) {
+  final theme = Get.theme;
+  final colorScheme = theme.colorScheme;
+
+  final backgroundColor = isSuccess
+      ? colorScheme.secondaryContainer
+      : colorScheme.errorContainer;
+
+  final textColor = isSuccess
+      ? colorScheme.onSecondaryContainer
+      : colorScheme.onErrorContainer;
+
+  final icon = isSuccess ? Icons.check_circle_outline : Icons.error_outline;
+
   Get.snackbar(
     isSuccess ? 'Success' : 'Error',
     message,
-    backgroundColor: isSuccess ? Colors.green : Colors.red,
-    colorText: AppColors.primaryColour,
+    backgroundColor: backgroundColor,
+    colorText: textColor,
+    icon: Icon(icon, color: textColor, size: 24),
     snackPosition: SnackPosition.BOTTOM,
-    margin: const EdgeInsets.all(10),
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-    borderRadius: 8,
-    duration: const Duration(seconds: 3),
-    // overlayBlur: 1,
+    borderRadius: 12,
+    duration: const Duration(seconds: 4),
+    overlayBlur: 0.3,
+    barBlur: 3,
+    shouldIconPulse: false,
+    boxShadows: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.15),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      ),
+    ],
   );
 }
+
 Widget buildTextField(
     String label,
     TextEditingController controller, {
@@ -65,6 +89,7 @@ Widget buildTextField(
       controller: controller,
       obscureText: obscureText,
       readOnly: readOnly,
+      validator: validator,
       keyboardType: keyboardType,
       maxLength: maxLength,
       style: const TextStyle(color: Colors.white),
@@ -89,6 +114,14 @@ Widget buildTextField(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.white, width: 2), // Black border on focus
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.white, width: 2.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.white, width: 2.0),
+        ),
       ),
     ),
   );
@@ -109,6 +142,7 @@ Widget buildDropdownField({
         labelStyle: TextStyle(color: Colors.white), // Set label color to white
         filled: true,
         fillColor: Colors.transparent,
+        errorStyle: TextStyle(color: AppColors.redLight),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

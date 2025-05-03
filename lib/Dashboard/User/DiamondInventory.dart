@@ -84,6 +84,16 @@ class _DiamondInventoryState extends State<DiamondInventory> {
   Future<void> addToCart(BuildContext context, String itemCode, int quantity) async {
     final String apiUrl = "${ApiService.baseUrl}/addToCart";
     final userId = await SharedPrefService.getString('userId') ?? '';
+    print("userIduserId   ${userId}");
+
+    // Validate inputs
+    if (userId.isEmpty || itemCode.isEmpty || quantity <= 0) {
+      print(userId.isEmpty);
+      print(itemCode.isEmpty);
+      print(quantity);
+      utils.showCustomSnackbar("Invalid input data", false);
+      return;
+    }
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -105,6 +115,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
       }
     } catch (e) {
       utils.showCustomSnackbar("Error: $e", false);
+      print("222222222222  ${e}");
     }
   }
 

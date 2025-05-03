@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:daimo/Library/AppStrings.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
@@ -215,6 +217,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   bool isLoading = false;
 
   Future submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     setState(() => isLoading = true);
 
     try {
@@ -254,14 +260,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
       setState(() => isLoading = false);
 
-      print("Response Status Code: ${response.statusCode}");
-      print("_supplierName.toString() : ${_supplierName.toString() }");
-      print("Response Body: ${response.body}");
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         utils.showCustomSnackbar('Diamond purchased successfully!', true);
         resetForm();
-        // Get.toEnd(Inventory());
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Inventory()));
       } else {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         String message = jsonData["message"];
@@ -311,6 +313,21 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       print("Error fetching suppliers: $error");
     }
   }
+  String? validateInvoiceNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Invoice Number is required';
+    }
+    if (value.length != 10) {
+      return 'Invoice Number must be 10 digits long';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Invoice Number must contain only digits';
+    }
+    return null;
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -344,18 +361,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.overlayLight,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.cardShadow,
-                    blurRadius: 15,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
+            child: Form(
+              key: _formKey,
               child: Column(
                 children: [
                   // Shape Selection
@@ -500,18 +507,14 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                           hintColor: Colors.grey,
                           readOnly: true,
                         ),
-                        // utils.buildTextField(
-                        //   AppString.companyName,
-                        //   TextEditingController(text: _companyName),
-                        //   textColor: AppColors.primaryWhite,
-                        //   hintColor: Colors.grey,
-                        //   readOnly: true,
-                        // ),
                         utils.buildTextField(
                           AppString.invoiceNumber,
                           invoiceNumberController,
                           textColor: AppColors.primaryWhite,
                           hintColor: Colors.grey,
+                          maxLength: 10,
+                          keyboardType: TextInputType.number,
+                          validator: validateInvoiceNumber,
                         ),
                       ],
                     ),
@@ -765,7 +768,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                       child: utils.PrimaryButton(
                         text: AppString.purchase,
                         onPressed: () {
-                          submitForm();
+                          if (_formKey.currentState!.validate()) {
+                            submitForm();
+                          }
+
                         },
                       ),
                     ),

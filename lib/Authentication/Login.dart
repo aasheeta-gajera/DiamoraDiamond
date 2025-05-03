@@ -72,7 +72,7 @@ class _LogInState extends State<LogIn> {
         String token = responseData['token'] ?? '';
         String email = responseData['user']['email'] ?? '';
         String name = responseData['user']['name'] ?? '';
-        String userId = responseData['user']['user_id'] ?? '';
+        String userId = responseData['user']['_id'] ?? '';
         String mobile = responseData['user']['mobile'] ?? '';
         String city = responseData['user']['city'] ?? '';
         String address = responseData['user']['address'] ?? '';
@@ -81,7 +81,7 @@ class _LogInState extends State<LogIn> {
         String licenseCopy = responseData['user']['licenseCopy'] ?? '';
         String taxCertificate = responseData['user']['taxCertificate'] ?? '';
         String partnerCopy = responseData['user']['partnerCopy'] ?? '';
-        String userType = responseData['user']['userType'] ?? ''; // Default to 'customer']
+        String userType = responseData['user']['userType'] ?? '';
 
         // Save User Data
         await SharedPrefService.setString('auth_token', token);
@@ -99,6 +99,8 @@ class _LogInState extends State<LogIn> {
         await SharedPrefService.setString('userType', userType);
 
         utils.showCustomSnackbar('Login successful!', true);
+        print("aasfdbhjiohgkjkoih  ${userId}");
+        print("aasfdbhjiohgkjkoih  ${responseData}");
 
         if (userType == "admin") {
           Get.off(() => AdminDashboard(token: token));

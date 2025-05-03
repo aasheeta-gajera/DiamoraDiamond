@@ -26,36 +26,46 @@ class Diamond {
   String? remarks;
   int? totalPurchasePrice;
 
-  Diamond(
-      {
-        this.supplier,
-        this.supplierContact,
-        this.itemCode,
-        this.lotNumber,
-        this.shape,
-        this.size,
-        this.weightCarat,
-        this.color,
-        this.clarity,
-        this.cut,
-        this.polish,
-        this.symmetry,
-        this.fluorescence,
-        this.certification,
-        this.measurements,
-        this.tablePercentage,
-        this.purchasePrice,
-        this.totalDiamonds,
-        this.invoiceNumber,
-        this.purchaseDate,
-        this.status,
-        this.storageLocation,
-        this.pairingAvailable,
-        this.imageURL,
-        this.remarks,
-        this.totalPurchasePrice
-      });
+  // New fields for payment details
+  String? paymentStatus;  // Payment status (Pending, Completed, Failed)
+  String? paymentMethod;  // Payment method (Credit Card, Debit Card, Cash, Bank Transfer)
+  String? transactionId;  // Transaction ID if applicable
+  DateTime? paymentDate;  // Payment date
 
+  Diamond({
+    this.supplier,
+    this.supplierContact,
+    this.itemCode,
+    this.lotNumber,
+    this.shape,
+    this.size,
+    this.weightCarat,
+    this.color,
+    this.clarity,
+    this.cut,
+    this.polish,
+    this.symmetry,
+    this.fluorescence,
+    this.certification,
+    this.measurements,
+    this.tablePercentage,
+    this.purchasePrice,
+    this.totalDiamonds,
+    this.invoiceNumber,
+    this.purchaseDate,
+    this.status,
+    this.storageLocation,
+    this.pairingAvailable,
+    this.imageURL,
+    this.remarks,
+    this.totalPurchasePrice,
+    this.paymentStatus,  // Add paymentStatus field
+    this.paymentMethod,  // Add paymentMethod field
+    this.transactionId,  // Add transactionId field
+    this.paymentDate,  // Add paymentDate field
+  });
+
+  // From JSON constructor
   Diamond.fromJson(Map<String, dynamic> json) {
     supplier = json['supplier'];
     supplierContact = json['supplierContact'];
@@ -83,8 +93,15 @@ class Diamond {
     imageURL = json['imageURL'];
     remarks = json['remarks'];
     totalPurchasePrice = (json['totalPurchasePrice'] ?? 0);
+
+    // Parse the new payment fields
+    paymentStatus = json['paymentStatus'];
+    paymentMethod = json['paymentMethod'];
+    transactionId = json['transactionId'];
+    paymentDate = json['paymentDate'] != null ? DateTime.parse(json['paymentDate']) : null;  // Parse the payment date
   }
 
+  // To JSON method
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['supplier'] = this.supplier;
@@ -113,6 +130,15 @@ class Diamond {
     data['imageURL'] = this.imageURL;
     data['remarks'] = this.remarks;
     data['totalPurchasePrice'] = this.totalPurchasePrice;
+
+    // Add the new payment fields to the JSON
+    data['paymentStatus'] = this.paymentStatus;
+    data['paymentMethod'] = this.paymentMethod;
+    data['transactionId'] = this.transactionId;
+    if (this.paymentDate != null) {
+      data['paymentDate'] = this.paymentDate?.toIso8601String();
+    }
+
     return data;
   }
 }

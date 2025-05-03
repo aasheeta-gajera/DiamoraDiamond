@@ -165,6 +165,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
           backgroundColor: AppColors.error,
           colorText: AppColors.primaryWhite,
         );
+        print('sajkhdihbdjh  ${decodedResponse['message']}');
       }
     } catch (e) {
       Get.snackbar(
@@ -173,6 +174,8 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         backgroundColor: AppColors.error,
         colorText: AppColors.primaryWhite,
       );
+      print('sssssssssssssssssssss  ${e}');
+
     } finally {
       setState(() => _isLoading = false);
     }
@@ -384,6 +387,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
             style: TextStyleHelper.mediumBlack.copyWith(
               fontSize: 14,
             ),
+            maxLength: 10,
             decoration: InputDecoration(
               labelText: AppString.mobileNo,
               labelStyle: TextStyleHelper.mediumBlack.copyWith(
@@ -498,6 +502,19 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.secondaryColour,
+        elevation: 1,
+        title: Text("Register", style: TextStyleHelper.mediumPrimaryColour),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: AppColors.primaryColour,
+          icon: Icon(Icons.arrow_back_ios_new_sharp),
+        ),
+      ),
+      resizeToAvoidBottomInset: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -514,103 +531,29 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         child: SafeArea(
           child: Column(
             children: [
-              // Logo and Title
-              Container(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Blurred backdrop inside a circle
-                          Container(
-                            width: 140,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.transparent,
-                                  Colors.white.withOpacity(0.05),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.4),
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Center(
-                              child: ClipOval(
-                                child: Image.asset(
-                                  AppImages.splashImage,
-                                  width: 90,
-                                  height: 90,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                          ClipOval(
-                            child: Image.asset(
-                              AppImages.splashImage,
-                              width: 90,
-                              height: 90,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
-                      ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 48, // fix the height of the TabBar
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      color: AppColors.primaryWhite,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      AppString.register,
-                      style: TextStyleHelper.extraLargeWhite.copyWith(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppString.createAccount,
-                      style: TextStyleHelper.mediumWhite.copyWith(
-                        fontSize: 14,
-                        letterSpacing: 0.3,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-
-              // TabBar
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24),
-                decoration: BoxDecoration(
-                  color: AppColors.overlayLight,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    color: AppColors.primaryWhite,
-                    borderRadius: BorderRadius.circular(8),
+                    indicatorSize: TabBarIndicatorSize.tab, // make indicator match full tab size
+                    labelColor: AppColors.primaryColour,
+                    unselectedLabelColor: AppColors.primaryWhite,
+                    labelPadding: EdgeInsets.zero, // remove extra horizontal padding if needed
+                    tabs: const [
+                      Tab(text: 'Personal Info'),
+                      Tab(text: 'KYC Info'),
+                      Tab(text: 'Business Info'),
+                    ],
                   ),
-                  labelColor: AppColors.primaryColour,
-                  unselectedLabelColor: AppColors.primaryWhite,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 16), // ← horizontal text padding inside each tab
-                  tabs: const [
-                    Tab(text: 'Personal Info'),
-                    Tab(text: 'KYC Info'),
-                    Tab(text: 'Business Info'),
-                  ],
                 ),
-              ),
+              )
+      ,
 
 
               // TabBarView

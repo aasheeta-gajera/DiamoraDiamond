@@ -1,8 +1,12 @@
 import 'package:daimo/Library/ApiService.dart';
 import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:flutter/material.dart';
+import '../Dashboard/Admin/AddSupplier.dart';
+import '../Dashboard/Admin/DiamondPurchase.dart';
+import '../Dashboard/Admin/InquiryAns.dart';
 import '../Dashboard/User/AddCart.dart';
 import '../Dashboard/User/CustomerDashboard.dart';
+import '../Dashboard/User/Order.dart';
 import '../Dashboard/User/Profile.dart';
 import '../Library/AppColour.dart';
 import '../Library/AppStrings.dart';
@@ -46,12 +50,12 @@ class CommonDrawer extends StatelessWidget {
                         _buildDrawerItem(
                           icon: Icons.shopping_cart_checkout,
                           text: "CART",
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CardDiamonds())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.receipt_long,
                           text: "ORDER",
-                          onTap: () {},
+                          onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Order())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.favorite_border,
@@ -96,23 +100,27 @@ class CommonDrawer extends StatelessWidget {
                         ),
                         _buildDrawerItem(
                           icon: Icons.shopping_cart_checkout,
-                          text: "MY CART",
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>CardDiamonds())),
+                          text: "PURCHASE",
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>DiamondPurchaseForm())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.receipt_long,
-                          text: "ORDER",
+                          text: "INVENTORY",
                           onTap: () {},
                         ),
-                        // _buildDrawerItem(
-                        //   icon: Icons.favorite_border,
-                        //   text: "WISHLIST",
-                        //   onTap: () {},
-                        // ),
+                        _buildDrawerItem(
+                          icon: Icons.favorite_border,
+                          text: "INQUIRY",
+                          onTap: () {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminInquiryScreen(adminName: "Aasheeta",)));
+                          },
+                        ),
                         _buildDrawerItem(
                           icon: Icons.settings,
-                          text: "SETTING",
-                          onTap: () {},
+                          text: "ADD SUPPLIER",
+                          onTap: () {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
+                          },
                         ),
                         const Divider(
                           color: AppColors.primaryWhite,

@@ -7,6 +7,7 @@ import '../../Library/AppColour.dart';
 import 'package:get/get.dart';
 import 'AddSupplier.dart';
 import 'DiamondPurchase.dart';
+import 'InquiryAns.dart';
 import 'Inventory.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -71,41 +72,6 @@ class AdminDashboard extends StatelessWidget {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: AppColors.primaryWhite,
-      //   currentIndex: _selectedIndex,
-      //   selectedItemColor: AppColors.primaryColour,
-      //   unselectedItemColor: Colors.grey,
-      //   showUnselectedLabels: true,
-      //   type: BottomNavigationBarType.fixed,
-      //   onTap: (index) {
-      //     _selectedIndex = index;
-      //     switch (index) {
-      //       case 0:
-      //         Get.to(() => AdminDashboard());
-      //         break;
-      //       case 1:
-      //       // Get.to(() => DiamondListScreen());
-      //         break;
-      //       case 2:
-      //       // Get.to(() => OrdersPage());
-      //         break;
-      //       case 3:
-      //       // Get.to(() => PurchasePage());
-      //         break;
-      //       case 4:
-      //       // Get.to(() => AccountPage());
-      //         break;
-      //     }
-      //   },
-      //   items: const [
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HOME'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart), label: 'PURCHASE'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.opacity_rounded), label: 'ORDER'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.publish_rounded), label: 'INQUIRY'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'REPORT'),
-      //   ],
-      // ),
     );
   }
 
@@ -137,7 +103,9 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DashboardCard(title: AppString.inquiry, icon: Icons.add_task_outlined, onTap: () {}),
+            _DashboardCard(title: AppString.inquiry, icon: Icons.add_task_outlined, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminInquiryScreen(adminName: "Aasheeta",)));
+            }),
             _DashboardCard(title: AppString.history, icon: Icons.watch_later_outlined, onTap: () {}),
           ],
         ),
