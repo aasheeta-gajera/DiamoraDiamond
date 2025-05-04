@@ -9,6 +9,8 @@ import 'AddSupplier.dart';
 import 'DiamondPurchase.dart';
 import 'InquiryAns.dart';
 import 'Inventory.dart';
+import 'ReceiveOrder.dart';
+import 'Report.dart';
 
 class AdminDashboard extends StatelessWidget {
   final String? token;
@@ -60,6 +62,8 @@ class AdminDashboard extends StatelessWidget {
                   _ReportCard(
                     icon: Icons.bar_chart_rounded,
                     title: AppString.sellReport,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SaleReport()));},
                   ),
                   const SizedBox(height: 16),
                   // _ReportCard(
@@ -96,7 +100,9 @@ class AdminDashboard extends StatelessWidget {
             _DashboardCard(title: AppString.addSupplier, icon: Icons.opacity_rounded, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
             }),
-            _DashboardCard(title: AppString.receiveOrder, icon: Icons.opacity_rounded, onTap: () {}),
+            _DashboardCard(title: AppString.receiveOrder, icon: Icons.opacity_rounded, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ReceiveOrder()));
+            }),
           ],
         ),
         const SizedBox(height: 20),
@@ -169,40 +175,49 @@ class _DashboardCard extends StatelessWidget {
 class _ReportCard extends StatelessWidget {
   final IconData icon;
   final String title;
+  final VoidCallback onTap; // Add onTap callback
 
-  const _ReportCard({Key? key, required this.icon, required this.title}) : super(key: key);
+  const _ReportCard({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.onTap, // Accept the onTap callback in the constructor
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.12),
-            blurRadius: 10,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 50, color: AppColors.primaryColour),
-            const SizedBox(height: 10),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColour,
-              ),
+    return GestureDetector( // Wrap the container with GestureDetector
+      onTap: onTap, // Trigger the onTap callback when tapped
+      child: Container(
+        height: 120,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.primaryWhite,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.12),
+              blurRadius: 10,
+              offset: Offset(0, 6),
             ),
           ],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 50, color: AppColors.primaryColour),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColour,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

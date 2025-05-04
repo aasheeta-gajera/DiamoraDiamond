@@ -601,17 +601,14 @@ void showAddToCartBottomSheet({
                 onPressed: () async {
                   final userId = await SharedPrefService.getString('userId') ?? '';
                   int quantity = int.tryParse(quantityController.text) ?? 0;
-
                   if (quantity <= 0) {
                     utils.showCustomSnackbar("Enter a quantity", false);
                     return;
                   }
-
                   if ((diamond.totalDiamonds ?? 0) <= 0) {
                     utils.showCustomSnackbar("This diamond is not available.", false);
                     return;
                   }
-
                   Navigator.pop(context);
                   addToCartFn(userId, diamond.itemCode ?? "", quantity);
                 },

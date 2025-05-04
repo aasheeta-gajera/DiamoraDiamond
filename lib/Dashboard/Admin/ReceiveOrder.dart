@@ -9,14 +9,14 @@ import '../../Library/AppStyle.dart';
 import '../../Models/DiamondModel.dart';
 import '../../Library/Utils.dart' as utils;
 
-class Order extends StatefulWidget {
-  const Order({super.key});
+class ReceiveOrder extends StatefulWidget {
+  const ReceiveOrder({super.key});
 
   @override
-  _OrderState createState() => _OrderState();
+  _ReceiveOrderState createState() => _ReceiveOrderState();
 }
 
-class _OrderState extends State<Order> {
+class _ReceiveOrderState extends State<ReceiveOrder> {
   List<Diamond> diamonds = [];
   bool isLoading = true;
 
@@ -55,7 +55,7 @@ class _OrderState extends State<Order> {
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColour,
         elevation: 0.5,
-        title: Text("Order", style: TextStyleHelper.mediumPrimaryColour),
+        title: Text("Receive Order", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new_sharp),
           color: AppColors.primaryColour,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../Dashboard/Admin/AddSupplier.dart';
 import '../Dashboard/Admin/DiamondPurchase.dart';
 import '../Dashboard/Admin/InquiryAns.dart';
+import '../Dashboard/Admin/Report.dart';
 import '../Dashboard/User/AddCart.dart';
 import '../Dashboard/User/CustomerDashboard.dart';
 import '../Dashboard/User/Order.dart';
@@ -50,12 +51,12 @@ class CommonDrawer extends StatelessWidget {
                         _buildDrawerItem(
                           icon: Icons.shopping_cart_checkout,
                           text: "CART",
-                          onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CardDiamonds())),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>CardDiamonds())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.receipt_long,
                           text: "ORDER",
-                          onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Order())),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>Order())),
                         ),
                         _buildDrawerItem(
                           icon: Icons.favorite_border,
@@ -65,7 +66,9 @@ class CommonDrawer extends StatelessWidget {
                         _buildDrawerItem(
                           icon: Icons.settings,
                           text: "REPORT",
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> SaleReport()));
+                          },
                         ),
                         const Divider(
                           color: AppColors.primaryWhite,
@@ -112,14 +115,14 @@ class CommonDrawer extends StatelessWidget {
                           icon: Icons.favorite_border,
                           text: "INQUIRY",
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminInquiryScreen(adminName: "Aasheeta",)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminInquiryScreen(adminName: "Aasheeta",)));
                           },
                         ),
                         _buildDrawerItem(
                           icon: Icons.settings,
                           text: "ADD SUPPLIER",
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
                           },
                         ),
                         const Divider(
