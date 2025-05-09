@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Authentication/Login.dart';
 import '../../Library/AppColour.dart';
-import '../../Library/AppImages.dart';
 import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import '../../Library/SharedPrefService.dart';
@@ -42,7 +41,6 @@ class _ProfileState extends State<Profile> {
     setState(() {});
   }
 
-
   void logout() async {
     await SharedPrefService.clearAll();
     Get.offAll(() => LogIn());
@@ -60,11 +58,15 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppString.profile, style: theme.textTheme.titleLarge),
+        title: Text(AppString.profile, style: TextStyleHelper.mediumPrimaryColour),
         backgroundColor: AppColors.secondaryColour,
-        elevation: 0,
-        leading: BackButton(color: AppColors.primaryColour),
-      ),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppColors.primaryColour,
+          ),
+        ),      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -80,8 +82,6 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-
-                  // Profile Info Card
                   Card(
                     color: Colors.white.withOpacity(0.1),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -90,20 +90,19 @@ class _ProfileState extends State<Profile> {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          _buildProfileRow(AppString.contactName, contactName, theme),
-                          _buildProfileRow(AppString.email, email, theme),
-                          _buildProfileRow(AppString.mobileNo, mobileNo, theme),
-                          _buildProfileRow(AppString.city, city, theme),
-                          _buildProfileRow(AppString.address, address, theme),
-                          _buildProfileRow(AppString.companyName, companyName, theme),
-                          _buildProfileRow("ID Proof", idProof, theme),
-                          _buildProfileRow("License Copy", licenseCopy, theme),
-                          _buildProfileRow("Tax Certificate", taxCertificate, theme),
-                          _buildProfileRow("Partner Copy", partnerCopy, theme),
-                          _buildProfileRow("User Type", userType, theme),
+                          _buildProfileRow(Icons.person, AppString.contactName, contactName, theme),
+                          _buildProfileRow(Icons.email, AppString.email, email, theme),
+                          _buildProfileRow(Icons.phone, AppString.mobileNo, mobileNo, theme),
+                          _buildProfileRow(Icons.location_city, AppString.city, city, theme),
+                          _buildProfileRow(Icons.home, AppString.address, address, theme),
+                          _buildProfileRow(Icons.business, AppString.companyName, companyName, theme),
+                          _buildProfileRow(Icons.document_scanner, "ID Proof", idProof, theme),
+                          _buildProfileRow(Icons.file_copy, "License Copy", licenseCopy, theme),
+                          _buildProfileRow(Icons.assignment, "Tax Certificate", taxCertificate, theme),
+                          _buildProfileRow(Icons.group, "Partner Copy", partnerCopy, theme),
+                          _buildProfileRow(Icons.account_box, "User Type", userType, theme),
                         ],
                       ),
-
                     ),
                   ),
 
@@ -130,16 +129,17 @@ class _ProfileState extends State<Profile> {
           ),
         ),
       ),
-
     );
   }
 
-  Widget _buildProfileRow(String label, String value, ThemeData theme) {
+  Widget _buildProfileRow(IconData icon, String label, String value, ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Icon(icon, color: Colors.white70, size: 28),
+          const SizedBox(width: 16),
           Expanded(
             flex: 2,
             child: Text(

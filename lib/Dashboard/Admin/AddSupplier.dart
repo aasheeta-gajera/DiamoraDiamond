@@ -48,7 +48,7 @@ class _AddSupplierState extends State<AddSupplier> {
 
     try {
       final response = await http.post(
-        Uri.parse("${ApiService.baseUrl}/supplier"),
+        Uri.parse("${ApiService.baseUrl}/Admin/supplier"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "name": newSupplier.name,

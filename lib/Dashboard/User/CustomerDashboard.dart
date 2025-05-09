@@ -32,7 +32,7 @@ class CustomerDashboard extends StatelessWidget {
         backgroundColor: AppColors.secondaryColour,
         elevation: 1,
         title: Text(
-          AppString.customer,
+          "Welcome",
           style: TextStyleHelper.mediumPrimaryColour,
         ),
         leading: IconButton(
@@ -42,6 +42,9 @@ class CustomerDashboard extends StatelessWidget {
             color: AppColors.primaryColour,
           ),
         ),
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.notification_add_outlined,color: AppColors.primaryColour,))
+        ],
       ),
       drawer: const CommonDrawer(),
       body: Container(

@@ -21,7 +21,7 @@ class _OrderState extends State<Order> {
   bool isLoading = true;
 
   Future<void> fetchDiamonds() async {
-      final String apiUrl = "${ApiService.baseUrl}/getSoldDiamonds";
+      final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

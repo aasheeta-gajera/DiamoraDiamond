@@ -41,7 +41,7 @@ class _InventoryState extends State<Inventory> {
   }
   var totleValue = 0;
   Future<void> fetchDiamonds() async {
-    final String apiUrl = "${ApiService.baseUrl}/getAllPurchasedDiamonds";
+    final String apiUrl = "${ApiService.baseUrl}/Admin/getAllPurchasedDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

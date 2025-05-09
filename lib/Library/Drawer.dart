@@ -4,16 +4,14 @@ import 'package:flutter/material.dart';
 import '../Dashboard/Admin/AddSupplier.dart';
 import '../Dashboard/Admin/DiamondPurchase.dart';
 import '../Dashboard/Admin/InquiryAns.dart';
-import '../Dashboard/Admin/Report.dart';
 import '../Dashboard/User/AddCart.dart';
 import '../Dashboard/User/CustomerDashboard.dart';
 import '../Dashboard/User/Order.dart';
 import '../Dashboard/User/Profile.dart';
 import '../Library/AppColour.dart';
-import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import 'package:get/get.dart';
-import '../Authentication/AuthChoice.dart';
+import 'AppImages.dart';
 
 class CommonDrawer extends StatelessWidget {
   const CommonDrawer({Key? key}) : super(key: key);
@@ -67,7 +65,7 @@ class CommonDrawer extends StatelessWidget {
                           icon: Icons.settings,
                           text: "REPORT",
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> SaleReport()));
+                            // Navigator.push(context, MaterialPageRoute(builder: (context)=> ReportDashboard()));
                           },
                         ),
                         const Divider(
@@ -157,30 +155,16 @@ class CommonDrawer extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: const CircleAvatar(
-              radius: 40,
-              backgroundColor: AppColors.primaryWhite,
-              child: Icon(
-                Icons.person,
-                size: 50,
-                color: AppColors.primaryColour,
-              ),
+          const SizedBox(height: 16),
+          ClipOval(
+            child: Image.asset(
+              AppImages.splashImage,
+              width: 110,
+              height: 110,
+              fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 5),
           Text(
             name,
             style: TextStyleHelper.extraLargeWhite.copyWith(

@@ -250,10 +250,14 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         pairingAvailable: isPairSelected,
         imageURL: "",
         remarks: "",
+        paymentStatus: "Pending",  // <-- REQUIRED!
+        paymentMethod: "Credit Card",
+        transactionId: "TXN001",
+        paymentDate: DateTime.now()
       );
 
       final response = await http.post(
-        Uri.parse("${ApiService.baseUrl}/purchaseDiamond"),
+        Uri.parse("${ApiService.baseUrl}/Admin/purchaseDiamond"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(diamond.toJson()),
       );
@@ -268,10 +272,12 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         String message = jsonData["message"];
         utils.showCustomSnackbar(message, false);
+        print(message);
       }
     } catch (e) {
       setState(() => isLoading = false);
       utils.showCustomSnackbar('Error: $e', false);
+      print(e);
     }
   }
 
@@ -283,7 +289,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
   Future<void> fetchSuppliers() async {
     try {
-      final response = await http.get(Uri.parse("${ApiService.baseUrl}/getAllSuppliers"));
+      final response = await http.get(Uri.parse("${ApiService.baseUrl}/Admin/getAllSuppliers"));
 
       print("Raw API Response: ${response.body}");  // Debugging Step
 

@@ -32,7 +32,7 @@ class _CardDiamondsState extends State<CardDiamonds> {
   bool isLoading = true;
 
   Future<void> fetchCartDiamonds() async {
-    final String apiUrl = "${ApiService.baseUrl}/cartDiamonds";
+    final String apiUrl = "${ApiService.baseUrl}/Customer/cartDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -245,6 +245,7 @@ Widget _detailChip(String label, String value) {
     ),
   );
 }
+
 Future<void> sellDiamond(CartDiamond diamond) async {
   final userId = await SharedPrefService.getString('userId') ?? '';
   print("userIduserId   ${userId}");
@@ -259,12 +260,13 @@ Future<void> sellDiamond(CartDiamond diamond) async {
     "itemCode": diamond.itemCode,
     "customerName": diamond.diamondDetails.supplier,
     "quantity": diamond.quantity,
+    "purchasePrice": diamond.diamondDetails.purchasePrice,
     "totlePrice": diamond.diamondDetails.totalPurchasePrice,
     "paymentStatus": paymentStatus, // Now using the payment status extracted from the diamond object
     "paymentMethod": paymentMethod, // New field for payment method
     "transactionId": transactionId, // New field for transaction ID
   };
-  final url = Uri.parse("${ApiService.baseUrl}/sellDiamond");
+  final url = Uri.parse("${ApiService.baseUrl}/Customer/sellDiamond");
   try {
     final response = await http.post(url, headers: {"Content-Type": "application/json"},
       body: json.encode(sellData),
@@ -274,11 +276,13 @@ Future<void> sellDiamond(CartDiamond diamond) async {
       utils.showCustomSnackbar(res['message'], true);
     } else {
       utils.showCustomSnackbar("Error selling ${diamond.itemCode}: ${response.body}", false);
+      print("Error selling ${diamond.itemCode}: ${response.body}");
       return;
     }
   } catch (e) {
     print('Error in sellDiamond: $e');
     utils.showCustomSnackbar("$e", false);
+    print(e);
     return;
   }
 }
@@ -287,7 +291,7 @@ Future<bool> removeDiamondFromCart(BuildContext context, String id) async {
   final bool shouldRemove = await showRemoveConfirmationDialog(context);
   if (!shouldRemove) return false;
 
-  final url = Uri.parse("${ApiService.baseUrl}/cartDiamonds/$id");
+  final url = Uri.parse("${ApiService.baseUrl}/Customer/cartDiamonds/$id");
   print("iddd ${id}");
   try {
     final response = await http.delete(url);

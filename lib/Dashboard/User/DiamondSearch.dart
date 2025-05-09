@@ -80,7 +80,7 @@ class _DiamondSearchState extends State<DiamondSearch> {
   }
 
   Future<void> fetchDiamonds() async {
-    final String apiUrl = "${ApiService.baseUrl}/getAllPurchasedDiamonds";
+    final String apiUrl = "${ApiService.baseUrl}/Admin/getAllPurchasedDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

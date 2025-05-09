@@ -56,7 +56,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
     setState(() => isLoading = true);
 
     try {
-      final url = Uri.parse("${ApiService.baseUrl}/forgotPassword");
+      final url = Uri.parse("${ApiService.baseUrl}/Auth/forgotPassword");
       final response = await http.post(
         url,
         body: jsonEncode({"email": email}),
@@ -91,7 +91,7 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
     setState(() => isLoading = true);
 
     try {
-      final url = Uri.parse("${ApiService.baseUrl}/resetPassword");
+      final url = Uri.parse("${ApiService.baseUrl}/Auth/resetPassword");
       final response = await http.post(
         url,
         body: jsonEncode({

@@ -30,7 +30,7 @@ class _AdminInquiryScreenState extends State<AdminInquiryScreen> {
   }
 
   Future<void> fetchInquiries() async {
-    final String apiUrl = "${ApiService.baseUrl}/admin/inquiries";
+    final String apiUrl = "${ApiService.baseUrl}/Admin/inquiries";
 
     final url = Uri.parse(apiUrl);
     try {
@@ -53,7 +53,7 @@ class _AdminInquiryScreenState extends State<AdminInquiryScreen> {
   Future<void> respondToInquiry(String id) async {
     TextEditingController responseController = TextEditingController();
 
-    final String apiUrl = "${ApiService.baseUrl}/admin/inquiry/$id/respond";
+    final String apiUrl = "${ApiService.baseUrl}/Admin/inquiry/$id/respond";
 
     await showDialog(
       context: context,

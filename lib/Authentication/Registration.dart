@@ -87,7 +87,35 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
     }
   }
 
+  Future<bool> checkIfPartnershipCertificate(File imageFile) async {
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${ApiService.baseUrl}/Auth/uploadCertificate'),
+    );
+    request.files.add(await http.MultipartFile.fromPath('certificate', imageFile.path));
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+      return decoded['isPartnershipCertificate'] == true;
+    } else {
+      throw Exception('Failed to verify certificate');
+    }
+  }
+
   Future<void> _register() async {
+
+    String userType = 'customer';
+
+    if (_partnerCopyImage != null) {
+      bool isPartnership = await checkIfPartnershipCertificate(_partnerCopyImage!);
+      if (isPartnership) {
+        userType = 'admin';
+      }
+    }
+
     if (_passwordController.text != _confirmPasswordController.text) {
       Get.snackbar(
         'Error',
@@ -98,8 +126,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
       return;
     }
 
-    if (_idProofImage == null || _licenseCopyImage == null || 
-        _taxCertificateImage == null || _partnerCopyImage == null) {
+    if (_idProofImage == null || _licenseCopyImage == null) {
       Get.snackbar(
         'Error',
         'Please upload all required documents',
@@ -111,45 +138,36 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
 
     setState(() => _isLoading = true);
     try {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('${ApiService.baseUrl}/register'),
-      );
+      // Read and convert images to Base64
+      final idProofBase64 = base64Encode(await _idProofImage!.readAsBytes());
+      final licenseCopyBase64 = base64Encode(await _licenseCopyImage!.readAsBytes());
+      final taxCertificateBase64 = base64Encode(await _taxCertificateImage!.readAsBytes());
+      final partnerCopyBase64 = base64Encode(await _partnerCopyImage!.readAsBytes());
 
-      // Add text fields
-      request.fields.addAll({
-        'name': _nameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
-        'mobile': _mobileController.text,
-        'address': _addressController.text,
-        'city': _cityController.text,
-        'contact_name': _contactNameController.text,
+      final body = jsonEncode({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text.trim(),
+        'mobile': _mobileController.text.trim(),
+        'address': _addressController.text.trim(),
+        'city': _cityController.text.trim(),
+        'contact_name': _contactNameController.text.trim(),
+        'id_proof': idProofBase64,
+        'license_copy': licenseCopyBase64,
+        'tax_certificate': taxCertificateBase64,
+        'partner_copy': partnerCopyBase64,
+        'userType': userType
       });
 
-      // Add files
-      request.files.add(await http.MultipartFile.fromPath(
-        'idProof',
-        _idProofImage!.path,
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'licenseCopy',
-        _licenseCopyImage!.path,
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'taxCertificate',
-        _taxCertificateImage!.path,
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'partnerCopy',
-        _partnerCopyImage!.path,
-      ));
+      final response = await http.post(
+        Uri.parse('${ApiService.baseUrl}/Auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
 
-      final response = await request.send();
-      final responseData = await response.stream.bytesToString();
-      final decodedResponse = jsonDecode(responseData);
+      final decodedResponse = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         Get.snackbar(
           'Success',
           'Registration successful',
@@ -165,7 +183,6 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
           backgroundColor: AppColors.error,
           colorText: AppColors.primaryWhite,
         );
-        print('sajkhdihbdjh  ${decodedResponse['message']}');
       }
     } catch (e) {
       Get.snackbar(
@@ -174,8 +191,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         backgroundColor: AppColors.error,
         colorText: AppColors.primaryWhite,
       );
-      print('sssssssssssssssssssss  ${e}');
-
+      print('Error: $e');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -552,8 +568,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
                     ],
                   ),
                 ),
-              )
-      ,
+              ),
 
 
               // TabBarView

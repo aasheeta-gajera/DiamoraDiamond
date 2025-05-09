@@ -50,7 +50,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
   var totleValue = 0;
 
   Future<void> fetchDiamonds() async {
-    final String apiUrl = "${ApiService.baseUrl}/getAllPurchasedDiamonds";
+    final String apiUrl = "${ApiService.baseUrl}/Admin/getAllPurchasedDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -82,7 +82,7 @@ class _DiamondInventoryState extends State<DiamondInventory> {
   }
 
   Future<void> addToCart(BuildContext context, String itemCode, int quantity) async {
-    final String apiUrl = "${ApiService.baseUrl}/addToCart";
+    final String apiUrl = "${ApiService.baseUrl}/Customer/addToCart";
     final userId = await SharedPrefService.getString('userId') ?? '';
     print("userIduserId   ${userId}");
 

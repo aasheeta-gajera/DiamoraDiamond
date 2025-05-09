@@ -10,7 +10,7 @@ import 'DiamondPurchase.dart';
 import 'InquiryAns.dart';
 import 'Inventory.dart';
 import 'ReceiveOrder.dart';
-import 'Report.dart';
+import 'ReportDashboard.dart';
 
 class AdminDashboard extends StatelessWidget {
   final String? token;
@@ -28,13 +28,16 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColour,
         elevation: 1,
-        title: Text(AppString.admin, style: TextStyleHelper.mediumPrimaryColour),
+        title: Text("Welcome", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           icon: Icon(Icons.menu, color: AppColors.primaryColour),
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.notification_add_outlined,color: AppColors.primaryColour,))
+        ],
       ),
       drawer: CommonDrawer(),
       body: Container(
@@ -61,9 +64,9 @@ class AdminDashboard extends StatelessWidget {
                   const SizedBox(height: 30),
                   _ReportCard(
                     icon: Icons.bar_chart_rounded,
-                    title: AppString.sellReport,
+                    title: "Reports & Analytics",
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SaleReport()));},
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReportDashboard()));},
                   ),
                   const SizedBox(height: 16),
                   // _ReportCard(

@@ -130,15 +130,12 @@ class Diamond {
     data['imageURL'] = this.imageURL;
     data['remarks'] = this.remarks;
     data['totalPurchasePrice'] = this.totalPurchasePrice;
-
-    // Add the new payment fields to the JSON
     data['paymentStatus'] = this.paymentStatus;
     data['paymentMethod'] = this.paymentMethod;
     data['transactionId'] = this.transactionId;
     if (this.paymentDate != null) {
       data['paymentDate'] = this.paymentDate?.toIso8601String();
     }
-
     return data;
   }
 }

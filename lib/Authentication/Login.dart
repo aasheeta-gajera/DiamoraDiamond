@@ -52,7 +52,7 @@ class _LogInState extends State<LogIn> {
   Future<void> _login() async {
     setState(() => isLoading = true);
 
-    final String url = '${ApiService.baseUrl}/login';
+    final String url = '${ApiService.baseUrl}/Auth/login';
     final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, dynamic> body = {
       'email': emailController.text.trim(),
@@ -99,8 +99,6 @@ class _LogInState extends State<LogIn> {
         await SharedPrefService.setString('userType', userType);
 
         utils.showCustomSnackbar('Login successful!', true);
-        print("aasfdbhjiohgkjkoih  ${userId}");
-        print("aasfdbhjiohgkjkoih  ${responseData}");
 
         if (userType == "admin") {
           Get.off(() => AdminDashboard(token: token));
