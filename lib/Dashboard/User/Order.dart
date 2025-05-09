@@ -1,7 +1,11 @@
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/AppStrings.dart';
@@ -19,6 +23,51 @@ class Order extends StatefulWidget {
 class _OrderState extends State<Order> {
   List<Diamond> diamonds = [];
   bool isLoading = true;
+
+  Future<void> shareExcelFile(List<Diamond> diamonds) async {
+    final workbook = xlsio.Workbook();
+    final sheet = workbook.worksheets[0];
+
+    // Add header row
+    sheet.importList([
+      'Item',
+      'Weight',
+      'Color',
+      'Clarity',
+      'Size',
+      'Certification',
+      'Supplier',
+      'Price',
+    ], 1, 1, false);
+
+    int rowIndex = 2;
+
+    for (var diamond in diamonds) {
+      sheet.importList([
+        diamond.itemCode ?? 'N/A',
+        diamond.weightCarat?.toString() ?? 'N/A',
+        diamond.color ?? 'N/A',
+        diamond.clarity ?? 'N/A',
+        diamond.size ?? 'N/A',
+        diamond.certification ?? 'N/A',
+        diamond.supplier ?? 'N/A',
+        diamond.totalPurchasePrice?.toString() ?? 'N/A',
+      ], rowIndex, 1, false);
+
+      rowIndex++;
+    }
+
+    final List<int> bytes = workbook.saveAsStream();
+    workbook.dispose();
+
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/Diamonds.xlsx';
+    final file = File(filePath);
+    await file.writeAsBytes(bytes, flush: true);
+
+    await Share.shareXFiles([XFile(filePath)], text: 'Check out the diamond details!');
+  }
+
 
   Future<void> fetchDiamonds() async {
       final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
@@ -61,6 +110,14 @@ class _OrderState extends State<Order> {
           color: AppColors.primaryColour,
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              shareExcelFile(diamonds); // Share Excel file when pressed
+            },
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(

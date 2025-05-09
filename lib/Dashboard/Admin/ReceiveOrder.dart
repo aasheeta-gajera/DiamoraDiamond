@@ -1,13 +1,16 @@
-
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
 import '../../Models/DiamondModel.dart';
 import '../../Library/Utils.dart' as utils;
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 
 class ReceiveOrder extends StatefulWidget {
   const ReceiveOrder({super.key});
@@ -21,7 +24,7 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
   bool isLoading = true;
 
   Future<void> fetchDiamonds() async {
-      final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
+    final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -40,6 +43,50 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
       setState(() => isLoading = false);
       utils.showCustomSnackbar("Error: $e", false);
     }
+  }
+
+  Future<void> shareExcelFile(List<Diamond> diamonds) async {
+    final workbook = xlsio.Workbook();
+    final sheet = workbook.worksheets[0];
+
+    // Add header row
+    sheet.importList([
+      'Item',
+      'Weight',
+      'Color',
+      'Clarity',
+      'Size',
+      'Certification',
+      'Supplier',
+      'Price',
+    ], 1, 1, false);
+
+    int rowIndex = 2;
+
+    for (var diamond in diamonds) {
+      sheet.importList([
+        diamond.itemCode ?? 'N/A',
+        diamond.weightCarat?.toString() ?? 'N/A',
+        diamond.color ?? 'N/A',
+        diamond.clarity ?? 'N/A',
+        diamond.size ?? 'N/A',
+        diamond.certification ?? 'N/A',
+        diamond.supplier ?? 'N/A',
+        diamond.totalPurchasePrice?.toString() ?? 'N/A',
+      ], rowIndex, 1, false);
+
+      rowIndex++;
+    }
+
+    final List<int> bytes = workbook.saveAsStream();
+    workbook.dispose();
+
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/Diamonds.xlsx';
+    final file = File(filePath);
+    await file.writeAsBytes(bytes, flush: true);
+
+    await Share.shareXFiles([XFile(filePath)], text: 'Check out the diamond details!');
   }
 
   @override
@@ -61,6 +108,14 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
           color: AppColors.primaryColour,
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+                shareExcelFile(diamonds); // Share Excel file when pressed
+            },
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -148,7 +203,6 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
                         SizedBox(height: 12),
 
                         // Price Footer
-                        // Price & Download Footer
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -159,25 +213,6 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            if (status == 'Paid')
-                              InkWell(
-                                onTap: () {
-                                  utils.showCustomSnackbar("Downloading bill for ${diamond.itemCode}", true);
-                                },
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryColour.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Icon(
-                                    Icons.download_rounded,
-                                    color: AppColors.primaryColour,
-                                    size: 24,
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ],

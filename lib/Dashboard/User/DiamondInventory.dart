@@ -9,6 +9,9 @@ import 'package:http/http.dart' as http;
 import '../../Library/AppColour.dart';
 import '../../Library/AppImages.dart';
 import '../../Library/AppStrings.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import '../../Library/SharedPrefService.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
@@ -132,6 +135,62 @@ class _DiamondInventoryState extends State<DiamondInventory> {
     "Radiant": "Assets/Images/Round.png",
   };
 
+  Future<void> shareExcelFile(List<Diamond> diamonds) async {
+    final workbook = xlsio.Workbook();
+    final sheet = workbook.worksheets[0];
+
+    // Add header row
+    sheet.importList([
+      'Item Code',
+      'Weight (Carat)',
+      'Color',
+      'Clarity',
+      'Size',
+      'Certification',
+      'Supplier',
+      'Purchase Price',
+      'Total Diamonds',
+      'Total Value',
+    ], 1, 1, false);
+
+    int rowIndex = 2;
+
+    for (var diamond in diamonds) {
+      int purchasePrice = diamond.purchasePrice ?? 0;
+      int totalDiamonds = diamond.totalDiamonds ?? 0;
+      int totalValue = purchasePrice * totalDiamonds;
+
+      sheet.importList([
+        diamond.itemCode ?? 'N/A',
+        diamond.weightCarat?.toString() ?? 'N/A',
+        diamond.color ?? 'N/A',
+        diamond.clarity ?? 'N/A',
+        diamond.size ?? 'N/A',
+        diamond.certification ?? 'N/A',
+        diamond.supplier ?? 'N/A',
+        purchasePrice.toString(),
+        totalDiamonds.toString(),
+        totalValue.toString(),
+      ], rowIndex, 1, false);
+
+      rowIndex++;
+    }
+
+    final List<int> bytes = workbook.saveAsStream();
+    workbook.dispose();
+
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/PurchasedDiamonds.xlsx';
+    final file = File(filePath);
+    await file.writeAsBytes(bytes, flush: true);
+
+    await Share.shareXFiles(
+      [XFile(filePath)],
+      text: 'Purchased Diamond Details - Excel Export',
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,7 +205,14 @@ class _DiamondInventoryState extends State<DiamondInventory> {
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
         },color: AppColors.primaryColour, icon: Icon(Icons.arrow_back_ios_new_sharp),),
-
+          actions: [
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {
+                shareExcelFile(diamonds);
+              },
+            ),
+          ]
       ),
       body: Container(
         width: double.infinity,
