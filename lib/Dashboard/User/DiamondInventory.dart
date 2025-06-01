@@ -7,19 +7,15 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Library/AppColour.dart';
-import '../../Library/AppImages.dart';
 import '../../Library/AppStrings.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
+import '../../Library/Notification.dart';
 import '../../Library/SharedPrefService.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'DiamondDetilas.dart';
 
 class DiamondInventory extends StatefulWidget {
@@ -41,6 +37,8 @@ class _DiamondInventoryState extends State<DiamondInventory> {
   @override
   void initState() {
     super.initState();
+    // NotificationService.init();
+    // NotificationService.showNewDiamondNotification(1);  // Test with a manual notification
     if (widget.diamonds != null) {
       setState(() {
         diamonds = widget.diamonds!;
@@ -51,36 +49,40 @@ class _DiamondInventoryState extends State<DiamondInventory> {
     }
   }
   var totleValue = 0;
+  int lastDiamondCount = 0;
+  // final NotificationService _notificationService = NotificationService(); // Instance of NotificationService
 
   Future<void> fetchDiamonds() async {
     final String apiUrl = "${ApiService.baseUrl}/Admin/getAllPurchasedDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
-      ApiService().printLargeResponse(response.body);
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
+        final List<Diamond> fetchedDiamonds = (data["diamonds"] as List)
+            .map((json) => Diamond.fromJson(json))
+            .toList();
+
+        // Check if there are new diamonds
+        if (fetchedDiamonds.length > lastDiamondCount) {
+          int newDiamondsCount = fetchedDiamonds.length - lastDiamondCount;
+          // NotificationService.showNewDiamondNotification(newDiamondsCount); // Use instance to call method
+        }
+
         setState(() {
-          diamonds = (data["diamonds"] as List)
-              .map((json) {
-            final diamond = Diamond.fromJson(json);
-            // Accumulate the total value for each diamond
-            final diamondValue = (diamond.purchasePrice ?? 0) * (diamond.totalDiamonds ?? 0);
-            totleValue += diamondValue;  // Add the current diamond's value to total
-            print('Diamond Value: $diamondValue');  // Print value for each diamond
-            return diamond;
-          })
-              .toList();
-          print('Total Value of all Diamonds: $totleValue'); // Print total value after all diamonds are processed
+          diamonds = fetchedDiamonds;
+          lastDiamondCount = diamonds.length;
           isLoading = false;
         });
-
       } else {
-        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        print("Error: ${response.body}");
       }
     } catch (e) {
-      setState(() => isLoading = false);
-      utils.showCustomSnackbar('${e}', false);
+      setState(() {
+        isLoading = false;
+      });
+      print("Error: $e");
     }
   }
 

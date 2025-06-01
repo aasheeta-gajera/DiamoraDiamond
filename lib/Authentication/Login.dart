@@ -113,6 +113,7 @@ class _LogInState extends State<LogIn> {
       }
     } catch (e) {
       setState(() => isLoading = false);
+      print(e.toString());
       utils.showCustomSnackbar('Error: ${e.toString()}', false);
     }
   }

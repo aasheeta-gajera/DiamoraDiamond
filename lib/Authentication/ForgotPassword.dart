@@ -10,7 +10,6 @@ import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotResetPassword extends StatefulWidget {
   const ForgotResetPassword({super.key});
@@ -114,10 +113,12 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
           confirmPasswordController.clear();
         });
       } else {
+        print(data["message"]);
         utils.showCustomSnackbar(data["message"], false);
       }
     } catch (e) {
       setState(() => isLoading = false);
+      print(e);
       utils.showCustomSnackbar('${e}', false);
     }
   }

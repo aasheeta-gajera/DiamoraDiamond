@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -7,7 +8,6 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Library/AppColour.dart';
-import '../../Library/AppImages.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import 'package:screenshot/screenshot.dart';
@@ -177,33 +177,6 @@ class _InventoryState extends State<Inventory> {
         child: SafeArea(
           child: Column(
             children: [
-              // Header
-              // Container(
-              //   padding: const EdgeInsets.all(24),
-              //   child: Column(
-              //     children: [
-              //       const SizedBox(height: 16),
-              //       Text(
-              //         AppString.diamondInventory,
-              //         style: TextStyleHelper.extraLargeWhite.copyWith(
-              //           fontSize: 24,
-              //           fontWeight: FontWeight.w600,
-              //           letterSpacing: 0.5,
-              //         ),
-              //       ),
-              //       const SizedBox(height: 8),
-              //       Text(
-              //         'Manage your diamond inventory',
-              //         style: TextStyleHelper.mediumWhite.copyWith(
-              //           fontSize: 14,
-              //           letterSpacing: 0.3,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-
-              // Stats Cards
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 15),
                 child: Row(
@@ -636,80 +609,6 @@ class _InventoryState extends State<Inventory> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: TextStyleHelper.mediumBlack.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(value, style: TextStyleHelper.mediumBlack),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSingleShape(String shape) {
-    return SizedBox(
-      width: 80,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            shapeImages[shape]!,
-            width: 40,
-            height: 40,
-            color: AppColors.primaryColour,
-          ),
-          const SizedBox(height: 5),
-          Text(
-            shape,
-            textAlign: TextAlign.center,
-            style: TextStyleHelper.mediumBlack.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildShapeRow(List<String> shapes) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children:
-          shapes.map((shape) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: _buildSingleShape(shape),
-            );
-          }).toList(),
-    );
-  }
-
-  Widget _buildShapeGrid(List<String> shapes) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: shapes.length > 4 ? 4 : shapes.length,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 8,
-        childAspectRatio: 1,
-      ),
-      itemCount: shapes.length,
-      itemBuilder: (context, index) {
-        return _buildSingleShape(shapes[index]);
-      },
     );
   }
 }
