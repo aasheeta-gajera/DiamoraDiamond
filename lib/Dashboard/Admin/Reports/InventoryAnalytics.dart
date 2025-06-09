@@ -26,11 +26,31 @@ class _InventoryAnalyticsPageState extends State<InventoryAnalyticsPage> {
   Future<void> fetchInventoryAnalytics() async {
     final String apiUrl = "${ApiService.baseUrl}/Report/getInventoryAnalytics";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          // Raw encrypted string response
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          // Encrypted data inside 'data' key
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          // Unexpected format, fallback to original body
+          decryptedJsonString = response.body;
+        }
+
+        final decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          inventoryAnalytics = json.decode(response.body);
+          inventoryAnalytics = decryptedData;
           isLoading = false;
         });
       } else {

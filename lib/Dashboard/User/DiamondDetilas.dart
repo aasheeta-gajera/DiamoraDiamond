@@ -21,7 +21,7 @@ class Diamond3DViewScreen extends StatelessWidget {
           // 3D Model viewer
           Expanded(
             child:ModelViewer(
-              src: 'http://127.0.0.1:41455/diamond.glb', // Your model file URL
+              src: 'http://192.168.000.000:41455/diamond.gltf', // Your model file URL
               alt: 'A 3D model of a shoe',
               autoRotate: true,
               cameraControls: true,

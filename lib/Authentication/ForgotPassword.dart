@@ -10,6 +10,7 @@ import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotResetPassword extends StatefulWidget {
   const ForgotResetPassword({super.key});
@@ -55,30 +56,51 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
     setState(() => isLoading = true);
 
     try {
+      // Prepare plain JSON body
+      final body = {"email": email};
+
+      // Encrypt body
+      final encryptedBody = jsonEncode({"data": ApiService.encryptData(jsonEncode(body))});
+
       final url = Uri.parse("${ApiService.baseUrl}/Auth/forgotPassword");
       final response = await http.post(
         url,
-        body: jsonEncode({"email": email}),
+        body: encryptedBody,
         headers: {"Content-Type": "application/json"},
       );
+
       setState(() => isLoading = false);
 
-      final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        // Decrypt response body
+        final responseBody = jsonDecode(response.body);
+        final decryptedJson = ApiService.decryptData(responseBody['data']);
+        final data = jsonDecode(decryptedJson);
+
         setState(() {
           _resetToken = data["resetToken"];
           _isResetMode = true;
         });
-        utils.showCustomSnackbar(
-          'Reset token received. Enter new password.',
-          true,
-        );
+        utils.showCustomSnackbar('Reset token received. Enter new password.', true);
       } else {
-        utils.showCustomSnackbar(data["message"], false);
+        // Optionally decrypt error message if backend encrypts error also
+        final responseBody = jsonDecode(response.body);
+        String message = responseBody['message'] ?? 'Unknown error';
+
+        // If 'data' exists in error, try decrypting it
+        if (responseBody.containsKey('data')) {
+          try {
+            final decryptedError = ApiService.decryptData(responseBody['data']);
+            final errorJson = jsonDecode(decryptedError);
+            message = errorJson['message'] ?? message;
+          } catch (_) {}
+        }
+
+        utils.showCustomSnackbar(message, false);
       }
     } catch (e) {
       setState(() => isLoading = false);
-      utils.showCustomSnackbar('${e}', false);
+      utils.showCustomSnackbar('Error: ${e.toString()}', false);
     }
   }
 
@@ -90,22 +112,30 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
     setState(() => isLoading = true);
 
     try {
+      final body = {
+        "token": _resetToken,
+        "newPassword": passwordController.text,
+      };
+
+      final encryptedBody = jsonEncode({"data": ApiService.encryptData(jsonEncode(body))});
+
       final url = Uri.parse("${ApiService.baseUrl}/Auth/resetPassword");
       final response = await http.post(
         url,
-        body: jsonEncode({
-          "token": _resetToken,
-          "newPassword": passwordController.text,
-        }),
+        body: encryptedBody,
         headers: {"Content-Type": "application/json"},
       );
 
       setState(() => isLoading = false);
 
-      final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        final decryptedJson = ApiService.decryptData(responseBody['data']);
+        final data = jsonDecode(decryptedJson);
+
         utils.showCustomSnackbar("Password reset successful!", true);
         Get.to(() => LogIn());
+
         setState(() {
           _isResetMode = false;
           emailController.clear();
@@ -113,16 +143,24 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
           confirmPasswordController.clear();
         });
       } else {
-        print(data["message"]);
-        utils.showCustomSnackbar(data["message"], false);
+        final responseBody = jsonDecode(response.body);
+        String message = responseBody['message'] ?? 'Unknown error';
+
+        if (responseBody.containsKey('data')) {
+          try {
+            final decryptedError = ApiService.decryptData(responseBody['data']);
+            final errorJson = jsonDecode(decryptedError);
+            message = errorJson['message'] ?? message;
+          } catch (_) {}
+        }
+
+        utils.showCustomSnackbar(message, false);
       }
     } catch (e) {
       setState(() => isLoading = false);
-      print(e);
-      utils.showCustomSnackbar('${e}', false);
+      utils.showCustomSnackbar('Error: ${e.toString()}', false);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

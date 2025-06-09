@@ -85,21 +85,33 @@ class _DiamondSearchState extends State<DiamondSearch> {
     try {
       final response = await http.get(Uri.parse(apiUrl));
       ApiService().printLargeResponse(response.body);
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          diamonds = (data["diamonds"] as List)
-              .map((json) => Diamond.fromJson(json))
-              .toList();
-          filteredDiamonds = List.from(diamonds);
-          isLoading = false;
-        });
+        final Map<String, dynamic> encryptedResponse = json.decode(response.body);
+
+        if (encryptedResponse.containsKey("data")) {
+          final decryptedString = ApiService.decryptData(encryptedResponse["data"]);
+          final Map<String, dynamic> data = json.decode(decryptedString);
+
+          setState(() {
+            diamonds = (data["diamonds"] as List)
+                .map((json) => Diamond.fromJson(json))
+                .toList();
+            filteredDiamonds = List.from(diamonds);
+            isLoading = false;
+          });
+        } else {
+          utils.showCustomSnackbar("Invalid response from server", false);
+          setState(() => isLoading = false);
+        }
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        setState(() => isLoading = false);
       }
     } catch (e) {
       setState(() => isLoading = false);
-      utils.showCustomSnackbar('${e}', false);
+      print(e);
+      utils.showCustomSnackbar('Error: $e', false);
     }
   }
 

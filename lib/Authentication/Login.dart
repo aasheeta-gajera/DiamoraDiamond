@@ -52,64 +52,50 @@ class _LogInState extends State<LogIn> {
   Future<void> _login() async {
     setState(() => isLoading = true);
 
-    final String url = '${ApiService.baseUrl}/Auth/login';
-    final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Map<String, dynamic> body = {
       'email': emailController.text.trim(),
       'password': passwordController.text.trim(),
     };
 
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(body),
-      );
+      final responseData = await ApiService.post('/Auth/login', body);
       setState(() => isLoading = false);
 
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        String token = responseData['token'] ?? '';
-        String email = responseData['user']['email'] ?? '';
-        String name = responseData['user']['name'] ?? '';
-        String userId = responseData['user']['_id'] ?? '';
-        String mobile = responseData['user']['mobile'] ?? '';
-        String city = responseData['user']['city'] ?? '';
-        String address = responseData['user']['address'] ?? '';
-        String contactName = responseData['user']['contact_name'] ?? '';
-        String idProof = responseData['user']['idProof'] ?? '';
-        String licenseCopy = responseData['user']['licenseCopy'] ?? '';
-        String taxCertificate = responseData['user']['taxCertificate'] ?? '';
-        String partnerCopy = responseData['user']['partnerCopy'] ?? '';
-        String userType = responseData['user']['userType'] ?? '';
+      String token = responseData['token'] ?? '';
+      String email = responseData['user']['email'] ?? '';
+      String name = responseData['user']['name'] ?? '';
+      String userId = responseData['user']['_id'] ?? '';
+      String mobile = responseData['user']['mobile'] ?? '';
+      String city = responseData['user']['city'] ?? '';
+      String address = responseData['user']['address'] ?? '';
+      String contactName = responseData['user']['contact_name'] ?? '';
+      String idProof = responseData['user']['idProof'] ?? '';
+      String licenseCopy = responseData['user']['licenseCopy'] ?? '';
+      String taxCertificate = responseData['user']['taxCertificate'] ?? '';
+      String partnerCopy = responseData['user']['partnerCopy'] ?? '';
+      String userType = responseData['user']['userType'] ?? '';
 
-        // Save User Data
-        await SharedPrefService.setString('auth_token', token);
-        await SharedPrefService.setString('user_email', email);
-        await SharedPrefService.setString('user_name', name);
-        await SharedPrefService.setString('userId', userId);
-        await SharedPrefService.setString('mobileNo', mobile);
-        await SharedPrefService.setString('Address', address);
-        await SharedPrefService.setString('contactName', contactName);
-        await SharedPrefService.setString('City', city);
-        await SharedPrefService.setString('id_proof', idProof);
-        await SharedPrefService.setString('license_copy', licenseCopy);
-        await SharedPrefService.setString('tax_certificate', taxCertificate);
-        await SharedPrefService.setString('partner_copy', partnerCopy);
-        await SharedPrefService.setString('userType', userType);
+      // Save User Data
+      await SharedPrefService.setString('auth_token', token);
+      await SharedPrefService.setString('user_email', email);
+      await SharedPrefService.setString('user_name', name);
+      await SharedPrefService.setString('userId', userId);
+      await SharedPrefService.setString('mobileNo', mobile);
+      await SharedPrefService.setString('Address', address);
+      await SharedPrefService.setString('contactName', contactName);
+      await SharedPrefService.setString('City', city);
+      await SharedPrefService.setString('id_proof', idProof);
+      await SharedPrefService.setString('license_copy', licenseCopy);
+      await SharedPrefService.setString('tax_certificate', taxCertificate);
+      await SharedPrefService.setString('partner_copy', partnerCopy);
+      await SharedPrefService.setString('userType', userType);
 
-        utils.showCustomSnackbar('Login successful!', true);
+      utils.showCustomSnackbar('Login successful!', true);
 
-        if (userType == "admin") {
-          Get.off(() => AdminDashboard(token: token));
-        } else {
-          Get.off(() => CustomerDashboard(token: token));
-        }
+      if (userType == "admin") {
+        Get.off(() => AdminDashboard(token: token));
       } else {
-        utils.showCustomSnackbar(
-          jsonDecode(response.body)['message'] ?? 'Invalid credentials',
-          false,
-        );
+        Get.off(() => CustomerDashboard(token: token));
       }
     } catch (e) {
       setState(() => isLoading = false);

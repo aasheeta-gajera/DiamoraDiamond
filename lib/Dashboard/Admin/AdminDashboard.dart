@@ -9,6 +9,7 @@ import 'AddSupplier.dart';
 import 'DiamondPurchase.dart';
 import 'InquiryAns.dart';
 import 'Inventory.dart';
+import 'Payment.dart';
 import 'ReceiveOrder.dart';
 import 'ReportDashboard.dart';
 
@@ -67,6 +68,7 @@ class AdminDashboard extends StatelessWidget {
                     title: "Reports & Analytics",
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ReportDashboard()));},
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen()));},
                   ),
                   const SizedBox(height: 16),
                   // _ReportCard(

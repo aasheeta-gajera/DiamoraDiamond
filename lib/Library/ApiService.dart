@@ -4,28 +4,63 @@ import 'package:http/http.dart' as http;
 import 'package:daimo/Library/SharedPrefService.dart';
 import 'package:get/get.dart';
 import '../Authentication/Login.dart';
-import '../Models/DiamondModel.dart';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class ApiService {
-  static const String baseUrl = "https://ae07-2409-4080-be1e-fcdc-5d50-ecc3-8ec1-61c9.ngrok-free.app/diamora/api";
+
+  static const String baseUrl = "https://3970-2409-4080-be45-5e0b-c8d2-5368-6b66-a0b6.ngrok-free.app/diamora/api";
   static String? userTypes = SharedPrefService.getString('userType') ?? "";
+
+  static final _key = sha256.convert(utf8.encode('aasheeta#p')).bytes;
+
+  static String encryptData(String plainText) {
+    final iv = encrypt.IV.fromSecureRandom(16);
+    final encrypter = encrypt.Encrypter(encrypt.AES(
+      encrypt.Key(Uint8List.fromList(_key)), //
+      mode: encrypt.AESMode.cbc,
+    ));
+    final encrypted = encrypter.encrypt(plainText, iv: iv);
+    return iv.base16 + ':' + encrypted.base16;
+  }
+
+  static String decryptData(String encryptedText) {
+    final parts = encryptedText.split(':');
+    final iv = encrypt.IV.fromBase16(parts[0]);
+    final encrypted = encrypt.Encrypted.fromBase16(parts[1]);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(
+      encrypt.Key(Uint8List.fromList(_key)), // <-- here
+      mode: encrypt.AESMode.cbc,
+    ));
+    return encrypter.decrypt(encrypted, iv: iv);
+  }
+
+  static Future<Map<String, dynamic>> post(
+      String endpoint,
+      Map<String, dynamic> body,
+      ) async {
+    final encryptedBody = jsonEncode({"data": encryptData(jsonEncode(body))});
+    print("Encrypted POST body: $encryptedBody");  // DEBUG
+    final response = await http.post(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {'Content-Type': 'application/json'},
+      body: encryptedBody,
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      final decrypted = decryptData(responseBody['data']);
+      return jsonDecode(decrypted);
+    } else {
+      throw Exception('Error: ${response.statusCode} - ${response.body}');
+    }
+  }
 
   Future logout() async {
     await SharedPrefService.clearAll(); // Clear saved data
     Get.offAll(() => LogIn()); // Navigate back to login
-  }
-
-  Future<List<Diamond>> fetchDiamonds() async {
-    final response = await http.get(Uri.parse(baseUrl));
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> diamondList = data['diamonds'];
-
-      return diamondList.map((json) => Diamond.fromJson(json)).toList();
-    } else {
-      throw Exception("Failed to load diamonds");
-    }
   }
 
   void printLargeResponse(String response) {

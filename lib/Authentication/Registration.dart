@@ -97,23 +97,39 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
+    print('Certificate API response status: ${response.statusCode}');
+    print('Certificate API response body: ${response.body}');
+
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      return decoded['isPartnershipCertificate'] == true;
+
+      print(decoded);
+      if (decoded.containsKey('data')) {
+        print('wwwwwwwwwwwwwwwwwwwwwwwwwwww');
+        final decrypted = ApiService.decryptData(decoded['data']);
+        final jsonData = jsonDecode(decrypted);
+        print("Decrypted certificate data: $jsonData");
+        return jsonData['isPartnershipCertificate'] == true;
+      } else {
+        return decoded['isPartnershipCertificate'] == true;
+      }
     } else {
       throw Exception('Failed to verify certificate');
     }
   }
 
   Future<void> _register() async {
-
     String userType = 'customer';
 
     if (_partnerCopyImage != null) {
       bool isPartnership = await checkIfPartnershipCertificate(_partnerCopyImage!);
       if (isPartnership) {
         userType = 'admin';
+      } else {
+        userType = 'customer'; // explicit fallback (optional)
       }
+    } else {
+      userType = 'customer';
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -137,14 +153,18 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
     }
 
     setState(() => _isLoading = true);
+
     try {
-      // Read and convert images to Base64
       final idProofBase64 = base64Encode(await _idProofImage!.readAsBytes());
       final licenseCopyBase64 = base64Encode(await _licenseCopyImage!.readAsBytes());
-      final taxCertificateBase64 = base64Encode(await _taxCertificateImage!.readAsBytes());
-      final partnerCopyBase64 = base64Encode(await _partnerCopyImage!.readAsBytes());
+      final taxCertificateBase64 = _taxCertificateImage != null
+          ? base64Encode(await _taxCertificateImage!.readAsBytes())
+          : null;
+      final partnerCopyBase64 = _partnerCopyImage != null
+          ? base64Encode(await _partnerCopyImage!.readAsBytes())
+          : null;
 
-      final body = jsonEncode({
+      final bodyMap = {
         'name': _nameController.text.trim(),
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
@@ -156,18 +176,30 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         'license_copy': licenseCopyBase64,
         'tax_certificate': taxCertificateBase64,
         'partner_copy': partnerCopyBase64,
-        'userType': userType
+        'userType': userType,
+      };
+
+      print("Final userType: $userType");
+      print("Request Body before encryption: $bodyMap");
+
+      final encryptedBody = jsonEncode({
+        "data": ApiService.encryptData(jsonEncode(bodyMap))
       });
 
       final response = await http.post(
         Uri.parse('${ApiService.baseUrl}/Auth/register'),
         headers: {'Content-Type': 'application/json'},
-        body: body,
+        body: encryptedBody,
       );
 
-      final decodedResponse = jsonDecode(response.body);
+      final responseBody = jsonDecode(response.body);
 
       if (response.statusCode == 201) {
+        final decryptedJson = ApiService.decryptData(responseBody['data']);
+        final decodedResponse = jsonDecode(decryptedJson);
+
+        print("Registration response: $decodedResponse");
+
         Get.snackbar(
           'Success',
           'Registration successful',
@@ -176,22 +208,33 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         );
         Get.off(() => const LogIn());
       } else {
-        print(decodedResponse['message']);
+        print("Error response: $responseBody");
+
+        String message = responseBody['message'] ?? 'Registration failed';
+
+        if (responseBody.containsKey('data')) {
+          try {
+            final decryptedError = ApiService.decryptData(responseBody['data']);
+            final errorJson = jsonDecode(decryptedError);
+            message = errorJson['message'] ?? message;
+          } catch (_) {}
+        }
+
         Get.snackbar(
           'Error',
-          decodedResponse['message'] ?? 'Registration failed',
+          message,
           backgroundColor: AppColors.error,
           colorText: AppColors.primaryWhite,
         );
       }
     } catch (e) {
+      print('Registration Exception: $e');
       Get.snackbar(
         'Error',
         'An error occurred. Please try again.',
         backgroundColor: AppColors.error,
         colorText: AppColors.primaryWhite,
       );
-      print('Error: $e');
     } finally {
       setState(() => _isLoading = false);
     }

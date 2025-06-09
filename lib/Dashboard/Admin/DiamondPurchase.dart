@@ -225,49 +225,64 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
     try {
       Diamond diamond = Diamond(
-        supplier: _supplierName.toString() ?? '',
-        supplierContact: _supplierContact ?? "",
-        itemCode: supplierGst ?? "",
-        lotNumber: _supplierEmail ?? "",
-        shape: _selectedShapes.isNotEmpty ? _selectedShapes.join(", ") : "",
-        size: sizeMin,
-        weightCarat: weightCaratMin,
-        color: _selectedColors.isNotEmpty ? _selectedColors.join(", ") : "",
-        clarity: clarityValue.toString(),
-        cut: cutValue.toString(),
-        polish: polishValue.toString(),
-        symmetry: symmetryValue.toString(),
-        fluorescence: fluorescenceValue.toString(),
-        certification: _selectedCertification.toString(),
-        measurements: measurementsMinValue.toString(),
-        tablePercentage: tablePercentageMinValue.toInt(),
-        purchasePrice: int.tryParse(purchaseController.text) ?? 0,
-        totalDiamonds: int.tryParse(totalDiamondsController.text) ?? 0,
-        invoiceNumber: invoiceNumberController.text,
-        purchaseDate: _selectedPurchaseDate?.toIso8601String() ?? "",
-        status: "In Stock",
-        storageLocation: _selectedLocation.toString(),
-        pairingAvailable: isPairSelected,
-        imageURL: "",
-        remarks: "",
-        paymentStatus: "Pending",  // <-- REQUIRED!
-        paymentMethod: "Credit Card",
-        transactionId: "TXN001",
-        paymentDate: DateTime.now()
+          supplier: _supplierName.toString() ?? '',
+          supplierContact: _supplierContact ?? "",
+          itemCode: supplierGst ?? "",
+          lotNumber: _supplierEmail ?? "",
+          shape: _selectedShapes.isNotEmpty ? _selectedShapes.join(", ") : "",
+          size: sizeMin,
+          weightCarat: weightCaratMin,
+          color: _selectedColors.isNotEmpty ? _selectedColors.join(", ") : "",
+          clarity: clarityValue.toString(),
+          cut: cutValue.toString(),
+          polish: polishValue.toString(),
+          symmetry: symmetryValue.toString(),
+          fluorescence: fluorescenceValue.toString(),
+          certification: _selectedCertification.toString(),
+          measurements: measurementsMinValue.toString(),
+          tablePercentage: tablePercentageMinValue.toInt(),
+          purchasePrice: int.tryParse(purchaseController.text) ?? 0,
+          totalDiamonds: int.tryParse(totalDiamondsController.text) ?? 0,
+          invoiceNumber: invoiceNumberController.text,
+          purchaseDate: _selectedPurchaseDate?.toIso8601String() ?? "",
+          status: "In Stock",
+          storageLocation: _selectedLocation.toString(),
+          pairingAvailable: isPairSelected,
+          imageURL: "",
+          remarks: "",
+          paymentStatus: "Pending",
+          paymentMethod: "Credit Card",
+          transactionId: "TXN001",
+          paymentDate: DateTime.now()
       );
+
+      // Convert diamond to JSON string
+      String jsonBody = jsonEncode(diamond.toJson());
+
+      // Encrypt the JSON string
+      String encryptedBody = ApiService.encryptData(jsonBody);
+
+      // Wrap encrypted data inside { "data": encryptedString }
+      String requestBody = jsonEncode({"data": encryptedBody});
 
       final response = await http.post(
         Uri.parse("${ApiService.baseUrl}/Admin/purchaseDiamond"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(diamond.toJson()),
+        body: requestBody,
       );
 
       setState(() => isLoading = false);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // The response body is encrypted inside 'data'
+        final responseBody = jsonDecode(response.body);
+
+        String decryptedJson = ApiService.decryptData(responseBody['data']);
+        final decodedResponse = jsonDecode(decryptedJson);
+
         utils.showCustomSnackbar('Diamond purchased successfully!', true);
         resetForm();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Inventory()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Inventory()));
       } else {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         String message = jsonData["message"];
@@ -290,26 +305,31 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
   Future<void> fetchSuppliers() async {
     try {
       final response = await http.get(Uri.parse("${ApiService.baseUrl}/Admin/getAllSuppliers"));
-
-      print("Raw API Response: ${response.body}");  // Debugging Step
+      print("Raw API Response: ${response.body}");
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-        print("Decoded API Response: $data");  // Debugging Step
+        final responseBody = json.decode(response.body);
 
-        if (data is Map<String, dynamic> && data.containsKey("data")) {
-          setState(() {
-            suppliers = (data["data"] as List)
-                .map((json) => Supplier.fromJson(json))
-                .toList();
+        if (responseBody is Map<String, dynamic> && responseBody.containsKey("data")) {
+          final decryptedJsonString = ApiService.decryptData(responseBody["data"]);
+          final decryptedData = json.decode(decryptedJsonString);
 
-            // for (var supplier in suppliers) {
-            //   _supplierContact = suppliers.first.contact;
-            // }
-          });
-        }
-        else {
-          print("Unexpected API format: $data");  // Debugging Output
+          print("Decrypted Response: $decryptedData");
+
+          // ✅ Use decryptedData["data"], NOT decryptedData["suppliers"]
+          if (decryptedData is Map<String, dynamic> && decryptedData.containsKey("data")) {
+            final List supplierList = decryptedData["data"];
+
+            setState(() {
+              suppliers = supplierList
+                  .map((json) => Supplier.fromJson(json))
+                  .toList();
+            });
+          } else {
+            print("Unexpected decrypted data format: $decryptedData");
+          }
+        } else {
+          print("Unexpected API format: $responseBody");
         }
       } else {
         print("API Error: ${response.statusCode}");
@@ -319,6 +339,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       print("Error fetching suppliers: $error");
     }
   }
+
   String? validateInvoiceNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Invoice Number is required';

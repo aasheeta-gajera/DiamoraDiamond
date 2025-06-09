@@ -25,11 +25,28 @@ class _SearchAnalyticsPageState extends State<SearchAnalyticsPage> {
   Future<void> fetchSearchAnalytics() async {
     final String apiUrl = "${ApiService.baseUrl}/Report/getSearchAnalytics";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          decryptedJsonString = response.body;
+        }
+
+        final decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          searchAnalyticsData = json.decode(response.body);
+          searchAnalyticsData = decryptedData;
           isLoading = false;
         });
       } else {

@@ -48,53 +48,90 @@ class _InquiryScreenState extends State<InquiryScreen> {
       caratWeight: caratWeightController.text,
       color: colorController.text,
       clarity: clarityController.text,
-      certification: certificationController.text, id: '',
+      certification: certificationController.text,
+      id: '',
     );
 
     final url = Uri.parse('${ApiService.baseUrl}/Admin/inquiry');
 
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(newInquiry.toJson()),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(newInquiry.toJson()),
+      );
 
-    setState(() => _isLoading = false);
+      final data = jsonDecode(response.body);
 
-    final data = jsonDecode(response.body);
+      if (response.statusCode == 201) {
+        Get.snackbar(
+          "Success",
+          "Inquiry submitted successfully",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
 
-    if (response.statusCode == 201) {
-      Get.snackbar("Success", "Inquiry submitted successfully",
-          backgroundColor: Colors.green, colorText: Colors.white);
-      _formKey.currentState!.reset();
+        _formKey.currentState!.reset();
 
-      // Optionally add the newly created inquiry to the list
-      inquiries.add(InquiryModel.fromJson(data));
-      setState(() {}); // Refresh UI if necessary
-    } else {
-      Get.snackbar("Error", data['error'] ?? 'Something went wrong',
-          backgroundColor: Colors.red, colorText: Colors.white);
+        // Add the newly created inquiry to the list and refresh UI
+        setState(() {
+          inquiries.add(InquiryModel.fromJson(data));
+          _isLoading = false;
+        });
+      } else {
+        Get.snackbar(
+          "Error",
+          data['error'] ?? 'Something went wrong',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      Get.snackbar(
+        "Error",
+        'Error: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
   Future<void> fetchInquiries() async {
     final String apiUrl = "${ApiService.baseUrl}/Admin/inquiries";
-
     final url = Uri.parse(apiUrl);
+
+    setState(() => _isLoading = true);
+
     try {
       final response = await http.get(url);
+
       if (response.statusCode == 200) {
-        final List data = json.decode(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+
+        // responseBody['data'] is the encrypted string
+        final String encryptedData = responseBody['data'] ?? '';
+
+        // Decrypt to get JSON string (which should be a list encoded as a string)
+        final String decryptedJsonString = ApiService.decryptData(encryptedData);
+
+        // Parse decrypted JSON string to List<dynamic>
+        final List<dynamic> dataList = json.decode(decryptedJsonString);
+
         setState(() {
-          inquiries = data.map((json) => InquiryModel.fromJson(json)).toList();
+          inquiries = dataList.map((json) => InquiryModel.fromJson(json)).toList();
           _isLoading = false;
         });
       } else {
-        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        final error = jsonDecode(response.body)['message'] ?? 'Failed to fetch inquiries';
+        utils.showCustomSnackbar(error, false);
+        setState(() => _isLoading = false);
       }
     } catch (e) {
       setState(() => _isLoading = false);
-      utils.showCustomSnackbar('${e}', false);
+      print(e);
+      utils.showCustomSnackbar('Error: $e', false);
     }
   }
 

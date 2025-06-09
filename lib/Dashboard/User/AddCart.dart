@@ -36,22 +36,41 @@ class _CardDiamondsState extends State<CardDiamonds> {
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          cartDiamonds = (data['cartItems'] as List).map((item) => CartDiamond.fromJson(item)).toList();
-          isLoading = false;
-        });
+        final responseBody = json.decode(response.body);
+
+        if (responseBody is Map && responseBody.containsKey('data')) {
+          final decryptedString = ApiService.decryptData(responseBody['data']);
+          final Map<String, dynamic> data = json.decode(decryptedString);
+
+          final cartItems = data['cartItems'];
+          if (cartItems != null && cartItems is List) {
+            setState(() {
+              cartDiamonds = cartItems
+                  .map((item) => CartDiamond.fromJson(item as Map<String, dynamic>))
+                  .toList();
+              isLoading = false;
+            });
+          } else {
+            setState(() {
+              cartDiamonds = [];
+              isLoading = false;
+            });
+            print("No cart items found or cartItems is not a list.");
+          }
+        } else {
+          setState(() => isLoading = false);
+          print("Missing 'data' field in encrypted response.");
+          utils.showCustomSnackbar("Invalid server response", false);
+        }
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        // utils.showCustomSnackbar("Failed to load cart items", false);
+        setState(() => isLoading = false);
+        utils.showCustomSnackbar("Failed to load cart items", false);
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
+      print("Exception in fetchCartDiamonds: $e");
       utils.showCustomSnackbar("Error: $e", false);
     }
   }
@@ -248,12 +267,11 @@ Widget _detailChip(String label, String value) {
 
 Future<void> sellDiamond(CartDiamond diamond) async {
   final userId = await SharedPrefService.getString('userId') ?? '';
-  print("userIduserId   ${userId}");
+  print("userIduserId   $userId");
 
-  final String paymentMethod = "Credit Card";  // This can be dynamic based on user input
-  final String transactionId = "TX123456789"; // This can be dynamically generated or retrieved from a payment API
-
-  final String paymentStatus = diamond.diamondDetails.paymentStatus ?? 'Pending'; // Default to 'Pending' if not available
+  final String paymentMethod = "Credit Card";
+  final String transactionId = "TX123456789";
+  final String paymentStatus = diamond.diamondDetails.paymentStatus ?? 'Pending';
 
   final sellData = {
     "userId": userId,
@@ -262,28 +280,38 @@ Future<void> sellDiamond(CartDiamond diamond) async {
     "quantity": diamond.quantity,
     "purchasePrice": diamond.diamondDetails.purchasePrice,
     "totlePrice": diamond.diamondDetails.totalPurchasePrice,
-    "paymentStatus": paymentStatus, // Now using the payment status extracted from the diamond object
-    "paymentMethod": paymentMethod, // New field for payment method
-    "transactionId": transactionId, // New field for transaction ID
+    "paymentStatus": paymentStatus,
+    "paymentMethod": paymentMethod,
+    "transactionId": transactionId,
   };
+
   final url = Uri.parse("${ApiService.baseUrl}/Customer/sellDiamond");
+
   try {
-    final response = await http.post(url, headers: {"Content-Type": "application/json"},
-      body: json.encode(sellData),
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"data": ApiService.encryptData(json.encode(sellData))}),
     );
+
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final res = json.decode(response.body);
-      utils.showCustomSnackbar(res['message'], true);
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+
+      if (responseBody.containsKey("data")) {
+        final decrypted = ApiService.decryptData(responseBody["data"]);
+        final res = json.decode(decrypted);
+        utils.showCustomSnackbar(res["message"] ?? "Success", true);
+      } else {
+        print("Missing 'data' in response: $responseBody");
+        utils.showCustomSnackbar("Unexpected response from server", false);
+      }
     } else {
       utils.showCustomSnackbar("Error selling ${diamond.itemCode}: ${response.body}", false);
       print("Error selling ${diamond.itemCode}: ${response.body}");
-      return;
     }
   } catch (e) {
     print('Error in sellDiamond: $e');
-    utils.showCustomSnackbar("$e", false);
-    print(e);
-    return;
+    utils.showCustomSnackbar("Error: $e", false);
   }
 }
 
@@ -292,10 +320,22 @@ Future<bool> removeDiamondFromCart(BuildContext context, String id) async {
   if (!shouldRemove) return false;
 
   final url = Uri.parse("${ApiService.baseUrl}/Customer/cartDiamonds/$id");
-  print("iddd ${id}");
+  print("iddd $id");
+
   try {
     final response = await http.delete(url);
+
     if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+
+      if (responseBody is String) {
+        final decryptedString = ApiService.decryptData(responseBody);
+        final result = json.decode(decryptedString);
+        utils.showCustomSnackbar(result['message'] ?? 'Removed successfully', true);
+      } else if (responseBody is Map<String, dynamic>) {
+        utils.showCustomSnackbar(responseBody['message'] ?? 'Removed successfully', true);
+      }
+
       return true;
     } else {
       utils.showCustomSnackbar("Failed to remove diamond", false);

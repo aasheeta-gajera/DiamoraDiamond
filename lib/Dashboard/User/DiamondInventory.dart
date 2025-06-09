@@ -7,15 +7,19 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Library/AppColour.dart';
+import '../../Library/AppImages.dart';
 import '../../Library/AppStrings.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
-import '../../Library/Notification.dart';
 import '../../Library/SharedPrefService.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
 import 'DiamondDetilas.dart';
 
 class DiamondInventory extends StatefulWidget {
@@ -37,8 +41,6 @@ class _DiamondInventoryState extends State<DiamondInventory> {
   @override
   void initState() {
     super.initState();
-    // NotificationService.init();
-    // NotificationService.showNewDiamondNotification(1);  // Test with a manual notification
     if (widget.diamonds != null) {
       setState(() {
         diamonds = widget.diamonds!;
@@ -49,40 +51,54 @@ class _DiamondInventoryState extends State<DiamondInventory> {
     }
   }
   var totleValue = 0;
-  int lastDiamondCount = 0;
-  // final NotificationService _notificationService = NotificationService(); // Instance of NotificationService
 
   Future<void> fetchDiamonds() async {
     final String apiUrl = "${ApiService.baseUrl}/Admin/getAllPurchasedDiamonds";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+      ApiService().printLargeResponse(response.body);
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        final List<Diamond> fetchedDiamonds = (data["diamonds"] as List)
-            .map((json) => Diamond.fromJson(json))
-            .toList();
+        String decryptedJsonString;
 
-        // Check if there are new diamonds
-        if (fetchedDiamonds.length > lastDiamondCount) {
-          int newDiamondsCount = fetchedDiamonds.length - lastDiamondCount;
-          // NotificationService.showNewDiamondNotification(newDiamondsCount); // Use instance to call method
+        final responseBody = json.decode(response.body);
+
+        if (responseBody is String) {
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          decryptedJsonString = response.body;
         }
 
+        final Map<String, dynamic> data = json.decode(decryptedJsonString);
+
         setState(() {
-          diamonds = fetchedDiamonds;
-          lastDiamondCount = diamonds.length;
+          diamonds = (data["diamonds"] as List).map((json) {
+            final diamond = Diamond.fromJson(json);
+
+            // Calculate total value per diamond
+            final diamondValue =
+                (diamond.purchasePrice ?? 0) * (diamond.totalDiamonds ?? 0);
+            totleValue += diamondValue;
+            print('Diamond Value: $diamondValue');
+
+            return diamond;
+          }).toList();
+
+          print('Total Value of all Diamonds: $totleValue');
           isLoading = false;
         });
       } else {
-        print("Error: ${response.body}");
+        setState(() => isLoading = false);
+        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      print("Error: $e");
+      setState(() => isLoading = false);
+      utils.showCustomSnackbar('Error: $e', false);
     }
   }
 
@@ -229,28 +245,28 @@ class _DiamondInventoryState extends State<DiamondInventory> {
         child: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        'Total Diamonds',
-                        diamonds.length.toString(),
-                        Icons.diamond_outlined,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildStatCard(
-                        'Total Value',
-                        '$totleValue',
-                        Icons.attach_money_outlined,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 10),
+              //   child: Row(
+              //     children: [
+              //       Expanded(
+              //         child: _buildStatCard(
+              //           'Total Diamonds',
+              //           diamonds.length.toString(),
+              //           Icons.diamond_outlined,
+              //         ),
+              //       ),
+              //       const SizedBox(width: 16),
+              //       Expanded(
+              //         child: _buildStatCard(
+              //           'Total Value',
+              //           '$totleValue',
+              //           Icons.attach_money_outlined,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
               // Diamond List
               Expanded(

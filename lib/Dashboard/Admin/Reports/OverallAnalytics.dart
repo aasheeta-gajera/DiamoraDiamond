@@ -29,11 +29,31 @@ class _AnalyticsDashboardPageState extends State<AnalyticsDashboardPage> {
   Future<void> fetchAnalytics() async {
     final String apiUrl = "${ApiService.baseUrl}/Report/getOverallAnalytics";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          // If response is encrypted string directly
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          // If encrypted data is inside 'data' key
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          // Fallback to original body string
+          decryptedJsonString = response.body;
+        }
+
+        final decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          analyticsData = json.decode(response.body);
+          analyticsData = decryptedData;
           isLoading = false;
 
           if (analyticsData != null) {

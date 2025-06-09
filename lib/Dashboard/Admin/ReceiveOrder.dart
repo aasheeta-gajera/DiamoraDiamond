@@ -26,17 +26,34 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
   Future<void> fetchDiamonds() async {
     final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          decryptedJsonString = response.body;
+        }
+
+        final Map<String, dynamic> decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          diamonds = (data["soldDiamonds"] as List)
+          diamonds = (decryptedData["soldDiamonds"] as List)
               .map((json) => Diamond.fromJson(json))
               .toList();
           isLoading = false;
         });
       } else {
+        setState(() => isLoading = false);
         utils.showCustomSnackbar("Failed to load data", false);
       }
     } catch (e) {

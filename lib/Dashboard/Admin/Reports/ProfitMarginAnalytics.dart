@@ -25,14 +25,32 @@ class _ProfitMarginAnalyticsPageState extends State<ProfitMarginAnalyticsPage> {
 
   // Fetching data from the API
   Future<void> fetchProfitMarginAnalytics() async {
-    final String apiUrl =
-        "${ApiService.baseUrl}/Report/getProfitMarginAnalytics";
+    final String apiUrl = "${ApiService.baseUrl}/Report/getProfitMarginAnalytics";
+
+    setState(() => isLoading = true);
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          // If the response is an encrypted string
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          // If the encrypted data is inside a 'data' key
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          decryptedJsonString = response.body;
+        }
+
+        final decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          profitData = json.decode(response.body)['averageMarginByShape'];
+          profitData = decryptedData['averageMarginByShape'];
           isLoading = false;
         });
       } else {

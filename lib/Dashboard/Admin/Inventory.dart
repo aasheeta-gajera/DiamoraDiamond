@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -8,6 +7,7 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Library/AppColour.dart';
+import '../../Library/AppImages.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import 'package:screenshot/screenshot.dart';
@@ -46,28 +46,45 @@ class _InventoryState extends State<Inventory> {
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
-      ApiService().printLargeResponse(response.body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          diamonds = (data["diamonds"] as List)
-              .map((json) {
-            final diamond = Diamond.fromJson(json);
-            totleValue = (diamond.purchasePrice ?? 0) * (diamond.totalDiamonds ?? 0);
+      ApiService().printLargeResponse(response.body); // Optional debug print
 
-            return diamond;
-          })
-              .toList();
-          isLoading = false;
-        });
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+
+        if (responseBody.containsKey("data")) {
+          // Decrypt the data
+          final decryptedJsonString = ApiService.decryptData(responseBody["data"]);
+          final decryptedData = json.decode(decryptedJsonString);
+
+          // ✅ Corrected this line: we now look for 'diamonds' key
+          if (decryptedData is Map<String, dynamic> && decryptedData.containsKey("diamonds")) {
+            final List<dynamic> diamondList = decryptedData["diamonds"];
+
+            setState(() {
+              diamonds = diamondList.map((json) {
+                final diamond = Diamond.fromJson(json);
+                totleValue = (diamond.purchasePrice ?? 0) * (diamond.totalDiamonds ?? 0);
+                return diamond;
+              }).toList();
+
+              isLoading = false;
+            });
+          } else {
+            print("Unexpected decrypted data format: $decryptedData");
+            utils.showCustomSnackbar("Unexpected decrypted response format", false);
+          }
+        } else {
+          print("Unexpected response format: $responseBody");
+          utils.showCustomSnackbar("Invalid server response", false);
+        }
       } else {
         utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
         print(jsonDecode(response.body)['message']);
       }
     } catch (e) {
       setState(() => isLoading = false);
-      utils.showCustomSnackbar('${e}', false);
-      print("eeeeeeeeeee  ${e}");
+      utils.showCustomSnackbar('Error: $e', false);
+      print("eeeeeeeeeee  $e");
     }
   }
 
@@ -177,6 +194,33 @@ class _InventoryState extends State<Inventory> {
         child: SafeArea(
           child: Column(
             children: [
+              // Header
+              // Container(
+              //   padding: const EdgeInsets.all(24),
+              //   child: Column(
+              //     children: [
+              //       const SizedBox(height: 16),
+              //       Text(
+              //         AppString.diamondInventory,
+              //         style: TextStyleHelper.extraLargeWhite.copyWith(
+              //           fontSize: 24,
+              //           fontWeight: FontWeight.w600,
+              //           letterSpacing: 0.5,
+              //         ),
+              //       ),
+              //       const SizedBox(height: 8),
+              //       Text(
+              //         'Manage your diamond inventory',
+              //         style: TextStyleHelper.mediumWhite.copyWith(
+              //           fontSize: 14,
+              //           letterSpacing: 0.3,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
+              // Stats Cards
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 15),
                 child: Row(
@@ -609,6 +653,80 @@ class _InventoryState extends State<Inventory> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: TextStyleHelper.mediumBlack.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(value, style: TextStyleHelper.mediumBlack),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSingleShape(String shape) {
+    return SizedBox(
+      width: 80,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            shapeImages[shape]!,
+            width: 40,
+            height: 40,
+            color: AppColors.primaryColour,
+          ),
+          const SizedBox(height: 5),
+          Text(
+            shape,
+            textAlign: TextAlign.center,
+            style: TextStyleHelper.mediumBlack.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildShapeRow(List<String> shapes) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children:
+          shapes.map((shape) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: _buildSingleShape(shape),
+            );
+          }).toList(),
+    );
+  }
+
+  Widget _buildShapeGrid(List<String> shapes) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: shapes.length > 4 ? 4 : shapes.length,
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1,
+      ),
+      itemCount: shapes.length,
+      itemBuilder: (context, index) {
+        return _buildSingleShape(shapes[index]);
+      },
     );
   }
 }

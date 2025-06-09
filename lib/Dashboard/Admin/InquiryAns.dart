@@ -31,72 +31,125 @@ class _AdminInquiryScreenState extends State<AdminInquiryScreen> {
 
   Future<void> fetchInquiries() async {
     final String apiUrl = "${ApiService.baseUrl}/Admin/inquiries";
-
     final url = Uri.parse(apiUrl);
+
+    setState(() => loading = true);
+
     try {
       final response = await http.get(url);
+
       if (response.statusCode == 200) {
-        final List data = json.decode(response.body);
-        setState(() {
-          inquiries = data.map((json) => InquiryModel.fromJson(json)).toList();
-          loading = false;
-        });
+        final responseBody = json.decode(response.body);
+
+        // If API returns encrypted string directly
+        if (responseBody is String) {
+          final decryptedJsonString = ApiService.decryptData(responseBody);
+          final decryptedData = json.decode(decryptedJsonString);
+
+          if (decryptedData is List) {
+            setState(() {
+              inquiries = decryptedData
+                  .map((json) => InquiryModel.fromJson(json))
+                  .toList();
+              loading = false;
+            });
+          } else {
+            print("Unexpected decrypted data format: $decryptedData");
+            setState(() => loading = false);
+          }
+
+          // If API returns a list directly (already decrypted)
+        } else if (responseBody is List) {
+          setState(() {
+            inquiries = responseBody
+                .map((json) => InquiryModel.fromJson(json))
+                .toList();
+            loading = false;
+          });
+
+          // If API returns an object (probably encrypted under 'data' key)
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          final encryptedData = responseBody['data'] as String;
+          final decryptedJsonString = ApiService.decryptData(encryptedData);
+          final decryptedData = json.decode(decryptedJsonString);
+
+          if (decryptedData is List) {
+            setState(() {
+              inquiries = decryptedData
+                  .map((json) => InquiryModel.fromJson(json))
+                  .toList();
+              loading = false;
+            });
+          } else {
+            print("Unexpected decrypted data format inside 'data' key: $decryptedData");
+            setState(() => loading = false);
+          }
+
+        } else {
+          print("Unexpected API format: $responseBody");
+          setState(() => loading = false);
+        }
+
       } else {
-        utils.showCustomSnackbar(jsonDecode(response.body)['message'], false);
+        final errorMsg = jsonDecode(response.body)['message'] ?? 'Failed to fetch inquiries';
+        utils.showCustomSnackbar(errorMsg, false);
+        setState(() => loading = false);
       }
     } catch (e) {
       setState(() => loading = false);
-      utils.showCustomSnackbar('${e}', false);
+      utils.showCustomSnackbar('Error: $e', false);
     }
   }
 
   Future<void> respondToInquiry(String id) async {
     TextEditingController responseController = TextEditingController();
-
     final String apiUrl = "${ApiService.baseUrl}/Admin/inquiry/$id/respond";
 
     await showDialog(
       context: context,
-      builder:
-          (_) => AlertDialog(
-            title: Text('Respond to Inquiry'),
-            content: TextField(
-              controller: responseController,
-              maxLines: 3,
-              decoration: InputDecoration(hintText: "Type your response here"),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("Cancel"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final url = Uri.parse(apiUrl);
-
-                  final body = json.encode({
-                    'response': responseController.text,
-                    'adminName': widget.adminName,
-                  });
-
-                  final headers = {'Content-Type': 'application/json'};
-
-                  final res = await http.post(
-                    url,
-                    body: body,
-                    headers: headers,
-                  );
-                  if (res.statusCode == 200) {
-                    Navigator.pop(context);
-                    fetchInquiries(); // refresh list
-                  } else {
-                    print("Failed to respond");
-                  }
-                },
-                child: Text("Send"),
-              ),
-            ],
+      builder: (_) => AlertDialog(
+        title: Text('Respond to Inquiry'),
+        content: TextField(
+          controller: responseController,
+          maxLines: 3,
+          decoration: InputDecoration(hintText: "Type your response here"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
           ),
+          ElevatedButton(
+            onPressed: () async {
+              final url = Uri.parse(apiUrl);
+
+              final body = json.encode({
+                'response': responseController.text,
+                'adminName': widget.adminName,
+              });
+
+              final headers = {'Content-Type': 'application/json'};
+
+              final res = await http.post(
+                url,
+                body: body,
+                headers: headers,
+              );
+
+              if (res.statusCode == 200) {
+                Navigator.pop(context);
+                fetchInquiries(); // Refresh list
+                utils.showCustomSnackbar("Response sent successfully", true);
+              } else {
+                final resBody = jsonDecode(res.body);
+                utils.showCustomSnackbar(resBody['message'] ?? "Failed to respond", false);
+                print("Failed to respond: ${res.body}");
+              }
+            },
+            child: Text("Send"),
+          ),
+        ],
+      ),
     );
   }
 

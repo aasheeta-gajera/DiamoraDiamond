@@ -25,11 +25,33 @@ class _CustomerAnalyticsPageState extends State<CustomerAnalyticsPage> {
   Future<void> fetchCustomerAnalytics() async {
     final String apiUrl = "${ApiService.baseUrl}/Report/getCustomerAnalytics";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
+        // The response body is expected to be encrypted string or JSON with encrypted "data" key
+
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          // If the API returns a raw encrypted string
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          // If the API returns an object with encrypted data inside 'data' key
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          // Unexpected format - fallback to original body as string
+          decryptedJsonString = response.body;
+        }
+
+        final decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          customerAnalytics = json.decode(response.body);
+          customerAnalytics = decryptedData;
           isLoading = false;
         });
       } else {

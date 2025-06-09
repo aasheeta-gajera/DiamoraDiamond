@@ -70,20 +70,31 @@ class _OrderState extends State<Order> {
 
 
   Future<void> fetchDiamonds() async {
-      final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
+    final String apiUrl = "${ApiService.baseUrl}/Customer/getSoldDiamonds";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          diamonds = (data["soldDiamonds"] as List)
-              .map((json) => Diamond.fromJson(json))
-              .toList();
-          isLoading = false;
-        });
+        final Map<String, dynamic> encryptedResponse = json.decode(response.body);
+
+        if (encryptedResponse.containsKey("data")) {
+          final decryptedString = ApiService.decryptData(encryptedResponse["data"]);
+          final Map<String, dynamic> data = json.decode(decryptedString);
+
+          setState(() {
+            diamonds = (data["soldDiamonds"] as List)
+                .map((json) => Diamond.fromJson(json))
+                .toList();
+            isLoading = false;
+          });
+        } else {
+          utils.showCustomSnackbar("Invalid response format", false);
+          setState(() => isLoading = false);
+        }
       } else {
         utils.showCustomSnackbar("Failed to load data", false);
+        setState(() => isLoading = false);
       }
     } catch (e) {
       setState(() => isLoading = false);

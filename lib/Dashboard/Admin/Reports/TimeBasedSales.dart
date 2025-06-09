@@ -31,11 +31,28 @@ class _TimeBasedSalesPageState extends State<TimeBasedSalesPage> {
   Future<void> fetchSalesData() async {
     final String apiUrl = "${ApiService.baseUrl}/Report/getTimeBasedSales";
 
+    setState(() => isLoading = true);
+
     try {
       final response = await http.get(Uri.parse(apiUrl));
+
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+
+        String decryptedJsonString;
+
+        if (responseBody is String) {
+          decryptedJsonString = ApiService.decryptData(responseBody);
+        } else if (responseBody is Map<String, dynamic> && responseBody.containsKey('data')) {
+          decryptedJsonString = ApiService.decryptData(responseBody['data']);
+        } else {
+          decryptedJsonString = response.body;
+        }
+
+        final decryptedData = json.decode(decryptedJsonString);
+
         setState(() {
-          salesData = json.decode(response.body);
+          salesData = decryptedData;
           isLoading = false;
 
           // Generate chart data from API response
@@ -56,7 +73,6 @@ class _TimeBasedSalesPageState extends State<TimeBasedSalesPage> {
       });
     }
   }
-
   List<ChartData> _generateChartData(Map<String, dynamic> sales) {
     List<ChartData> chartData = [];
     sales.forEach((key, value) {
