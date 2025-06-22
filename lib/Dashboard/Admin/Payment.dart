@@ -9,7 +9,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   late Razorpay razorpay;
   TextEditingController _amountController = TextEditingController();
-  String _paymentType = 'card'; // default method
+  String _paymentType = 'card';
 
   @override
   void initState() {

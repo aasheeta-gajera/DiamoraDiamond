@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Library/AppColour.dart';
-import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/ApiService.dart';
@@ -88,8 +87,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
   }
 
   Future<bool> checkIfPartnershipCertificate(File imageFile) async {
-    final request = http.MultipartRequest(
-      'POST',
+    final request = http.MultipartRequest('POST',
       Uri.parse('${ApiService.baseUrl}/Auth/uploadCertificate'),
     );
     request.files.add(await http.MultipartFile.fromPath('certificate', imageFile.path));

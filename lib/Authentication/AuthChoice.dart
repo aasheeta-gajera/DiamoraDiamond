@@ -134,7 +134,6 @@ class AuthChoice extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
-                    // Register Button with semi-transparent background
                     Container(
                       height: 50,
                       width: double.infinity,

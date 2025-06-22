@@ -10,7 +10,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 
 class ApiService {
 
-  static const String baseUrl = "https://3970-2409-4080-be45-5e0b-c8d2-5368-6b66-a0b6.ngrok-free.app/diamora/api";
+  static const String baseUrl = "https://1c61-157-32-244-183.ngrok-free.app/diamora/api";
   static String? userTypes = SharedPrefService.getString('userType') ?? "";
 
   static final _key = sha256.convert(utf8.encode('aasheeta#p')).bytes;

@@ -1,6 +1,5 @@
 
 import 'dart:async';
-
 import 'package:daimo/Library/AppStrings.dart';
 import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import '../../Library/Utils.dart' as utils;
 import '../../Models/DiamondModel.dart';
 import '../../Models/SupplierModel.dart';
 import 'Inventory.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class DiamondPurchaseForm extends StatefulWidget {
   @override
@@ -225,10 +225,10 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
 
     try {
       Diamond diamond = Diamond(
-          supplier: _supplierName.toString() ?? '',
-          supplierContact: _supplierContact ?? "",
-          itemCode: supplierGst ?? "",
-          lotNumber: _supplierEmail ?? "",
+          supplier: _supplierName?.trim() ?? '',
+          supplierContact: _supplierContact?.trim() ?? '',
+          itemCode: supplierGst?.trim() ?? '',
+          lotNumber: _supplierEmail?.trim() ?? '',
           shape: _selectedShapes.isNotEmpty ? _selectedShapes.join(", ") : "",
           size: sizeMin,
           weightCarat: weightCaratMin,
@@ -277,6 +277,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         // The response body is encrypted inside 'data'
         final responseBody = jsonDecode(response.body);
 
+        print(responseBody);
         String decryptedJson = ApiService.decryptData(responseBody['data']);
         final decodedResponse = jsonDecode(decryptedJson);
 
@@ -287,7 +288,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         String message = jsonData["message"];
         utils.showCustomSnackbar(message, false);
-        print(message);
+        print("wwwwwwwww  ${message}");
       }
     } catch (e) {
       setState(() => isLoading = false);
@@ -296,16 +297,71 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
     }
   }
 
+  late Razorpay razorpay;
+  TextEditingController _amountController = TextEditingController();
+  String _paymentType = 'card';
+
   @override
   void initState() {
     super.initState();
     fetchSuppliers();
+    razorpay = Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+  }
+
+  void openCheckout() {
+    int amount = int.tryParse(_amountController.text) ?? 0;
+    if (amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid amount')),
+      );
+      return;
+    }
+
+    var options = {
+      'key': 'rzp_test_Ys1nk5c7y3p0ZD', // Replace with test key
+      'amount': amount * 100, // convert to paise
+      'name': 'Daimora',
+      'description': 'Purchase',
+      'prefill': {
+        'contact': '7283962317',
+        'email': 'aasheetagajera03@gmail.com',
+      },
+      'method': {
+        'card': _paymentType == 'card',
+        'upi': _paymentType == 'upi',
+        'wallet': _paymentType == 'wallet',
+      }
+    };
+
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    print("✅ Payment successful: ${response.paymentId}");
+    submitForm();
+    // Optionally: Send to backend for verification
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    print("❌ Payment failed: ${response.message}");
+  }
+
+  @override
+  void dispose() {
+    razorpay.clear();
+    _amountController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchSuppliers() async {
     try {
       final response = await http.get(Uri.parse("${ApiService.baseUrl}/Admin/getAllSuppliers"));
-      print("Raw API Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
@@ -313,8 +369,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
         if (responseBody is Map<String, dynamic> && responseBody.containsKey("data")) {
           final decryptedJsonString = ApiService.decryptData(responseBody["data"]);
           final decryptedData = json.decode(decryptedJsonString);
-
-          print("Decrypted Response: $decryptedData");
 
           // ✅ Use decryptedData["data"], NOT decryptedData["suppliers"]
           if (decryptedData is Map<String, dynamic> && decryptedData.containsKey("data")) {
@@ -784,6 +838,54 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                           ),
                         ),
                         const SizedBox(height: 16),
+                        utils.buildTextField(
+                          readOnly: true,
+                            "Enter amount (₹)",
+                            purchaseController,
+                            textColor: AppColors.primaryWhite,
+                            hintColor: Colors.grey,
+                            keyboardType: TextInputType.number
+                        ),
+                        SizedBox(height: 20),
+                        DropdownButtonFormField<String>(
+                          value: _paymentType,
+                          onChanged: (value) {
+                            setState(() {
+                              _paymentType = value!;
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem(value: 'card', child: Text("Card")),
+                            DropdownMenuItem(value: 'upi', child: Text("UPI")),
+                            DropdownMenuItem(value: 'wallet', child: Text("Wallet")),
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Payment Method",
+                            labelStyle: TextStyle(color: Colors.white), // Set label color to white
+                            filled: true,
+                            fillColor: Colors.transparent,
+                            errorStyle: TextStyle(color: AppColors.redLight),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: AppColors.primaryWhite),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: AppColors.primaryWhite, width: 2),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.red, width: 1.5),
+                            ),
+                          ),
+                          dropdownColor: Colors.black,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(height: 30),
                       ],
                     ),
                   ),
@@ -796,9 +898,9 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                         text: AppString.purchase,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
+                            // openCheckout();
                             submitForm();
                           }
-
                         },
                       ),
                     ),
