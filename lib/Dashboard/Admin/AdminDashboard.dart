@@ -6,6 +6,7 @@ import '../../Library/Drawer.dart';
 import '../../Library/AppColour.dart';
 import 'package:get/get.dart';
 import 'AddSupplier.dart';
+import 'Bill.dart';
 import 'DiamondPurchase.dart';
 import 'InquiryAns.dart';
 import 'Inventory.dart';
@@ -29,16 +30,16 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColour,
         elevation: 1,
-        title: Text("Welcome", style: TextStyleHelper.mediumPrimaryColour),
+        title: Text("Diamora Diamonds", style: TextStyleHelper.mediumPrimaryColour),
         leading: IconButton(
           icon: Icon(Icons.menu, color: AppColors.primaryColour),
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.notification_add_outlined,color: AppColors.primaryColour,))
-        ],
+        // actions: [
+        //   IconButton(onPressed: (){}, icon: Icon(Icons.notification_add_outlined,color: AppColors.primaryColour,))
+        // ],
       ),
       drawer: CommonDrawer(),
       body: Container(
@@ -102,10 +103,10 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DashboardCard(title: AppString.addSupplier, icon: Icons.opacity_rounded, onTap: () {
+            _DashboardCard(title: AppString.addSupplier, icon: Icons.add_task, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSupplier()));
             }),
-            _DashboardCard(title: AppString.receiveOrder, icon: Icons.opacity_rounded, onTap: () {
+            _DashboardCard(title: AppString.receiveOrder, icon: Icons.call_received, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>ReceiveOrder()));
             }),
           ],
@@ -114,10 +115,12 @@ class AdminDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DashboardCard(title: AppString.inquiry, icon: Icons.add_task_outlined, onTap: () {
+            _DashboardCard(title: AppString.inquiry, icon: Icons.inventory, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminInquiryScreen(adminName: "Aasheeta",)));
             }),
-            _DashboardCard(title: AppString.history, icon: Icons.watch_later_outlined, onTap: () {}),
+            _DashboardCard(title: AppString.bill, icon: Icons.note_add_sharp, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>InvoiceScreen()));
+            }),
           ],
         ),
       ],

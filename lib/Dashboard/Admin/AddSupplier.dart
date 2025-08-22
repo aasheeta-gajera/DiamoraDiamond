@@ -102,7 +102,7 @@ class _AddSupplierState extends State<AddSupplier> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColour,
@@ -114,7 +114,7 @@ class _AddSupplierState extends State<AddSupplier> {
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios_new_sharp,
             color: AppColors.primaryColour,
           ),
         ),
@@ -130,12 +130,11 @@ class _AddSupplierState extends State<AddSupplier> {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
                     utils.buildTextField(
@@ -206,10 +205,10 @@ class _AddSupplierState extends State<AddSupplier> {
                           return 'GST Number is required';
                           //27ABCDE1234F1Z5
                         }
-                        final gstRegExp = RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$');
-                        if (!gstRegExp.hasMatch(value.trim().toUpperCase())) {
-                          return 'Please enter a valid 15-character GST Number';
-                        }
+                        // final gstRegExp = RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$');
+                        // if (!gstRegExp.hasMatch(value.trim().toUpperCase())) {
+                        //   return 'Please enter a valid 15-character GST Number';
+                        // }
                         return null;
                       },
                     ),

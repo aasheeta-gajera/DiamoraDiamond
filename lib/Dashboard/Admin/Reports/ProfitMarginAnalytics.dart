@@ -71,7 +71,7 @@ class _ProfitMarginAnalyticsPageState extends State<ProfitMarginAnalyticsPage> {
   Widget build(BuildContext context) {
     // Diamora theme colors
     final colors = {
-      'primary': AppColors.secondaryColour, // Coral
+      'primary': AppColors.primaryColour, // Coral
       'secondary': AppColors.secondaryColour, // Lime Green
       'bg': Color(0xFFF7F7F7), // Light Gray
     };
@@ -140,7 +140,7 @@ class _ProfitMarginAnalyticsPageState extends State<ProfitMarginAnalyticsPage> {
               yValueMapper: (_ProfitData d, _) => d.margin, // Profit margin values
               dataLabelSettings: DataLabelSettings(isVisible: true), // Shows the value on the chart
               maximumValue: 100,  // Set the max value for the radial bar (100% scale)
-              cornerStyle: CornerStyle.bothCurve,  // Curved corners for aesthetic design
+              cornerStyle: CornerStyle.bothCurve, // Curved corners for aesthetic design
             ),
           ],
         ),

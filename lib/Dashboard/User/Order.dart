@@ -159,7 +159,7 @@ class _OrderState extends State<Order> {
                 Color statusColor = status == 'Paid'
                     ? AppColors.greenAccent
                     : status == 'Pending'
-                    ? AppColors.yellow
+                    ? AppColors.backgroundBlack
                     : AppColors.redAccent;
 
                 return Card(

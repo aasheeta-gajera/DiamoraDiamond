@@ -11,6 +11,7 @@ import '../../Library/SharedPrefService.dart';
 import '../../Library/Utils.dart' as utils;
 import '../../Models/CartDiamond.dart';
 import '../../Models/DiamondModel.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CardDiamonds extends StatefulWidget {
   final List<Diamond>? diamonds;
@@ -26,6 +27,9 @@ class _CardDiamondsState extends State<CardDiamonds> {
   void initState() {
     super.initState();
     fetchCartDiamonds();
+    razorpay = Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
   }
 
   List<CartDiamond> cartDiamonds = [];
@@ -47,9 +51,7 @@ class _CardDiamondsState extends State<CardDiamonds> {
           final cartItems = data['cartItems'];
           if (cartItems != null && cartItems is List) {
             setState(() {
-              cartDiamonds = cartItems
-                  .map((item) => CartDiamond.fromJson(item as Map<String, dynamic>))
-                  .toList();
+              cartDiamonds = cartItems.map((item) => CartDiamond.fromJson(item as Map<String, dynamic>)).toList();
               isLoading = false;
             });
           } else {
@@ -265,6 +267,46 @@ Widget _detailChip(String label, String value) {
   );
 }
 
+late Razorpay razorpay;
+TextEditingController _amountController = TextEditingController();
+String _paymentType = 'card';
+
+void openCheckout() {
+  int amount = int.tryParse(_amountController.text) ?? 0;
+
+  var options = {
+    'key': 'rzp_test_Ys1nk5c7y3p0ZD', // Replace with test key
+    'amount': amount * 100, // convert to paise
+    'name': 'Daimora',
+    'description': 'Purchase',
+    'prefill': {
+      'contact': '7283962317',
+      'email': 'aasheetagajera03@gmail.com',
+    },
+    'method': {
+      'card': _paymentType == 'card',
+      'upi': _paymentType == 'upi',
+      'wallet': _paymentType == 'wallet',
+    }
+  };
+
+  try {
+    razorpay.open(options);
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+}
+
+void _handlePaymentSuccess(PaymentSuccessResponse response)async {
+  print("✅ Payment successful: ${response.paymentId}");
+  // await sellDiamond(widget.cartDiamond);
+  // Optionally: Send to backend for verification
+}
+
+void _handlePaymentError(PaymentFailureResponse response) {
+  print("❌ Payment failed: ${response.message}");
+}
+
 Future<void> sellDiamond(CartDiamond diamond) async {
   final userId = await SharedPrefService.getString('userId') ?? '';
   print("userIduserId   $userId");
@@ -474,40 +516,6 @@ class _SellConfirmationSheetState extends State<SellConfirmationSheet> {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 10),
-                  // Text(
-                  //   "🔢 Quantity: ${widget.cartDiamond.diamondDetails.totalDiamonds}",
-                  //   style: const TextStyle(fontSize: 16),
-                  // ),
-                  //
-                  // const SizedBox(height: 8),
-                  //
-                  // // Quantity Adjustment Row with icons for increment/decrement
-                  // Row(
-                  //   children: [
-                  //     IconButton(
-                  //       onPressed: widget.cartDiamond.diamondDetails.totalDiamonds! > 1
-                  //           ? () {
-                  //         // Decrease quantity logic
-                  //       }
-                  //           : null, // Disable "remove" if quantity is 1
-                  //       icon: const Icon(Icons.remove_circle_outline),
-                  //       color: Theme.of(context).colorScheme.primary,
-                  //     ),
-                  //     Text(
-                  //       "${widget.cartDiamond.diamondDetails.totalDiamonds}",
-                  //       style: const TextStyle(fontSize: 16),
-                  //     ),
-                  //     IconButton(
-                  //       onPressed: widget.cartDiamond.diamondDetails.totalDiamonds! < (widget.cartDiamond.diamondDetails.totalDiamonds ?? 0)
-                  //           ? () {
-                  //         // Increase quantity logic
-                  //       }
-                  //           : null, // Disable "add" if quantity exceeds stock
-                  //       icon: const Icon(Icons.add_circle_outline),
-                  //       color: Theme.of(context).colorScheme.primary,
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
             ),
@@ -521,6 +529,7 @@ class _SellConfirmationSheetState extends State<SellConfirmationSheet> {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   setState(() => isLoading = true);
+                  openCheckout();
                   await sellDiamond(widget.cartDiamond);
                   setState(() => isLoading = false);
                   Navigator.pop(context);

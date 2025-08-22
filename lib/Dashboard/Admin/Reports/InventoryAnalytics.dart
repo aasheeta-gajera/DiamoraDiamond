@@ -70,8 +70,8 @@ class _InventoryAnalyticsPageState extends State<InventoryAnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     final colors = {
-      'primary': AppColors.secondaryColour,
-      'secondary': AppColors.secondaryColour,
+      'primary': AppColors.primaryColour,
+      'secondary': AppColors.primaryColour,
       'bg': Color(0xFFFDF4F0),
     };
 
@@ -99,8 +99,6 @@ class _InventoryAnalyticsPageState extends State<InventoryAnalyticsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildChatBubble("Here's your inventory snapshot", colors),
-              SizedBox(height: 10),
               _buildKeyMetricsSection(colors),
               SizedBox(height: 20),
               _buildInventoryPieChart(colors),

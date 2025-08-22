@@ -5,7 +5,6 @@ import 'package:daimo/Library/AppStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:get/get.dart';
 import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/Utils.dart' as utils;
@@ -99,20 +98,6 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
       symmetry,
       lab;
 
-  // final List<String> shapes = [
-  //   "Round",
-  //   "Princess",
-  //   "Cushion",
-  //   "Oval",
-  //   "Pear",
-  //   "Marquise",
-  //   "Heart",
-  //   "Emerald",
-  //   "Radiant",
-  //   "Asscher",
-  //   "Mitchell",
-  //   "Other",
-  // ];
   final List<String> clarities = [
     "FL",
     "IF",
@@ -249,7 +234,7 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
           storageLocation: _selectedLocation.toString(),
           pairingAvailable: isPairSelected,
           imageURL: "",
-          remarks: "",
+          remarks: "" ?? '',
           paymentStatus: "Pending",
           paymentMethod: "Credit Card",
           transactionId: "TXN001",
@@ -839,9 +824,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                         ),
                         const SizedBox(height: 16),
                         utils.buildTextField(
-                          readOnly: true,
                             "Enter amount (₹)",
-                            purchaseController,
+                            _amountController,
                             textColor: AppColors.primaryWhite,
                             hintColor: Colors.grey,
                             keyboardType: TextInputType.number
@@ -898,8 +882,8 @@ class _DiamondPurchaseFormState extends State<DiamondPurchaseForm> {
                         text: AppString.purchase,
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // openCheckout();
-                            submitForm();
+                            openCheckout();
+                            // submitForm();
                           }
                         },
                       ),

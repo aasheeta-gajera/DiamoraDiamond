@@ -121,29 +121,13 @@ class _TimeBasedSalesPageState extends State<TimeBasedSalesPage> {
 
   // Key Metrics Section (e.g., Total Sales, Average Sales)
   Widget _buildKeyMetricsSection() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, spreadRadius: 2)
-        ],
-      ),
-      child: Column(
-        children: [
-          // Text('Key Metrics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColour)),
-          // SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildMetricCard('Total Sales', '\$200,000'),
-              _buildMetricCard('Average Sales', '\$5,000'),
-              _buildMetricCard('Highest Sales', '\$20,000'),
-            ],
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildMetricCard('Total Sales', '\$200,000'),
+        _buildMetricCard('Average Sales', '\$5,000'),
+        _buildMetricCard('Highest Sales', '\$20,000'),
+      ],
     );
   }
 
@@ -152,7 +136,7 @@ class _TimeBasedSalesPageState extends State<TimeBasedSalesPage> {
     return Container(
       padding: EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColour,  // Secondary color from Daimora theme
+        color: AppColors.primaryColour,  // Secondary color from Daimora theme
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 5, spreadRadius: 2)],
       ),

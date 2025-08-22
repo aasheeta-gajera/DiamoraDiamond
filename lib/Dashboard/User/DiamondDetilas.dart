@@ -12,39 +12,14 @@ class Diamond3DViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Diamond 3D View'),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Column(
-        children: [
-          // 3D Model viewer
-          Expanded(
-            child:ModelViewer(
-              src: 'http://192.168.000.000:41455/diamond.gltf', // Your model file URL
-              alt: 'A 3D model of a shoe',
-              autoRotate: true,
-              cameraControls: true,
-              ar: true, // Enable AR if needed
-            ),
-          ),
-          // Information about the diamond
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.white10,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Name: ${diamond.supplier}", style: TextStyle(color: Colors.white)),
-                Text("Carat: ${diamond.certification}", style: TextStyle(color: Colors.white70)),
-                Text("Clarity: ${diamond.clarity}", style: TextStyle(color: Colors.white70)),
-                Text("Cut: ${diamond.cut}", style: TextStyle(color: Colors.white70)),
-                Text("Price: ${diamond.totalDiamonds}", style: TextStyle(color: Colors.white70)),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: ModelViewer(
+      src: 'https://bc6d-157-32-84-33.ngrok-free.app/d2.glb',
+      alt: "Diamond 3D model",
+      ar: true,
+      autoRotate: true, cameraControls: true,
+      backgroundColor: Colors.white,
+    ),
+
     );
   }
 }

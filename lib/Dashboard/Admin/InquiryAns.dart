@@ -165,7 +165,7 @@ class _AdminInquiryScreenState extends State<AdminInquiryScreen> {
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: AppColors.primaryColour),
+          icon: const Icon(Icons.arrow_back_ios_new_sharp, color: AppColors.primaryColour),
         ),
       ),
       body: SafeArea(

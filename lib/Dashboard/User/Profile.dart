@@ -63,7 +63,7 @@ class _ProfileState extends State<Profile> {
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios_new_sharp,
             color: AppColors.primaryColour,
           ),
         ),      ),
@@ -78,7 +78,7 @@ class _ProfileState extends State<Profile> {
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

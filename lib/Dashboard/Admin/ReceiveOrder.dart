@@ -8,6 +8,7 @@ import '../../Library/ApiService.dart';
 import '../../Library/AppColour.dart';
 import '../../Library/AppStrings.dart';
 import '../../Library/AppStyle.dart';
+import '../../Library/SharedPrefService.dart';
 import '../../Models/DiamondModel.dart';
 import '../../Library/Utils.dart' as utils;
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
@@ -47,9 +48,7 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
         final Map<String, dynamic> decryptedData = json.decode(decryptedJsonString);
 
         setState(() {
-          diamonds = (decryptedData["soldDiamonds"] as List)
-              .map((json) => Diamond.fromJson(json))
-              .toList();
+          diamonds = (decryptedData["soldDiamonds"] as List).map((json) => Diamond.fromJson(json)).toList();
           isLoading = false;
         });
       } else {
@@ -66,7 +65,6 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
     final workbook = xlsio.Workbook();
     final sheet = workbook.worksheets[0];
 
-    // Add header row
     sheet.importList([
       'Item',
       'Weight',
@@ -163,7 +161,7 @@ class _ReceiveOrderState extends State<ReceiveOrder> {
                 Color statusColor = status == 'Paid'
                     ? AppColors.greenAccent
                     : status == 'Pending'
-                    ? AppColors.yellow
+                    ? AppColors.backgroundBlack
                     : AppColors.redAccent;
 
                 return Card(

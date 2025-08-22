@@ -110,41 +110,31 @@ class _CustomerAnalyticsPageState extends State<CustomerAnalyticsPage> {
   }
 
   Widget _buildKeyMetricsSection() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Text('Key Metrics',
-          //     style: TextStyle(
-          //         fontSize: 22,
-          //         fontWeight: FontWeight.bold,
-          //         color: Colors.deepOrangeAccent)),
-          // SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(child: _buildMetricCard('Total Customers', '${customerAnalytics?['totalCustomers']}')),
-              SizedBox(width: 12),
-              Expanded(child: _buildMetricCard('Average Orders', '${customerAnalytics?['averageOrdersPerCustomer']}')),
-            ],
-          ),
-          SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(child: _buildMetricCard('Repeat Customers', '${customerAnalytics?['repeatCustomers']}')),
-              SizedBox(width: 12),
-              Expanded(child: _buildMetricCard('One-Time Customers', '${customerAnalytics?['oneTimeCustomers']}')),
-            ],
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Text('Key Metrics',
+        //     style: TextStyle(
+        //         fontSize: 22,
+        //         fontWeight: FontWeight.bold,
+        //         color: Colors.deepOrangeAccent)),
+        // SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(child: _buildMetricCard('Total Customers', '${customerAnalytics?['totalCustomers']}')),
+            SizedBox(width: 12),
+            Expanded(child: _buildMetricCard('Average Orders', '${customerAnalytics?['averageOrdersPerCustomer']}')),
+          ],
+        ),
+        SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _buildMetricCard('Repeat Customers', '${customerAnalytics?['repeatCustomers']}')),
+            SizedBox(width: 12),
+            Expanded(child: _buildMetricCard('One-Time Customers', '${customerAnalytics?['oneTimeCustomers']}')),
+          ],
+        ),
+      ],
     );
   }
 
@@ -152,7 +142,7 @@ class _CustomerAnalyticsPageState extends State<CustomerAnalyticsPage> {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColour,
+        color: AppColors.primaryColour,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -187,7 +177,7 @@ class _CustomerAnalyticsPageState extends State<CustomerAnalyticsPage> {
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.secondaryColour)),
+                  color: AppColors.primaryColour)),
           SizedBox(height: 12),
           if (highValueCustomers.isEmpty)
             Center(
@@ -204,7 +194,7 @@ class _CustomerAnalyticsPageState extends State<CustomerAnalyticsPage> {
                 final customer = highValueCustomers[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: AppColors.secondaryColour,
+                    backgroundColor: AppColors.primaryColour,
                     child: Icon(Icons.person, color: Colors.white),
                   ),
                   title: Text('User ID: ${customer['userId']}',

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:daimo/Authentication/Login.dart';
@@ -10,7 +11,6 @@ import '../Library/AppImages.dart';
 import '../Library/AppStrings.dart';
 import '../Library/AppStyle.dart';
 import '../Library/Utils.dart' as utils;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotResetPassword extends StatefulWidget {
   const ForgotResetPassword({super.key});
@@ -155,10 +155,12 @@ class _ForgotResetPasswordState extends State<ForgotResetPassword> {
         }
 
         utils.showCustomSnackbar(message, false);
+        print(message);
       }
     } catch (e) {
       setState(() => isLoading = false);
       utils.showCustomSnackbar('Error: ${e.toString()}', false);
+      print(e.toString());
     }
   }
 

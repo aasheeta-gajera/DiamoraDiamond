@@ -42,9 +42,9 @@ class CustomerDashboard extends StatelessWidget {
             color: AppColors.primaryColour,
           ),
         ),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.notification_add_outlined,color: AppColors.primaryColour,))
-        ],
+        // actions: [
+        //   IconButton(onPressed: (){}, icon: Icon(Icons.notification_add_outlined,color: AppColors.primaryColour,))
+        // ],
       ),
       drawer: const CommonDrawer(),
       body: Container(
@@ -169,7 +169,7 @@ class CustomerDashboard extends StatelessWidget {
             ),
             _DiamondCard(
               title: AppString.order,
-              icon: Icons.opacity_rounded,
+              icon: Icons.outbond_outlined,
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> Order()));
               },
@@ -180,11 +180,11 @@ class CustomerDashboard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _DiamondCard(
-              title: AppString.bill,
-              icon: Icons.watch_later,
-              onTap: () {},
-            ),
+            // _DiamondCard(
+            //   title: AppString.bill,
+            //   icon: Icons.watch_later,
+            //   onTap: () {},
+            // ),
             _DiamondCard(
               title: AppString.inquiry,
               icon: Icons.inventory,

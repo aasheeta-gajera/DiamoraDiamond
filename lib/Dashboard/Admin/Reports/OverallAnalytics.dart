@@ -154,61 +154,57 @@ class _AnalyticsDashboardPageState extends State<AnalyticsDashboardPage> {
     String? profitShape = analyticsData?['mostProfitableShape']?['shape'];
     String? profitPrevShape = analyticsData?['profitShapeChange']?['previousShape'];
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 6,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SfCircularChart(
-          title: ChartTitle(
-            text: 'Sales & Profit by Shape',
-            textStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryColour,
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SfCircularChart(
+        title: ChartTitle(
+          text: 'Sales & Profit by Shape',
+          textStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryColour,
           ),
-          legend: Legend(
-            isVisible: true,
-            position: LegendPosition.bottom,
-            overflowMode: LegendItemOverflowMode.wrap,
-            textStyle: TextStyle(color: AppColors.secondaryColour),
-          ),
-          tooltipBehavior: TooltipBehavior(enable: true),
-          series: <CircularSeries>[
-            PieSeries<ChartData, String>(
-              dataSource: salesData,
-              xValueMapper: (ChartData data, _) => data.category,
-              yValueMapper: (ChartData data, _) => data.value,
-              dataLabelMapper: (ChartData data, _) {
-                String label = data.category;
-
-                if (data.category == topShape && topPrevShape != null && topPrevShape != topShape) {
-                  label += ' (prev: $topPrevShape)';
-                }
-                if (data.category == profitShape && profitPrevShape != null && profitPrevShape != profitShape) {
-                  label += ' (prev: $profitPrevShape)';
-                }
-
-                return '$label: ${formatNumber(data.value)}';
-              },
-              dataLabelSettings: DataLabelSettings(
-                isVisible: true,
-                textStyle: TextStyle(color: AppColors.backgroundBlack),
-              ),
-              pointColorMapper: (ChartData data, index) {
-                final colors = [
-                  AppColors.secondaryColour,
-                  AppColors.greenLight,
-                  AppColors.accentColour ?? Colors.orange,
-                  Colors.purple,
-                  Colors.redAccent,
-                ];
-                return colors[index % colors.length];
-              },
-            ),
-          ],
         ),
+        legend: Legend(
+          isVisible: true,
+          position: LegendPosition.bottom,
+          overflowMode: LegendItemOverflowMode.wrap,
+          textStyle: TextStyle(color: AppColors.secondaryColour),
+        ),
+        tooltipBehavior: TooltipBehavior(enable: true),
+        series: <CircularSeries>[
+          PieSeries<ChartData, String>(
+            dataSource: salesData,
+            xValueMapper: (ChartData data, _) => data.category,
+            yValueMapper: (ChartData data, _) => data.value,
+            dataLabelMapper: (ChartData data, _) {
+              String label = data.category;
+
+              if (data.category == topShape && topPrevShape != null && topPrevShape != topShape) {
+                label += ' (prev: $topPrevShape)';
+              }
+              if (data.category == profitShape && profitPrevShape != null && profitPrevShape != profitShape) {
+                label += ' (prev: $profitPrevShape)';
+              }
+
+              return '$label: ${formatNumber(data.value)}';
+            },
+            dataLabelSettings: DataLabelSettings(
+              isVisible: true,
+              textStyle: TextStyle(color: AppColors.backgroundBlack),
+            ),
+            pointColorMapper: (ChartData data, index) {
+              final colors = [
+                AppColors.secondaryColour,
+                AppColors.greenLight,
+                AppColors.accentColour ?? Colors.orange,
+                Colors.purple,
+                Colors.redAccent,
+              ];
+              return colors[index % colors.length];
+            },
+          ),
+        ],
       ),
     );
   }

@@ -66,7 +66,7 @@ class _SearchAnalyticsPageState extends State<SearchAnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     final colors = {
-      'primary': AppColors.secondaryColour, // Coral (Diamora theme)
+      'primary': AppColors.primaryColour, // Coral (Diamora theme)
       'secondary': Color(0xFF32CD32), // Lime Green
       'bg': Color(0xFFF7F7F7), // Light Gray background
     };
