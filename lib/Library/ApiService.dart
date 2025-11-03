@@ -10,7 +10,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 
 class ApiService {
 
-  static const String baseUrl = "https://apisdiamora.onrender.com/diamora/api";
+  static const String baseUrl = "https://apisdiamora.onrender.com/diamora/api/Admin/getAllPurchasedDiamonds";
   // static const String baseUrl = "https://apisdiamora.onrender.com/diamora/api";
   static String? userTypes = SharedPrefService.getString('userType') ?? "";
 
